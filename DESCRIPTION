@@ -1,0 +1,19 @@
+Package: loadeR
+Depends: R(>= 3.0.0), downscaleR.java (>= 1.0.0), rJava
+Imports: utils, abind, RCurl
+Suggests: downscaleR
+Type: Package
+Title: R package for remote and local climate data loading into R
+Version: 0.0-0
+Date: 03 Nov 2015
+Authors@R: as.person(c(
+    "Santander Meteorology Group <http://meteo.unican.es> [aut]",
+    "Joaquin Bedia <bediaj@unican.es> [ctb,cre]",
+    "Max Tuni <max@predictia.es> [ctb]",
+    "Antonio Cofino <antonio.cofino@unican.es> [ctb]",
+    "Sixto Herrera <sixto@predictia.es> [ctb]",
+    "Manuel Vega <manuel.vega@unican.es> [ctb]"))
+BugReports: https://github.com/SantanderMetGroup/loadeR/issues
+URL:
+Description: Enables homogenized, user-friendly access to climate databases remotely stored via OPeNDAP or to locally stored data, allowing the retrieval of user-defined dimensional slices from large climate datasets.
+License: GPL (>= 3)
