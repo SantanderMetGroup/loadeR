@@ -1,6 +1,24 @@
+# loadGridData.R Load a user-defined spatio-temporal slice from a gridded dataset
+#
+#     Copyright (C) 2015 Santander Meteorology Group (http://www.meteo.unican.es)
+#
+#     This program is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+# 
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+# 
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 #' @title Load a field from a dataset
 #' 
-#' @description Load a user-defined spatio-temporal slice (a field) from a gridded dataset
+#' @description Load a user-defined spatio-temporal slice from a gridded dataset
 #' 
 #' @import rJava
 #' 
@@ -32,7 +50,7 @@
 #'  \code{\link[ecomsUDG.Raccess]{loadECOMS}} function in package \pkg{ecomsUDG.Raccess}, basically because
 #'  the latter does not accept user-defined dictionaries at arbitrary file paths.
 #'    
-#' @author J. Bedia \email{joaquin.bedia@@gmail.com}
+#' @author J. Bedia, S. Herrera, M. Iturbide 
 #' @family loading
 #' @family loading.grid
 #' @family homogenization
@@ -112,43 +130,55 @@ loadGridData <- function(dataset, var, dictionary = TRUE, lonLim = NULL,
       latLon <- getLatLonDomain(grid, lonLim, latLim)
       proj <- grid$getCoordinateSystem()$getProjection()
       if (!proj$isLatLon()){
-        nc <- gds$getNetcdfDataset()
-        lonAxis <- nc$findVariable('lon')
-        auxLon <- t(matrix(data = lonAxis$getCoordValues(), nrow = lonAxis$getShape()[2], ncol = lonAxis$getShape()[1]))
-        latAxis <- nc$findVariable('lat')
-        auxLat <- t(matrix(data = latAxis$getCoordValues(), nrow = latAxis$getShape()[2], ncol = latAxis$getShape()[1]))
-        if (is.null(lonLim)){
-          lonLim <- c(min(auxLon),max(auxLon))
-        }
-        if (is.null(latLim)){
-          latLim <- c(min(auxLat),max(auxLat))
-        }
-        if (length(lonLim) == 1 | length(latLim) == 1) {
-          ind.x <- which.min(abs(auxLon - lonLim))
-          ind.y <- which.min(abs(auxLat - latLim))
-          pointXYindex <- c(ind.y,ind.x)
-          latLon$xyCoords$x <- grid$getCoordinateSystem()$getXHorizAxis()$getCoordValues()[ind.x]
-          latLon$xyCoords$y <- grid$getCoordinateSystem()$getYHorizAxis()$getCoordValues()[ind.y]
-          latLon$xyCoords$lon <- auxLon[ind.y,ind.x]
-          latLon$xyCoords$lat <- auxLat[ind.y,ind.x]
-        }else{
-          auxDis <- sqrt((auxLon - lonLim[1])^2+(auxLat - latLim[1])^2)
-          llrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
-          auxDis <- sqrt((auxLon - lonLim[2])^2+(auxLat - latLim[2])^2)
-          urrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
-          auxDis <- sqrt((auxLon - lonLim[1])^2+(auxLat - latLim[2])^2)
-          ulrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
-          auxDis <- sqrt((auxLon - lonLim[2])^2+(auxLat - latLim[1])^2)
-          lrrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
-          llrowCol <- c(min(c(llrowCol[1],lrrowCol[1])), min(c(llrowCol[2],ulrowCol[2])))
-          urrowCol <- c(max(c(ulrowCol[1],urrowCol[1])),max(c(lrrowCol[2],ulrowCol[2])))
-          latLon$xyCoords$x <- grid$getCoordinateSystem()$getXHorizAxis()$getCoordValues()[llrowCol[2]:urrowCol[2]]
-          latLon$xyCoords$y <- grid$getCoordinateSystem()$getYHorizAxis()$getCoordValues()[llrowCol[1]:urrowCol[1]]
-          latLon$xyCoords$lon <- auxLon[llrowCol[1]:urrowCol[1],llrowCol[2]:urrowCol[2]]
-          latLon$xyCoords$lat <- auxLat[llrowCol[1]:urrowCol[1],llrowCol[2]:urrowCol[2]]
-        }
-        latLon$lonRanges <- .jnew("ucar/ma2/Range", as.integer(llrowCol[2]-1), as.integer(urrowCol[2]-1))
-        latLon$latRanges <- .jnew("ucar/ma2/Range", as.integer(llrowCol[1]-1), as.integer(urrowCol[1]-1))
+            nc <- gds$getNetcdfDataset()
+            lonAxis <- nc$findVariable('lon')
+            auxLon <- t(matrix(data = lonAxis$getCoordValues(), nrow = lonAxis$getShape()[2], ncol = lonAxis$getShape()[1]))
+            latAxis <- nc$findVariable('lat')
+            auxLat <- t(matrix(data = latAxis$getCoordValues(), nrow = latAxis$getShape()[2], ncol = latAxis$getShape()[1]))
+            if (is.null(lonLim)){
+                  lonLim <- c(auxLon[arrayInd(which.min(auxLat),
+                                    dim(auxLat))[1],
+                                    which.min(auxLon[arrayInd(which.min(auxLat),
+                                    dim(auxLat))[1],])],
+                              auxLon[arrayInd(which.max(auxLat),
+                                    dim(auxLat))[1], which.max(auxLon[arrayInd(which.max(auxLat),
+                                    dim(auxLat))[1],])])
+            }
+            if (is.null(latLim)){
+                  latLim <- c(auxLat[arrayInd(which.min(auxLat),
+                                    dim(auxLat))[1],
+                                    which.min(auxLon[arrayInd(which.min(auxLat),
+                                    dim(auxLat))[1],])],
+                              auxLat[arrayInd(which.max(auxLat),
+                                    dim(auxLat))[1], which.max(auxLon[arrayInd(which.max(auxLat),
+                                    dim(auxLat))[1],])])
+            }
+            if (length(lonLim) == 1 | length(latLim) == 1) {
+                  ind.x <- which.min(abs(auxLon - lonLim))
+                  ind.y <- which.min(abs(auxLat - latLim))
+                  pointXYindex <- c(ind.y,ind.x)
+                  latLon$xyCoords$x <- grid$getCoordinateSystem()$getXHorizAxis()$getCoordValues()[ind.x]
+                  latLon$xyCoords$y <- grid$getCoordinateSystem()$getYHorizAxis()$getCoordValues()[ind.y]
+                  latLon$xyCoords$lon <- auxLon[ind.y,ind.x]
+                  latLon$xyCoords$lat <- auxLat[ind.y,ind.x]
+            } else {
+                  auxDis <- sqrt((auxLon - lonLim[1])^2+(auxLat - latLim[1])^2)
+                  llrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
+                  auxDis <- sqrt((auxLon - lonLim[2])^2+(auxLat - latLim[2])^2)
+                  urrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
+                  auxDis <- sqrt((auxLon - lonLim[1])^2+(auxLat - latLim[2])^2)
+                  ulrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
+                  auxDis <- sqrt((auxLon - lonLim[2])^2+(auxLat - latLim[1])^2)
+                  lrrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
+                  llrowCol <- c(min(c(llrowCol[1],lrrowCol[1])), min(c(llrowCol[2],ulrowCol[2])))
+                  urrowCol <- c(max(c(ulrowCol[1],urrowCol[1])),max(c(lrrowCol[2],ulrowCol[2])))
+                  latLon$xyCoords$x <- grid$getCoordinateSystem()$getXHorizAxis()$getCoordValues()[llrowCol[2]:urrowCol[2]]
+                  latLon$xyCoords$y <- grid$getCoordinateSystem()$getYHorizAxis()$getCoordValues()[llrowCol[1]:urrowCol[1]]
+                  latLon$xyCoords$lon <- auxLon[llrowCol[1]:urrowCol[1],llrowCol[2]:urrowCol[2]]
+                  latLon$xyCoords$lat <- auxLat[llrowCol[1]:urrowCol[1],llrowCol[2]:urrowCol[2]]
+            }
+            latLon$lonRanges <- .jnew("ucar/ma2/Range", as.integer(llrowCol[2]-1), as.integer(urrowCol[2]-1))
+            latLon$latRanges <- .jnew("ucar/ma2/Range", as.integer(llrowCol[1]-1), as.integer(urrowCol[1]-1))
       }
       out <- loadGridDataset(var, grid, dic, level, season, years, time, latLon, aggr.d, aggr.m)
       # Definition of projection
@@ -158,10 +188,10 @@ loadGridData <- function(dataset, var, dictionary = TRUE, lonLim = NULL,
       tab <- c("time", "level", "lat", "lon")
       x <- attr(out$Data, "dimensions")
       if (length(x) > 1) {
-        b <- na.exclude(match(tab, x))
-        dimNames <- attr(out$Data, "dimensions")[b]
-        out$Data <- aperm(out$Data, perm = b)    
-        attr(out$Data, "dimensions")  <- dimNames
+            b <- na.exclude(match(tab, x))
+            dimNames <- attr(out$Data, "dimensions")[b]
+            out$Data <- aperm(out$Data, perm = b)    
+            attr(out$Data, "dimensions")  <- dimNames
       }
       # Source Dataset and other metadata 
       attr(out, "dataset") <- dataset
@@ -170,3 +200,85 @@ loadGridData <- function(dataset, var, dictionary = TRUE, lonLim = NULL,
       return(out)
 }     
 # End
+
+#' Loads a user-defined subset of a gridded CDM dataset
+#' 
+#' Loads a user-defined subset from a gridded dataset compliant with the Common
+#'  Data Model interface
+#' 
+#' @author J. Bedia 
+#' @export
+#' @keywords internal
+
+loadGridDataset <- function(var, grid, dic, level, season, years, time, latLon, aggr.d, aggr.m) {
+      timePars <- getTimeDomain(grid, dic, season, years, time, aggr.d, aggr.m)
+      levelPars <- getVerticalLevelPars(grid, level)
+      cube <- makeSubset(grid, timePars, levelPars, latLon)
+      timePars <- NULL
+      if (!is.null(dic)) {
+            isStandard <- TRUE
+            cube$mdArray <- dictionaryTransformGrid(dic, cube$timePars, cube$mdArray)
+      } else {
+            isStandard <- FALSE
+      }
+      if (isTRUE(latLon$revLat)) {
+            cube$mdArray <- revArrayLatDim(cube$mdArray, grid)
+      }
+      Variable <- list("varName" = var, "level" = levelPars$level)
+      attr(Variable, "is_standard") <- isStandard
+      if (isStandard) {
+            data(vocabulary, envir = environment())
+            attr(Variable, "units") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier,), 3])
+            attr(Variable, "longname") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier,), 2])
+      } else {
+            attr(Variable, "units") <- "undefined"
+            attr(Variable, "longname") <- "undefined"
+      }
+      attr(Variable, "daily_agg_cellfun") <- cube$timePars$aggr.d
+      attr(Variable, "monthly_agg_cellfun") <- cube$timePars$aggr.m
+      attr(Variable, "verification_time") <- time
+      out <- list("Variable" = Variable, "Data" = cube$mdArray, "xyCoords" = latLon$xyCoords, "Dates" = adjustDates(cube$timePars))
+      return(out)
+      
+}
+# End
+
+
+#' Adjust time/start dates of a loaded object
+#' @param timePars Object containing the relevant time parameters
+#' @return A list with dates (POSIXct) start and end, defining the interval [start, end)
+#' @details Sub-daily information is displayed only in case of subdaily data
+#' @author J Bedia 
+#' @keywords internal
+
+# timePars <- cube$timePars
+adjustDates <- function(timePars) {
+      interval <- 0
+      if (timePars$aggr.m != "none") {
+            mon.len <- sapply(timePars$dateSliceList, ndays)
+            interval <- mon.len * 86400
+      } else if (timePars$aggr.d != "none") {
+            timePars$dateSliceList <- format(as.Date(substr(timePars$dateSliceList, 1, 10)), format = "%Y-%m-%d %H:%M:%S", usetz = TRUE) 
+            interval <- 86400
+      }
+      formato <- ifelse(interval[1] == 0, "%Y-%m-%d %H:%M:%S", "%Y-%m-%d")
+      dates.end <- format(as.POSIXct(as.POSIXlt(timePars$dateSliceList, tz = "GMT") + interval), format = formato, usetz = TRUE)
+      dates.start <- format(as.POSIXct(as.POSIXlt(timePars$dateSliceList, tz = "GMT"), tz = "GMT"), format = formato, usetz = TRUE)
+      return(list("start" = dates.start, "end" = dates.end))
+}
+# End
+
+
+#' Calculate the number of days of the current month
+#' @param d A date (character) in format YYYY-MM-DD...
+#' @return The number of days of the current month
+#' @references 
+#' \url{http://stackoverflow.com/questions/6243088/find-out-the-number-of-days-of-a-month-in-r}
+#' @export
+
+ndays <- function(d) {
+      as.difftime(tail((28:31)[which(!is.na(as.Date(paste0(substr(d, 1, 8), 28:31), '%Y-%m-%d')))], 1), units = "days")
+}
+#End
+
+

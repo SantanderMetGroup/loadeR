@@ -77,7 +77,7 @@ provides geo-referencing information as stored in the original dataset.}
   interval \emph{[start, end)}, or if the loaded field is static, a character string indicating it.}
 }
 \description{
-Load a user-defined spatio-temporal slice (a field) from a gridded dataset
+Load a user-defined spatio-temporal slice from a gridded dataset
 }
 \note{
 The possible values of argument \code{dictionary} are slightly different from those from the
@@ -153,12 +153,16 @@ plotMeanField(non.standard.field)
 }
 }
 \author{
-J. Bedia \email{joaquin.bedia@gmail.com}
+J. Bedia, S. Herrera, M. Iturbide
 }
 \seealso{
 Other homogenization: \code{\link{vocabulary}}
 
 Other loading: \code{\link{loadStationData}};
   \code{\link{makeAggregatedDataset}}
+
+Other loading.grid: \code{\link{getGrid}};
+  \code{\link{interpData}}; \code{\link{interpGridData}};
+  \code{\link{interpLocData}}
 }
 

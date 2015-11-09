@@ -78,7 +78,7 @@ J. bedia \email{joaquin.bedia@gmail.com}
 }
 \seealso{
 \code{\link{loadGridData}} and \code{\link[ecomsUDG.Raccess]{loadECOMS}} for loading fields (the latter also for loading
-multimember fields), \code{\link{loadMultiField}}, which directly loads a multifield. \code{\link{interpData}} and \code{\link{getGrid}}
+multimember fields). \code{\link{interpData}} and \code{\link{getGrid}}
 for spatial consistency of input fields.
 }
 

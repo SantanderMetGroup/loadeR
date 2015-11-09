@@ -15,6 +15,6 @@ vignettes/*.pdf
 .Rproj.user
 
 # Directories
-.ignore
+ignore
 
 .Rbuildignore
