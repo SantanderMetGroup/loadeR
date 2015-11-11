@@ -28,19 +28,15 @@
 #'  
 #'  
 #' @note A multifield can not be passed to the interpolator \code{\link{interpData}} directly. Instead, the 
-#' multimember fields should be interpolated individually prior to multifield construction. 
-#' 
+#' multimember fields should be interpolated individually prior to multifield construction.  
 #' @export
-#' 
 #' @importFrom abind abind
-#' 
-#' @author J. bedia \email{joaquin.bedia@@gmail.com}
-#' 
+#' @author J. bedia 
 #' @seealso \code{\link{loadGridData}} and \code{\link[ecomsUDG.Raccess]{loadECOMS}} for loading fields (the latter also for loading
 #' multimember fields). \code{\link{interpData}} and \code{\link{getGrid}}
 #' for spatial consistency of input fields.
 #' 
-#' @examples
+#' @examples 
 #' 
 #' # Creation of a multifield from three different fields:
 #' data(iberia_ncep_ta850)
@@ -72,12 +68,12 @@
 #' mm.mf <- makeMultiField(tasmax_forecast, tasmin_forecast, tp_forecast)
 #' # 'plotMeanField' can just handle the multi-member mean for each variable in this case:
 #' plotMeanField(mm.mf)
-#' 
+
 
 makeMultiField <- function(..., spatial.tolerance = 1e-3) {
       field.list <- list(...)
       if (length(field.list) < 2) {
-            stop("The input must be a list of at least two multimember fields")
+            stop("The input must be a list of at least two fields")
       }
       tol <- spatial.tolerance
       for (i in 2:length(field.list)) {
@@ -109,9 +105,9 @@ makeMultiField <- function(..., spatial.tolerance = 1e-3) {
       names(attr.list) <- names(attr.mf[[1]])[-1]
       attributes(field.list[[1]]$Variable) <- attr.list 
       names(field.list[[1]]$Variable) <- c("varName", "level")
-      field.list[[1]]$Dates <- lapply(1:length(field.list), function(x) {field.list[[x]]$Dates})
+      field.list[[1]]$Dates <- lapply(1:length(field.list), function(x) field.list[[x]]$Dates)
       dimNames <- attr(field.list[[1]]$Data, "dimensions")
-      field.list[[1]]$Data <- unname(do.call("abind", c(lapply(1:length(field.list), function(x) {field.list[[x]]$Data}), along = -1))) 
+      field.list[[1]]$Data <- unname(do.call("abind", c(lapply(1:length(field.list), function(x) field.list[[x]]$Data), along = -1))) 
       attr(field.list[[1]]$Data, "dimensions") <- c("var", dimNames)
       return(field.list[[1]])
 }

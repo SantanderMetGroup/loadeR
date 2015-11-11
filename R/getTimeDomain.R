@@ -1,6 +1,6 @@
-#' Selection of time slices of gridded datasets
+#' @title Selection of time slices of gridded datasets
 #' 
-#' Performs the selection of time slices based on season and year specification
+#' @description Performs the selection of time slices based on season and year specification
 #'  (including year-crossing seasons). Sub-routine of \code{loadGridDataset}
 #'  
 #' @param grid A java \sQuote{GeoGrid}
@@ -10,8 +10,8 @@
 #' @param years Vector of selected years. Passed by \code{loadGridDataset}.
 #' @param time Verification time defined as a character string (e.g. \dQuote{06} for data
 #' verifying at 06:00:00). Only applies for sub-daily datasets.
-#' @param aggr.d
-#' @param aggr.m
+#' @param aggr.d Aggregation function for subdaily to daily
+#' @param aggr.m Aggregation function from daily to monthly
 #' @return A list with the selected verification dates and a list
 #'  with the index values defined as java objects of the class \sQuote{ucar.ma2.Range}.
 #'  Output passed to \code{loadGridDataset}.
@@ -19,7 +19,7 @@
 #' discontinuous data in the time dimension from NetCDF files in a more efficient way
 #' (i.e. seasons for different years). The corresponding calendar dates (as POSIXct), are returned
 #' in the \code{dateSliceList} element.
-#' @author J. Bedia \email{joaquin.bedia@@gmail.com}
+#' @author J. Bedia 
 #' @keywords internal
 #' @export
 #' @import rJava
@@ -35,7 +35,7 @@ getTimeDomain <- function(grid, dic, season, years, time, aggr.d, aggr.m) {
       }
       # Si es MM hay que asegurarse de que se calcula sobre dato diario
       if ((aggr.m != "none") & ((timeResInSeconds / 3600) < 24) & (time == "none")) {
-            stop("Data is sub-daily:\nA daily aggregation function must be indicated first to perform monthly aggregation")
+            stop("Data is sub-daily:\nA daily aggregation function must be indicated prior to monthly aggregation")
       }
       if ((timeResInSeconds / 3600) == 24) {
             time <- "DD"
@@ -43,6 +43,10 @@ getTimeDomain <- function(grid, dic, season, years, time, aggr.d, aggr.m) {
                   aggr.d <- "none"
                   message("NOTE: The original data is daily: argument 'aggr.d' ignored")
             }
+      }
+      if (((timeResInSeconds / 3600) > 600) & (aggr.m != "none")) {
+            aggr.m <- "none"
+            message("NOTE: The original data is monthly: argument 'aggr.m' ignored")
       }
       if (aggr.d != "none") message("NOTE: Daily aggregation will be computed from ", timeResInSeconds/3600, "-hourly data")
       if (aggr.m != "none") message("NOTE: Daily data will be monthly aggregated")

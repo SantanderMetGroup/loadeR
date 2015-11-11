@@ -37,9 +37,7 @@
 #' @author J. Bedia \email{joaquin.bedia@@gmail.com} and A. Cofin\~no
 #' 
 #' @keywords internal
-#' 
 #' @export
-#' 
 #' @import rJava
 
 getLatLonDomain <- function(grid, lonLim, latLim) {

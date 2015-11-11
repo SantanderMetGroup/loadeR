@@ -6,11 +6,10 @@
 #' @import rJava
 #'   
 #' @param mdArray A n-dimensional array of data as returned by \code{makeSubset}
-#' @param dimNamesRef Character vector with the (ordered) names of the dimensions of the array
 #' @param grid A java-class \sQuote{GeoGrid}
 #' @return A n-dimensional array with the ordering of the lat dimension reversed
 #' @references \url{http://adv-r.had.co.nz/Computing-on-the-language.html}
-#' @author J. Bedia \email{joaquin.bedia@@gmail.com}
+#' @author J. Bedia 
 #' @note The code is partially based on an example provided at \url{http://stackoverflow.com/a/14502298}
 #'  by Hadley Wickham
 #'  @keywords internal

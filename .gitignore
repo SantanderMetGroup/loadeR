@@ -18,3 +18,5 @@ vignettes/*.pdf
 ignore
 
 .Rbuildignore
+
+.Rprofile

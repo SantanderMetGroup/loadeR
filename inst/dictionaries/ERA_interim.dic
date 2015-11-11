@@ -1,0 +1,16 @@
+identifier,short_name,time_step,lower_time_bound,upper_time_bound,cell_method,offset,scale,deaccum,derived,interface
+tasmax,MX2T,24h,0,24,max,-273.15,1,0,0,
+tasmin,MN2T,24h,0,24,min,-273.15,1,0,0,
+tas,2T,24h,0,24,mean,-273.15,1,0,0,
+tp,TP,24h,0,24,sum,0,1000,0,0,
+sst,SST,24h,0,24,mean,-273.15,1,0,0,
+psl,SLP,24h,0,24,mean,0,1,0,0,
+zg,Z,24h,0,24,mean,0,0.102040816,0,0,
+z,Z,24h,0,24,mean,0,1,0,0,
+hus,Q,24h,0,24,mean,0,1,0,0,
+ta,T,24h,0,24,mean,-273.15,1,0,0,
+ua,U,24h,0,24,mean,0,1,0,0,
+va,V,24h,0,24,mean,0,1,0,0,
+
+
+
