@@ -25,7 +25,7 @@ requested data, either single point loactions (finds closest --euclidean-- point
 data within the given bounding box.
 }
 \author{
-J. Bedia \email{joaquin.bedia@gmail.com}
+J. Bedia
 }
 \keyword{internal}
 

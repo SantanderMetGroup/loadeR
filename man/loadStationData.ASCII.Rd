@@ -32,7 +32,7 @@ Load station data in standard ASCII format, being the standard defined in the fr
 of the action COST VALUE
 }
 \author{
-J. Bedia \email{joaquin.bedia@gmail.com}
+J. Bedia
 }
 \references{
 \url{https://github.com/SantanderMetGroup/downscaleR/wiki/Observation-Data-format}

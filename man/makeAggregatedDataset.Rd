@@ -59,7 +59,7 @@ The current implementation of the function only considers datasets in which each
 one single variable. For other dataset configurations, please refer to the NcML tutorial.
 }
 \author{
-J. Bedia \email{joaquin.bedia@gmail.com}
+J. Bedia
 }
 \references{
 NcML Tutorial \url{http://www.unidata.ucar.edu/software/thredds/current/netcdf-java/ncml/Tutorial.html}. Accessed 28 Feb 2015.).

@@ -12,7 +12,6 @@
 #' 
 #' @references \url{http://meteo.unican.es/trac/wiki/udg/ecoms/RPackage/homogeneization}
 #' 
-#' @author J. Bedia \email{joaquin.bedia@@gmail.com}
 #' 
 #' @keywords internal
 

@@ -19,7 +19,7 @@ Parses the variable name as passed by the 'var' argument and extracts the level 
 The level output of this function is passed to \code{\link{getVerticalLevelPars}}
 }
 \author{
-J Bedia \email{joaquin.bedia@gmail.com}
+J Bedia
 }
 \keyword{internal}
 

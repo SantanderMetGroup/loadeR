@@ -11,7 +11,7 @@
 #' 
 #' @details The function opens the grid and checks all possible level values.
 #' 
-#' @author J. Bedia \email{joaquin.bedia@@gmail.com}
+#' @author J. Bedia 
 #' @keywords internal
 #' @import rJava
 

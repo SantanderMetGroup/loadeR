@@ -21,9 +21,6 @@ Searches variable string provided in the dictionary to map it in the vocabulary,
 all the necessary information for variable homogenization. It also includes a new column specifying the
 aggregation function to be applied (if any).
 }
-\author{
-J. Bedia \email{joaquin.bedia@gmail.com}
-}
 \references{
 \url{http://meteo.unican.es/trac/wiki/udg/ecoms/RPackage/homogeneization}
 }

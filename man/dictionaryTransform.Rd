@@ -21,7 +21,7 @@ Performs variable transformation according to dictionary specifications.
 Sub-routine of \code{loadGridDataset}.
 }
 \author{
-J. Bedia \email{joaquin.bedia@gmail.com}
+J. Bedia
 }
 \keyword{internal}
 

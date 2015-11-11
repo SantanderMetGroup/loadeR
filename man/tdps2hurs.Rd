@@ -18,7 +18,7 @@ vector of relative humidity (\%)
 Conversion of dew point to relative humidity
 }
 \author{
-J Bedia \email{joaquin.bedia@gmail.com}, borrowing MatLab code from S. Herrera
+J Bedia, S Herrera
 }
 \seealso{
 Other conversion: \code{\link{hurs2huss}},

@@ -20,7 +20,7 @@ surface pressure (Pa)
 Conversion of sea-level pressure to surface pressure
 }
 \author{
-S. Herrera \email{sixto@predictia.es}
+S. Herrera
 }
 \seealso{
 Other conversion: \code{\link{hurs2huss}},

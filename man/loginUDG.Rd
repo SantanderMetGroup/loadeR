@@ -26,6 +26,6 @@ Prior to data access, users must log in. Registration can be obtained via the TH
  Further details on registration for data access can be viewed in this \href{http://meteo.unican.es/ecoms-udg/DataServer/Registration}{example link}.
 }
 \author{
-J Bedia \email{joaquin.bedia@gmail.com}, M. Vega.
+J Bedia, M. Vega.
 }
 

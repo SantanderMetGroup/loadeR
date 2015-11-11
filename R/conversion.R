@@ -6,7 +6,7 @@
 #' @param hurs surface relative humidity (\%)
 #' @return Specific humidity (kg.kg-1)
 #' @references Bohren & Albrecht (2000) Atmospheric thermodynamics. Oxford University Press. 402 pp
-#' @author S. Herrera \email{sixto@@predictia.es}
+#' @author S. Herrera 
 #' @keywords internal
 #' @export
 #' @family conversion
@@ -43,7 +43,7 @@ hurs2huss <- function(tas, ps, hurs) {
 #' @param zs surface geopotential (m^2/s^2)
 #' @param mslp sea-level pressure (Pa)
 #' @return surface pressure (Pa)
-#' @author S. Herrera \email{sixto@@predictia.es}
+#' @author S. Herrera 
 #' @keywords internal
 #' @family conversion
 #' @export
@@ -85,7 +85,7 @@ mslp2ps <- function(tas, zs, mslp) {
 #' @param tas vector of surface temperature (K)
 #' @param tdps vector of surface dew point temperature (K)
 #' @return vector of relative humidity (\%)
-#' @author J Bedia \email{joaquin.bedia@@gmail.com}, borrowing MatLab code from S. Herrera
+#' @author J Bedia, S Herrera
 #' @keywords internal
 #' @family conversion
 #' @export

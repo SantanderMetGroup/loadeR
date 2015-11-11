@@ -44,7 +44,7 @@ print(di.stats$Summary.stats)
 
 }
 \author{
-J Bedia \email{joaquin.bedia@gmail.com}
+J Bedia
 }
 \seealso{
 \code{\link{stationInfo}} for a quick overview of available stations in station datasets.

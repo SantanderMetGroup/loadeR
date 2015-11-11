@@ -98,7 +98,7 @@ loadStationData <- function(dataset, file.format = "ascii", var,
 #' @param years Numeric vector of years
 #' @return A list with several components. See \code{\link{loadStationData}} for details.
 #' @references \url{https://github.com/SantanderMetGroup/downscaleR/wiki/Observation-Data-format} 
-#' @author J. Bedia \email{joaquin.bedia@@gmail.com}
+#' @author J. Bedia 
 #' @keywords internal
 
 loadStationData.ASCII <- function(dataset, var, stationID, lonLim, latLim, season, years, tz) {

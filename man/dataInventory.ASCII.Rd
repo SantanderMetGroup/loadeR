@@ -18,7 +18,7 @@ A data inventory
 Make data inventory from a station dataset in standard ASCII format
 }
 \author{
-J Bedia \email{joaquin.bedia@gmail.com}
+J Bedia
 }
 \keyword{internal}
 

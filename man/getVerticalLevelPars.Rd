@@ -23,7 +23,7 @@ of \code{loadGridDataset}, whose output is passed to \code{makeSubset}.
 The function opens the grid and checks all possible level values.
 }
 \author{
-J. Bedia \email{joaquin.bedia@gmail.com}
+J. Bedia
 }
 \keyword{internal}
 

@@ -30,7 +30,7 @@
 #' 
 #' @seealso \code{\link{stationInfo}} for a quick overview of available stations in station datasets.
 #' @export
-#' @author J Bedia \email{joaquin.bedia@@gmail.com}
+#' @author J Bedia 
 
 dataInventory <- function(dataset, return.stats = FALSE) {
       rs <- return.stats
@@ -51,7 +51,7 @@ dataInventory <- function(dataset, return.stats = FALSE) {
 #' @param dataset path to the directory containng the dataset
 #' @param rs Logical. return stats?
 #' @return A data inventory 
-#' @author J Bedia \email{joaquin.bedia@@gmail.com}
+#' @author J Bedia 
 #' @keywords internal
 
 dataInventory.ASCII <- function(dataset, rs) {
@@ -115,7 +115,7 @@ dataInventory.ASCII <- function(dataset, rs) {
 #' For each variable, information on the variable long name, data type, units and
 #' characteristics of its dimensions is provided.
 #' 
-#' @author J. Bedia \email{joaquin.bedia@@gmail.com}
+#' @author J. Bedia 
 #' 
 #' @keywords internal
 #' 
@@ -163,7 +163,7 @@ dataInventory.NetCDF <- function(dataset) {
 #' @note For an adequate map display the station coordinates must be in decimal degrees.
 #' @seealso \code{\link{dataInventory}} to obtain a more exhaustive report the dataset.
 #' @export
-#' @author J. Bedia \email{joaquin.bedia@@gmail.com}
+#' @author J. Bedia 
 #' @examples \donttest{
 #' dir.create("mydirectory")
 #' download.file("http://meteo.unican.es/work/downscaler/data/VALUE_ECA_86_v2.tar.gz", 

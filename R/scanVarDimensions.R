@@ -19,7 +19,7 @@
 #'  coordinate values are truncated to 1D for conciseness in the inventory.
 #'  
 #' @references \url{http://www.unidata.ucar.edu/software/thredds/v4.3/netcdf-java/v4.3/javadocAll/ucar/nc2/dt/grid/GeoGrid.html}
-#' @author J. Bedia \email{joaquin.bedia@@gmail.com}
+#' @author J. Bedia 
 #' @export
 #' @keywords internal
 

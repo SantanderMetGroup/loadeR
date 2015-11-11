@@ -28,7 +28,7 @@ When leadMonth equals 0, there is not a previous day for starting deaccumulation
  to preserve time series length (this is previously done by getForecastDomain.S4).
 }
 \author{
-J. Bedia \email{joaquin.bedia@gmail.com}
+J. Bedia
 }
 \keyword{internal}
 

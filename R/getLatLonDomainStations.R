@@ -10,7 +10,7 @@
 #' @param lats Numeric. All available Y coordinates in dataset 
 #' @return A list with index positions of the requested data and a 2D matrix
 #' of XY coordinates
-#' @author J. Bedia \email{joaquin.bedia@@gmail.com}
+#' @author J. Bedia 
 #' @keywords internal
 
 getLatLonDomainStations <- function(lonLim, latLim, lons, lats) {

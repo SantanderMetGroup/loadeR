@@ -36,7 +36,7 @@ print(stationInfo(value))
 
 }
 \author{
-J. Bedia \email{joaquin.bedia@gmail.com}
+J. Bedia
 }
 \seealso{
 \code{\link{dataInventory}} to obtain a more exhaustive report the dataset.

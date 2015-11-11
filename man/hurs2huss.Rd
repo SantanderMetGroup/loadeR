@@ -20,7 +20,7 @@ Specific humidity (kg.kg-1)
 Derive specific humidity from relative humidity
 }
 \author{
-S. Herrera \email{sixto@predictia.es}
+S. Herrera
 }
 \references{
 Bohren & Albrecht (2000) Atmospheric thermodynamics. Oxford University Press. 402 pp

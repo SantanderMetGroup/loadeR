@@ -20,7 +20,7 @@ A list with a vector of time index positions and the corresponding POSIXlt dates
 Get time index positions for loading ascii station data
 }
 \author{
-J. Bedia \email{joaquin.bedia@gmail.com}
+J. Bedia
 }
 \keyword{internal}
 

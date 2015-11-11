@@ -7,7 +7,7 @@
 #' @param timePars A list of time selection parameters, as returned by \code{getTimeDomain}
 #' @param mdArray A n-dimensional array, as returned by \code{makeSubset}
 #' @return a list with start/end dates and the transformed n-dimensional array of data.
-#' @author J. Bedia \email{joaquin.bedia@@gmail.com}
+#' @author J. Bedia 
 #' @keywords internal
 
 dictionaryTransform <- function(dic, grid, timePars, mdArray) {

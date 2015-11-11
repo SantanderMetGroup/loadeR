@@ -11,7 +11,7 @@
 #' of the dimensions done by \code{apply}, and also in the length of the time dimension, as usually the first time value
 #' of each runtime is lost in the deaccumulation. The function handles the re-ordering of the "dimensions" label in this case.
 #' @note The current implementation does not support deaccumulation of CFSv2 variables (not needed so far...)
-#' @author J. Bedia \email{joaquin.bedia@@gmail.com}
+#' @author J. Bedia 
 #' @keywords internal
 #' @export
 

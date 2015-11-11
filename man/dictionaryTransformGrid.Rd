@@ -29,7 +29,7 @@ of each runtime is lost in the deaccumulation. The function handles the re-order
 The current implementation does not support deaccumulation of CFSv2 variables (not needed so far...)
 }
 \author{
-J. Bedia \email{joaquin.bedia@gmail.com}
+J. Bedia
 }
 \keyword{internal}
 

@@ -29,7 +29,7 @@ The function also takes into account the possibility of selection of \dQuote{str
 a selection across a whole or part of a meridian/parallel.
 }
 \author{
-J Bedia \email{joaquin.bedia@gmail.com}
+J Bedia
 }
 \references{
 \url{http://www.unidata.ucar.edu/software/thredds/v4.3/netcdf-java/v4.3/javadocAll/ucar/nc2/dt/grid/GridCoordSys.html#findXYindexFromLatLon\%28double,\%20double,\%20int[]\%29}

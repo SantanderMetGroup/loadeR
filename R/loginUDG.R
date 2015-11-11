@@ -9,7 +9,7 @@
 #' Prior to data access, users must log in. Registration can be obtained via the THREDDS Administration Panel (\href{http://www.meteo.unican.es/tap}{TAP}),
 #'  indicating the group (Project) you belong to (e.g. CORDEX, SPECS ...), which will grant access to certain databases.
 #'  Further details on registration for data access can be viewed in this \href{http://meteo.unican.es/ecoms-udg/DataServer/Registration}{example link}.
-#' @author J Bedia \email{joaquin.bedia@@gmail.com}, M. Vega.
+#' @author J Bedia, M. Vega.
 #' @export
 
 
