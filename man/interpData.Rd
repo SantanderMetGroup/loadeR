@@ -71,7 +71,7 @@ attributes(t1000.djf.05$xyCoords)
 }
 }
 \author{
-J. Bedia \email{joaquin.bedia@gmail.com} and S. Herrera
+J. Bedia and S. Herrera
 }
 \seealso{
 Other loading.grid: \code{\link{getGrid}},

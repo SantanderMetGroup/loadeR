@@ -31,7 +31,7 @@
 #' @note To avoid unnecessary NA values, the function will not extrapolate using a new grid outside the
 #' current extent of the dataset, returning an error message.
 #' @family loading.grid
-#' @author J. Bedia \email{joaquin.bedia@@gmail.com} and S. Herrera
+#' @author J. Bedia and S. Herrera
 #' @export
 #' @examples \dontrun{
 #' # Download NCEP (model data) datasets
@@ -60,29 +60,29 @@
 
 
 interpData <- function(obj, new.Coordinates = list(x = NULL, y = NULL), method = c("nearest", "bilinear")) {
-  method <- match.arg(method, choices = c("nearest", "bilinear"))
-  if (any(attr(obj$Data, "dimensions") == "station")){
-    x <- as.numeric(obj$xyCoords[,1])
-    y <- as.numeric(obj$xyCoords[,2])
-  }else{
-    x <- obj$xyCoords$x
-    y <- obj$xyCoords$y
-  }
-  if (is.null(new.Coordinates)) {
-    new.Coordinates <- getGrid(obj)
-  }else{
-    if (is.null(new.Coordinates$x)) {
-      new.Coordinates$x <- x
-    }
-    if (is.null(new.Coordinates$y)) {
-      new.Coordinates$y <- y
-    }
-  }
-  if (any(attr(new.Coordinates,"type") == "location")) {
-    obj <- interpLocData(obj, new.points = new.Coordinates, method = method)
-  }else{
-    obj <- interpGridData(obj, new.grid = new.Coordinates, method = method)
-  }
-  return(obj)
+      method <- match.arg(method, choices = c("nearest", "bilinear"))
+      if (any(attr(obj$Data, "dimensions") == "station")){
+            x <- as.numeric(obj$xyCoords[,1])
+            y <- as.numeric(obj$xyCoords[,2])
+      } else {
+            x <- obj$xyCoords$x
+            y <- obj$xyCoords$y
+      }
+      if (is.null(new.Coordinates)) {
+            new.Coordinates <- getGrid(obj)
+      } else {
+            if (is.null(new.Coordinates$x)) {
+                  new.Coordinates$x <- x
+            }
+            if (is.null(new.Coordinates$y)) {
+                  new.Coordinates$y <- y
+            }
+      }
+      if (any(attr(new.Coordinates,"type") == "location")) {
+            obj <- interpLocData(obj, new.points = new.Coordinates, method = method)
+      } else {
+            obj <- interpGridData(obj, new.grid = new.Coordinates, method = method)
+      }
+      return(obj)
 }
 # End   

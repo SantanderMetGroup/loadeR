@@ -51,4 +51,5 @@ Other loading.grid: \code{\link{getGrid}},
   \code{\link{interpData}}, \code{\link{interpGridData}},
   \code{\link{loadGridData}}
 }
+\keyword{internal}
 
