@@ -12,7 +12,7 @@
 #' @export
 #' @details The function is a wrapper of the \code{\link[fields]{image.plot}} function
 #' in package \pkg{fields}
-#' @author J Bedia \email{joaquin.bedia@@gmail.com}
+#' @author J Bedia 
 #' @note The function plots a simple temporal mean of the loaded object in the form of
 #' a map. It does not handle other temporal aggregations. 
 #' @family visualization
@@ -41,11 +41,12 @@ plotMeanField <- function (gridData, multi.member = FALSE) {
       if (length(mar) != 2) {
             stop("Not a rectangular spatial domain")
       }
+      vname <- attr(gridData$Variable, "longname")
       titles <- if (!is.null(gridData$Variable$level)) {
-            aux <- paste(gridData$Variable$varName, gridData$Variable$level, sep = "@")
+            aux <- paste(vname, gridData$Variable$level, sep = "@")
             gsub("@NA", "", aux)
       } else {
-            gridData$Variable$varName
+            vname
       }
       if (is.na(match("var", dimNames))) {
             if (("member" %in% dimNames) & isTRUE(multi.member)) {
@@ -81,7 +82,7 @@ plotMeanField <- function (gridData, multi.member = FALSE) {
 #' @importFrom fields world
 #' 
 #' @keywords internal
-#' @author J Bedia \email{joaquin.bedia@@gmail.com}
+#' @author J Bedia 
 
 
 multiPlot <- function(gridData, split.dim.name, titles, multi.member) {
@@ -99,7 +100,7 @@ multiPlot <- function(gridData, split.dim.name, titles, multi.member) {
             image.plot(gridData$xyCoords$x, gridData$xyCoords$y, aux, xlab = "", ylab = "", asp = 1, horizontal = TRUE, cex.axis = .75) #, axes = axes)
             title("")
             if (i == 1 & isTRUE(multi.member)) {
-                  title(gridData$Variable$varName)
+                  title(attr(gridData$Variable, "longname"))
             }
             mtext(titles[i])
             world(add = TRUE)
