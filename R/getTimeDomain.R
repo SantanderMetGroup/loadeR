@@ -48,7 +48,7 @@ getTimeDomain <- function(grid, dic, season, years, time, aggr.d, aggr.m) {
             aggr.m <- "none"
             message("NOTE: The original data is monthly: argument 'aggr.m' ignored")
       }
-      if (aggr.d != "none") message("NOTE: Daily aggregation will be computed from ", timeResInSeconds/3600, "-hourly data")
+      if (aggr.d != "none") message("NOTE: Daily aggregation will be computed from ", round(timeResInSeconds/3600), "-hourly data")
       if (aggr.m != "none") message("NOTE: Daily data will be monthly aggregated")
       startDay <- timeDates[1]
       endDay <- timeDates[length(timeDates)]
