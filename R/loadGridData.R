@@ -48,7 +48,6 @@
 #' @author J. Bedia, S. Herrera, M. Iturbide, J.M. Gutierrez 
 #' @family loading
 #' @family loading.grid
-#' @family homogenization
 #' 
 #' @examples \dontrun{
 #' #Download dataset
@@ -74,8 +73,7 @@
 #' # Same but using the original variable (not homogenized via dictionary):
 #' di <- dataInventory(ncep)
 #' names(di)
-#' data(vocabulary)
-#' vocabulary
+#' showVocabulary()
 #' # Variable is named 'T', instead of the standard name 'ta' in the vocabulary
 #' # Vertical level is indicated using the '@@' symbol:
 #' non.standard.field <- loadGridData(ncep, var = "T@@850", dictionary = FALSE, lonLim = c(-10,5),
@@ -265,10 +263,11 @@ loadGridDataset <- function(var, grid, dic, level, season, years, time, latLon, 
             cube$mdArray <- revArrayLatDim(cube$mdArray, grid)
       }
       Variable <- list("varName" = var, "level" = levelPars$level)
-      attr(Variable, "is_standard") <- isStandard
+      attr(Variable, "use_dictionary") <- isStandard
       attr(Variable, "description") <- grid$getDescription()
       if (isStandard) {
-            data(vocabulary, envir = environment())
+            # data(vocabulary, envir = environment())
+            vocabulary <- showVocabulary()
             attr(Variable, "units") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier,), 3])
             attr(Variable, "longname") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier,), 2])
       } else {
