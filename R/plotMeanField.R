@@ -56,7 +56,7 @@ plotMeanField <- function (gridData, multi.member = FALSE) {
                   image.plot(gridData$xyCoords$x, gridData$xyCoords$y, aux, xlab = "", ylab = "", asp = 1, horizontal = TRUE, cex.axis = .75)
                   title("")
                   mtext(titles)
-                  world(add = TRUE)
+                  if (attr(gridData$xyCoords, "projection") != "RotatedPole") world(add = TRUE)
             }
       } else {
             multiPlot(gridData, "var", titles, multi.member)

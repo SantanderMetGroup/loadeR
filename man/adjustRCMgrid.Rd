@@ -4,7 +4,7 @@
 \alias{adjustRCMgrid}
 \title{RCM grid adjustment}
 \usage{
-adjustRCMgrid(gds, latLon)
+adjustRCMgrid(gds, latLon, lonLim, latLim)
 }
 \arguments{
 \item{gds}{a Java GridDataSet object}

@@ -135,9 +135,7 @@ loadGridData <- function(dataset, var, dictionary = TRUE, lonLim = NULL,
       }
       if (grepl("^http://", dataset)) {
             message("[", Sys.time(), "] ", "Opening connection with remote server...")
-            tryCatch(expr = {
-                  gds <- J("ucar.nc2.dt.grid.GridDataset")$open(dataset)
-                        }, error = function(e) {
+            gds <- tryCatch(expr = J("ucar.nc2.dt.grid.GridDataset")$open(dataset), error = function(e) {
                   if (grepl("return status=503", e)) {
                         stop("Service temporarily unavailable\nThe server is temporarily unable to service your request due to maintenance downtime or capacity problems, please try again later.")
                   } else if (grepl("return status=404", e)) {
@@ -157,7 +155,7 @@ loadGridData <- function(dataset, var, dictionary = TRUE, lonLim = NULL,
       }
       latLon <- getLatLonDomain(grid, lonLim, latLim)
       proj <- grid$getCoordinateSystem()$getProjection()
-      if (!proj$isLatLon()) latLon <- adjustRCMgrid(gds, latLon)
+      if (!proj$isLatLon()) latLon <- adjustRCMgrid(gds, latLon, lonLim, latLim)
       out <- loadGridDataset(var, grid, dic, level, season, years, time, latLon, aggr.d, aggr.m)
       # Definition of projection
       proj <- proj$toString()
@@ -189,7 +187,7 @@ loadGridData <- function(dataset, var, dictionary = TRUE, lonLim = NULL,
 #' @author S. Herrera, M. Iturbide
 
 
-adjustRCMgrid <- function(gds, latLon) {
+adjustRCMgrid <- function(gds, latLon, lonLim, latLim) {
       nc <- gds$getNetcdfDataset()
       lonAxis <- nc$findVariable('lon')
       auxLon <- t(matrix(data = lonAxis$getCoordValues(), nrow = lonAxis$getShape()[2], ncol = lonAxis$getShape()[1]))
