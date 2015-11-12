@@ -1,7 +1,7 @@
 Package: loadeR
 Depends:
     R(>= 3.0.0),
-    downscaleR.java (>= 1.0.0),
+    loadeR.java,
     rJava,
     maps
 Imports:
