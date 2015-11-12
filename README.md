@@ -10,7 +10,7 @@ What is loadeR?
 
 `loadeR` is powered by NetCDF-Java. Thus, a large variety of files can be read, including the most common NetCDF, Grib, HDF... (see a complete [list of supported formats](http://www.unidata.ucar.edu/software/thredds/current/netcdf-java/reference/formats/FileTypes.html)
 
-Since November 2015, this package supersedes the data loading capabilities of package [`downscaleR`](https://github.com/SantanderMetGroup/downscaleR/wiki).
+Since November 2015, this package supersedes the data loading capabilities of package [`downscaleR`](https://github.com/SantanderMetGroup/downscaleR).
 
 # How can I install it?
 
@@ -20,4 +20,7 @@ We recommend using the utilities in package `devtools` to this aim, as follows:
 devtools::install_github(c("SantanderMetGroup/loadeR.java", "SantanderMetGroup/loadeR"))
 ```
 
+# And now?
+
+We are working to provide a fully documented wiki with many examples. In the meantime, the examples are essentially the same that those presented in [downscaleR's wiki page](https://github.com/SantanderMetGroup/downscaleR/wiki)
 
