@@ -21,7 +21,7 @@
 #' @details  In case of default definition of either x, y or both grid coordinates, the default grid
 #' is calculated taking the corners of the current grid and assuming x and y resolutions equal to 
 #' the default \code{by} argument value in function \code{\link[base]{seq}}: \emph{by = ((to - from)/(length.out - 1))}.
-#' The bilinear interpolator is a wrapper of the \code{\link[fields]{interp.surface.grid}} function
+#' The bilinear interpolator is a wrapper of function \code{fields::interp.surface.grid} 
 #' in package \pkg{fields}.
 #' The output has special attributes in the \code{xyCoords} element that indicate that the object
 #'  has been interpolated. These attributes are \code{interpolation}, which indicates the method used and
