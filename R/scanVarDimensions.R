@@ -4,8 +4,8 @@
 #' This is a sub-routine of \code{dataInventory.NetCDF}, \code{makeSubset}.
 #' 
 #' @import rJava
-#' @importFrom downscaleR.java javaCalendarDate2rPOSIXlt
-#' @importFrom downscaleR.java javaString2rChar
+#' @importFrom loadeR.java javaCalendarDate2rPOSIXlt
+#' @importFrom loadeR.java javaString2rChar
 #' 
 #' @param grid A java object of the class \sQuote{ucar.nc2.dt.grid.GeoGrid}
 #' @return a list of length \emph{N}, being N the number of dimensions defining the grid shape.

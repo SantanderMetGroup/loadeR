@@ -13,9 +13,9 @@ Suggests:
     downscaleR,
     ecomsUDG.Raccess
 Type: Package
-Title: R package for remote and local climate data loading into R
+Title: R Package for Remote and Local Climate Data Loading into R
 Version: 0.0-0
-Date: 12 Nov 2015
+Date: 2015-11-12
 Authors@R: as.person(c(
     "Santander Meteorology Group <http://meteo.unican.es> [aut]",
     "Joaquin Bedia <bediaj@unican.es> [ctb,cre]",

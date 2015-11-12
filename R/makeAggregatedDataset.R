@@ -64,12 +64,12 @@ makeAggregatedDataset <- function(source.dir, ncml.file, file.ext = "nc", aggr.d
             varNames[i] <- unlist(strsplit(gsub("\\[|]|\\s", "", gds$getGrids()$toString()), ","))[1] # case when you have something like "varName, lon, lat" (e.g. some ENSEMBLES files)
       }
       vars <- unique(varNames)
-      #¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
+      #
       # Next code chunk takes one unique file for each variable and checks
       # if the aggregation dimension exists for that variable.
       # This makes sense when aggregation e.g. by "level", and we want to include
       # surface variables too in the dataset
-      #¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
+      #
       hasAggrDim <- rep(TRUE, length(vars))
       ind <- match(vars, varNames)
       for (i in 1:length(vars)) {
@@ -82,10 +82,10 @@ makeAggregatedDataset <- function(source.dir, ncml.file, file.ext = "nc", aggr.d
             hasAggrDim[i] <- any(grepl(aggr.dim, dims))
             gds$close()
       }
-      #¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
+      #
       # Those variables without the aggregating dimension are directly aggregated
       # with "union" at the upper level
-      #¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
+      #
       ind <- which(!hasAggrDim)
       if (length(ind) > 0) {
             for (i in 1:length(ind)) {
@@ -95,11 +95,11 @@ makeAggregatedDataset <- function(source.dir, ncml.file, file.ext = "nc", aggr.d
                   }
             }
       }
-      #¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
+      #
       # Case when there is a single file per variable. No need to concatenate
       # different files of the same variable. The variables are directly aggregated
       # with "union" at the upper level
-      #¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
+      #
       if (length(lf) == length(vars)) {
             for (i in 1:length(lf)) {
                   gds <- J("ucar.nc2.dt.grid.GridDataset")$open(lf[i])
@@ -110,10 +110,10 @@ makeAggregatedDataset <- function(source.dir, ncml.file, file.ext = "nc", aggr.d
                   cat(c("\n", "\t", "<netcdf location=", "\"", lf[i], "\" ncoords=\"", ncoords), "\"/>", sep = "", file = z)
             }
       } else {
-      #¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
+      #
       # Many files per varible are concatenated by "joinExisting" at the next
       # aggregation level
-      #¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
+      #
             ind <- which(hasAggrDim)
             if (length(ind) < 1) {
                   stop("Invalid dimension for aggregation")
