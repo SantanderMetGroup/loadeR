@@ -1,7 +1,7 @@
 Package: loadeR
 Depends:
     R(>= 3.0.0),
-    downscaleR.java (>= 1.1.0),
+    downscaleR.java (>= 1.0.0),
     rJava,
     maps
 Imports:
@@ -15,7 +15,7 @@ Suggests:
 Type: Package
 Title: R package for remote and local climate data loading into R
 Version: 0.0-0
-Date: 11 Nov 2015
+Date: 12 Nov 2015
 Authors@R: as.person(c(
     "Santander Meteorology Group <http://meteo.unican.es> [aut]",
     "Joaquin Bedia <bediaj@unican.es> [ctb,cre]",

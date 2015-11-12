@@ -21,8 +21,6 @@ Reverses the order of the latitudinal coordinates when the dataset is read in
 \note{
 The code is partially based on an example provided at \url{http://stackoverflow.com/a/14502298}
  by Hadley Wickham
- @keywords internal
- @export
 }
 \author{
 J. Bedia
@@ -30,4 +28,5 @@ J. Bedia
 \references{
 \url{http://adv-r.had.co.nz/Computing-on-the-language.html}
 }
+\keyword{internal}
 
