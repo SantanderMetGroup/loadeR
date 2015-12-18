@@ -3,7 +3,6 @@
 #' @description Plot the spatial mean of a gridded variable, or variables in the case of multi-fields.
 #' 
 #' @importFrom fields image.plot
-#' @import maps
 #' @param gridData A grid dataset
 #' @param multi.member Should members be plotted sepparately (TRUE), or just a plot
 #'  of the multi-member mean (FALSE, default)?. Ignored if the dataset has no members.
@@ -11,7 +10,11 @@
 #' @return a plot of the mean/multi-member/multi-variable field with a world map superposed
 #' @export
 #' @details The function is a wrapper of the \code{\link[fields]{image.plot}} function
-#' in package \pkg{fields}
+#' in package \pkg{fields}.
+#' 
+#' The world lines superposed onto the maps have been extracted from the land polygons at 1:50m scale
+#' freely available at \url{http://www.naturalearthdata.com/downloads/50m-physical-vectors/}, version 2.0.0.
+#' 
 #' @author J Bedia 
 #' @note The function plots a simple temporal mean of the loaded object in the form of
 #' a map. It does not handle other temporal aggregations. 
@@ -57,7 +60,12 @@ plotMeanField <- function (gridData, multi.member = FALSE) {
                   image.plot(gridData$xyCoords$x, gridData$xyCoords$y, aux, xlab = "", ylab = "", asp = 1, horizontal = TRUE, cex.axis = .75)
                   title("")
                   mtext(titles)
-                  if (attr(gridData$xyCoords, "projection") != "RotatedPole") world(add = TRUE)
+                  if (attr(gridData$xyCoords, "projection") != "RotatedPole") {
+                        load(file.path(find.package("loadeR"), "wrl.Rda"))
+                        for (i in 1:length(node.list)) {
+                              lines(node.list[[i]][,1], node.list[[i]][,2])            
+                        }
+                  }
             }
       } else {
             multiPlot(gridData, "var", titles, multi.member)
@@ -79,7 +87,6 @@ plotMeanField <- function (gridData, multi.member = FALSE) {
 #' 
 #' @importFrom abind asub
 #' @importFrom fields image.plot
-#' @importFrom fields world
 #' 
 #' @keywords internal
 #' @author J Bedia 
@@ -103,7 +110,10 @@ multiPlot <- function(gridData, split.dim.name, titles, multi.member) {
                   title(attr(gridData$Variable, "longname"))
             }
             mtext(titles[i])
-            world(add = TRUE)
+            load(file.path(find.package("loadeR"), "wrl.Rda"))
+            for (j in 1:length(node.list)) {
+                  lines(node.list[[j]][,1], node.list[[j]][,2])            
+            }
       }
       par(def.par)
 }      

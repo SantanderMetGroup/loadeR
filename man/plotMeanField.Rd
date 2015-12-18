@@ -20,7 +20,10 @@ Plot the spatial mean of a gridded variable, or variables in the case of multi-f
 }
 \details{
 The function is a wrapper of the \code{\link[fields]{image.plot}} function
-in package \pkg{fields}
+in package \pkg{fields}.
+
+The world lines superposed onto the maps have been extracted from the land polygons at 1:50m scale
+freely available at \url{http://www.naturalearthdata.com/downloads/50m-physical-vectors/}, version 2.0.0.
 }
 \note{
 The function plots a simple temporal mean of the loaded object in the form of
