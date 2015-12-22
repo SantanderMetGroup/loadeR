@@ -66,7 +66,8 @@ getForecastTimeDomain <- function (grid, dataset, dic, runTimePars, time, aggr.d
 #                               foreTimesList[[i]] <- ind
 #                         }
 #                   } else {
-                        foreTimesList[[i]] <- ind
+#                        foreTimesList[[i]] <- ind
+                        foreTimesList[[i]] <- seq(from = min(ind), to = max(ind), by = 1)
 #                   }
                   foreDatesList[[i]] <- auxDates[foreTimesList[[i]]]
                   auxDates <- NULL

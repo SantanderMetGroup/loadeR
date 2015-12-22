@@ -159,6 +159,15 @@ loadDecadalForecast <- function(dataset, var, dictionary = FALSE,
       foreTimePars <- getForecastTimeDomain(grid, dataset, dic, runTimePars, time, aggr.d, aggr.m)
       verticalPars <- getVerticalLevelPars(grid, level)
       cube <- makeSubsetDecadal(grid, latLon, runTimePars, memberRangeList, foreTimePars, verticalPars)
+      auxDates <- as.POSIXlt(cube$foreTimePars$forecastDates$start, tz = "GMT")
+      indMonthValid <- which(is.element(auxDates$mon+1,season))
+      if (length(indMonthValid)<dim(cube$mdArray)[grep("^time$", attr(cube$mdArray,"dimensions"))]){
+        dimName <- attr(cube$mdArray, "dimensions")
+        cube$mdArray <- cube$mdArray[,,indMonthValid,]
+        attr(cube$mdArray, "dimensions") <- dimName
+        cube$foreTimePars$forecastDates$start <- cube$foreTimePars$forecastDates$start[indMonthValid]
+        cube$foreTimePars$forecastDates$end <- cube$foreTimePars$forecastDates$end[indMonthValid]
+      }
         foreTimePars <- NULL
         if (!is.null(dic)) {
           isStandard <- TRUE
