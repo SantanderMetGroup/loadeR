@@ -4,11 +4,14 @@
 #' 
 #' @param grid a java \sQuote{GeoGrid}
 #' @param dataset character string of the dataset
-#' @param dictionary dictionary information
+#' @param dic dictionary information
 #' @param runTimePars A list of elements as returned by \code{\link{getRunTimeDomain}}
-#' @param time Verification time.
+#' @param time Verification time defined as a character string (e.g. \dQuote{06} for data
+#' verifying at 06:00:00). Only applies for sub-daily datasets.
+#' @param aggr.d Aggregation function for subdaily to daily
+#' @param aggr.m Aggregation function from daily to monthly
 #' @return A list with the following elements:
-#' \begin{itemize}
+#' 
 #' \item{forecastDates}{A list with POSIXlt dates defining the start and end of the 
 #' representative verification time. If start and end are identical, the variable is instantaneous
 #' and therefore the representative time interval is 0}
@@ -21,8 +24,8 @@
 #' of each element of the runTimeList to avoid losing the first day when performing deaccumulation.}
 #' \item{doDailyMean}{Logical. Are the forecast time values going to be used for data aggregation?. This argument is passed
 #' to \code{\link{makeSubset.S4}} to undertake the pertinent aggregation if TRUE.}
-#' \end{itemize}
-#' @author J. Bedia \email{joaquin.bedia@@gmail.com} 
+#' 
+#' @author S. Herrera
 
 getForecastTimeDomain <- function (grid, dataset, dic, runTimePars, time, aggr.d, aggr.m) {
       gcs <- grid$getCoordinateSystem()

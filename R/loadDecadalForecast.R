@@ -28,6 +28,7 @@
 #' e.g.: \code{"/path/to/the/dictionary_file.dic"}). This is the case for instance when the dataset is stored in a remote URL,
 #' and we have a locally stored dictionary for that particular dataset. If FALSE no variable homogenization takes place,
 #' and the raw variable, as originally stored in the dataset, will be returned. See details for dictionary specification.
+#' @param members Vector of integers indicating the members to be loaded.
 #' @param time A character vector indicating the temporal filtering/aggregation 
 #' of the output data. Default to \code{"none"}, which returns the original time 
 #' series as stored in the dataset. For sub-daily variables, instantantaneous data at 
@@ -48,58 +49,22 @@
 #' @author J. Bedia, S. Herrera, M. Iturbide, J.M. Gutierrez 
 #' @family loading
 #' @family loading.grid
-#' 
+#'
 #' @examples \dontrun{
-#' #Download dataset
-#' dir.create("mydirectory")
-#' download.file("http://meteo.unican.es/work/downscaler/data/Iberia_NCEP.tar.gz", 
-#' destfile = "mydirectory/Iberia_NCEP.tar.gz")
-#' # Extract files from the tar.gz file
-#' untar("mydirectory/NCEP_Iberia.tar.gz", exdir = "mydirectory")
-#' # First, the path to the ncml file is defined:
-#' ncep <- "mydirectory/Iberia_NCEP/Iberia_NCEP.ncml"
-#' # Load air temperature at 850 millibar isobaric surface pressure level from the built-in
-#' # NCEP dataset, for the Iberian Peninsula in summer (JJA):
-#' field <- loadGridData(ncep, var = "ta@@850", dictionary = TRUE, lonLim = c(-10,5),
-#'    latLim = c(35.5, 44.5), season = 6:8, years = 1981:2010)
-#' str(field)   
-#' plotMeanField(field)
-#' # Calculation of monthly mean temperature:
-#' field.mm <- loadGridData(ncep, var = "ta@@850", dictionary = TRUE, lonLim = c(-10,5),
-#'                          latLim = c(35.5, 44.5), season = 6:8,
-#'                          years = 1981:2010, aggr.m = "mean")
-#' str(field.mm)
-#' 
-#' # Same but using the original variable (not homogenized via dictionary):
-#' di <- dataInventory(ncep)
-#' names(di)
-#' showVocabulary()
-#' # Variable is named 'T', instead of the standard name 'ta' in the vocabulary
-#' # Vertical level is indicated using the '@@' symbol:
-#' non.standard.field <- loadGridData(ncep, var = "T@@850", dictionary = FALSE, lonLim = c(-10,5),
-#'                                   latLim = c(35.5, 44.5), season = 6:8, 
-#'                                   years = 1981:2010, aggr.m = "mean")
-#' str(non.standard.field$Variable)
-#' # Note the units are now in Kelvin, as originally stored
-#' plotMeanField(non.standard.field)
-#' 
-#' ## Example of data load from a remote repository via OPeNDAP (NASA dataserver)
-#  Definition of the OPeNDAP URL of the dataset
-#' ds <- "http://dataserver3.nccs.nasa.gov/thredds/dodsC/bypass/NEX-GDDP/bcsd/rcp85/r1i1p1/tasmax/MIROC-ESM.ncml"
-#' # Monthly mean maximum summer 2m temperature at 12:00 UTC over the Iberian Peninsula:
-#' # (CMIP5 MIROC-ESM model, RCP 8.5)
-#' tasmax <- loadGridData(dataset = ds,
-#'                        var = "tasmax",
-#'                        dictionary = FALSE,
-#'                        lonLim = c(-10,5),
-#'                        latLim = c(35,44),
-#'                        season = 6:8,
-#'                        years = 2021,
-#'                        time = "12",
-#'                        aggr.m = "mean")
-#' plotMeanField(tasmax)
+#' latLim <- c(-20,10)
+#' lonLim <-  c(-60,-30)
+#' season <- 3:5
+#' period <- 1981:1991
+#' loginUDG(username = "myuser", password = "mypassword") #type help(loginUDG)
+#' tasDECA <- loadDecadalForecast(
+#'    dataset = "http://www.meteo.unican.es/tds5/dodsC/specs/gfdl_specs_decadal.ncml", 
+#'    latLim = latLim, 
+#'    lonLim = lonLim,
+#'    var = "tas", 
+#'    dictionary = F, 
+#'    years = 1981:1982, 
+#'    season = season)
 #' }
-#' 
 
 
 loadDecadalForecast <- function(dataset, var, dictionary = FALSE, 

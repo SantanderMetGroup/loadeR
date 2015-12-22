@@ -8,7 +8,6 @@
 #' @param members Member selection (see \code{\link{loadECOMS}})
 #' @param season Season selection (see \code{\link{loadECOMS}})
 #' @param years Years selected (see \code{\link{loadECOMS}})
-#' @param leadMonth Lead month (see \code{\link{loadECOMS}})
 #' @return A list of parameters:
 #' \itemize{
 #' \item validMonth An integer in the range [1,12] indicating the month to take the initialization

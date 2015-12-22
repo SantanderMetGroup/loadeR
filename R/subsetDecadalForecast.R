@@ -19,7 +19,7 @@
 #' subsetDecadalForecast(tasDECA, ly = 1)
 #' }
 
-subsetDecadalForecast <- function(data, ly = c(1, 2, 3)){
+subsetDecadalForecast <- function(data, ly = 1){
       
       init <- data$InitializationDates      
       dates <- data$Dates$start
