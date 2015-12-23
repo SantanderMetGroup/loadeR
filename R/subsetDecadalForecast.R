@@ -7,6 +7,7 @@
 #' Default is ly = c(1,2) (the two years before).
 #' @return A field object with an additional dimension corresponding to the selected lead years. 
 #' @author M. Iturbide
+#' @importFrom abind abind
 #' @export
 #' @examples \dontrun{
 #' latLim <- c(35,45)
