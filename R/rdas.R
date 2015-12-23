@@ -183,3 +183,22 @@ NULL
 #' for download in \strong{"http://meteo.unican.es/work/downscaler/data/VALUE_ECA_86_v2.tar.gz"}.
 #' @seealso \code{\link{NCEP_Iberia_tas}}, \code{\link{VALUE_tas}}
 NULL
+
+#' @title Field of decadal foecast data from the SPECS_GFDL_decadal dataset containing monthly temperature for the Ibrian Peninsula.
+#' @description 
+#' latLim <- c(35,45)
+#' lonLim <-  c(-10,2)
+#' season <- 3:5
+#' period <- 1981:1982
+#' var= "tas".
+#' @format Field data
+#' @name tas_decadalForecast
+#' @docType data
+#' @keywords SPECS temperature decadal forecast
+#' @source  Subset of the SPECS_GFDL_decadal dataset. This data is accessible 
+#' for loading in the \strong{The User Data Gateway (UDG)}, which is the one stop shop for 
+#' climate data access maintained by the Santander MetGroup. 
+#' The UDG builds on the THREDDS Access Portal (UDG-TAP) which is the entry point for 
+#' authentication and data access (more info in \strong{https://meteo.unican.es/trac/wiki/udg}). 
+#' 
+NULL

@@ -4,31 +4,42 @@
 \alias{subsetDecadalForecast}
 \title{Subset decadal forecast by initialization years}
 \usage{
-subsetDecadalForecast(data, ly = 1)
+subsetDecadalForecast(data, ly = c(1, 2))
 }
 \arguments{
 \item{data}{field obtained from the output of function loadDecadalForecast.}
 
-\item{ly}{integer indicating the lead year of initialization}
+\item{ly}{Vector of integers indicating the lead years of initialization.
+Default is ly = c(1,2) (the two years before).}
+}
+\value{
+A field object with an additional dimension corresponding to the selected lead years.
 }
 \description{
 Subset decadal forecast by initialization years
 }
 \examples{
 \dontrun{
-latLim <- c(-20,10)
-lonLim <-  c(-60,-30)
+latLim <- c(35,45)
+lonLim <-  c(-10,2)
 season <- 3:5
-period <- 1981:1991
+period <- 1981:1982
 loginUDG(username = "myuser", password = "mypassword") #type help(loginUDG)
-tasDECA <- loadDecadalForecast(dataset = "http://www.meteo.unican.es/tds5/dodsC/specs/gfdl_specs_decadal.ncml",
-   latLim = latLim, lonLim = lonLim,
-   var = "tas", dictionary = F, years = 1981:1982, season = season)
-# data corresponding to the initialitation of the year before
-subsetDecadalForecast(tasDECA, ly = 1)
+tas_decadalForecast <- loadDecadalForecast(
+   dataset = "http://www.meteo.unican.es/tds5/dodsC/specs/gfdl_specs_decadal.ncml",
+   latLim = latLim,
+   lonLim = lonLim,
+   var = "tas",
+   dictionary = F,
+   years = period,
+   season = season)
+
+data(tas_decadalForecast)
+# data corresponding to the initialitation of the two years before
+subsetDecadalForecast(tasDECA, ly = c(1,2))
 }
 }
 \author{
-J. Bedia, S. Herrera, M. Iturbide, J.M. Gutierrez
+M. Iturbide
 }
 
