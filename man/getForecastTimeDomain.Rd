@@ -2,7 +2,7 @@
 % Please edit documentation in R/getForecastTimeDomain.R
 \name{getForecastTimeDomain}
 \alias{getForecastTimeDomain}
-\title{Calculates parameters for forecast time determination along the runtime axis}
+\title{Selection of time slices of forecast datasets}
 \usage{
 getForecastTimeDomain(grid, dataset, dic, runTimePars, time, aggr.d, aggr.m)
 }
@@ -39,6 +39,7 @@ of each element of the runTimeList to avoid losing the first day when performing
 to \code{\link{makeSubset.S4}} to undertake the pertinent aggregation if TRUE.}
 }
 \description{
+Calculates parameters for forecast time determination along the runtime axis.
 This is a subroutine of \code{\link{loadSeasonalForecast.S4}}
 }
 \author{

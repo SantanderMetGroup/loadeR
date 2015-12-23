@@ -1,5 +1,6 @@
-#' Calculates parameters for forecast time determination along the runtime axis
+#' @title Selection of time slices of forecast datasets
 #' 
+#' @description Calculates parameters for forecast time determination along the runtime axis. 
 #' This is a subroutine of \code{\link{loadSeasonalForecast.S4}}
 #' 
 #' @param grid a java \sQuote{GeoGrid}
@@ -24,7 +25,7 @@
 #' of each element of the runTimeList to avoid losing the first day when performing deaccumulation.}
 #' \item{doDailyMean}{Logical. Are the forecast time values going to be used for data aggregation?. This argument is passed
 #' to \code{\link{makeSubset.S4}} to undertake the pertinent aggregation if TRUE.}
-#' 
+#' @export
 #' @author S. Herrera
 
 getForecastTimeDomain <- function (grid, dataset, dic, runTimePars, time, aggr.d, aggr.m) {
