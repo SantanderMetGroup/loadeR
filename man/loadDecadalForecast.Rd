@@ -114,8 +114,8 @@ of the Santander Meteorology Group. There are also some built-in dictionaries in
 }
 \examples{
 \dontrun{
-latLim <- c(-20,10)
-lonLim <-  c(-60,-30)
+latLim <- c(40,50)
+lonLim <-  c(-5,10)
 season <- 3:5
 period <- 1981:1991
 loginUDG(username = "myuser", password = "mypassword") #type help(loginUDG)
@@ -125,7 +125,7 @@ tasDECA <- loadDecadalForecast(
    lonLim = lonLim,
    var = "tas",
    dictionary = F,
-   years = 1981:1982,
+   years = period,
    season = season)
 }
 }

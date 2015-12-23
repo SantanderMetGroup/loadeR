@@ -3,79 +3,117 @@
 #' @description Subset decadal forecast by initialization years
 #' 
 #' @param data field obtained from the output of function loadDecadalForecast. 
-#' @param ly integer indicating the lead year of initialization 
-#' @author J. Bedia, S. Herrera, M. Iturbide, J.M. Gutierrez 
+#' @param ly Vector of integers indicating the lead years of initialization. 
+#' Default is ly = c(1,2) (the two years before).
+#' @return A field object with an additional dimension corresponding to the selected lead years. 
+#' @author M. Iturbide
 #' @export
+#' @importFrom abind abind
 #' @examples \dontrun{
-#' latLim <- c(-20,10)
-#' lonLim <-  c(-60,-30)
+#' latLim <- c(35,45)
+#' lonLim <-  c(-10,2)
 #' season <- 3:5
-#' period <- 1981:1991
+#' period <- 1981:1982
 #' loginUDG(username = "myuser", password = "mypassword") #type help(loginUDG)
-#' tasDECA <- loadDecadalForecast(dataset = "http://www.meteo.unican.es/tds5/dodsC/specs/gfdl_specs_decadal.ncml", 
-#'    latLim = latLim, lonLim = lonLim,
-#'    var = "tas", dictionary = F, years = 1981:1982, season = season)
-#' # data corresponding to the initialitation of the year before
-#' subsetDecadalForecast(tasDECA, ly = 1)
+#' tas_decadalForecast <- loadDecadalForecast(
+#'    dataset = "http://www.meteo.unican.es/tds5/dodsC/specs/gfdl_specs_decadal.ncml", 
+#'    latLim = latLim, 
+#'    lonLim = lonLim,
+#'    var = "tas", 
+#'    dictionary = F, 
+#'    years = period, 
+#'    season = season)
+#' 
+#' data(tas_decadalForecast)
+#' # data corresponding to the initialitation of the two years before
+#' subsetDecadalForecast(tasDECA, ly = c(1,2))
 #' }
 
-subsetDecadalForecast <- function(data, ly = 1){
+subsetDecadalForecast <- function(data, ly = c(1,2)){
       
       init <- data$InitializationDates      
       dates <- data$Dates$start
       y <- getYearsAsINDEX(data)
       yu <- unique(y)
-      
-      yl <- (length(data$InitializationDates)-length(unique(y))+1) - ly
-      
+
       months <- (which(y[1:12] != y[1])[1]-1)/2
-      
       if (is.na(months) & length(yu)>1){
             months <- 12
       }else if (is.na(months) & length(yu)==1){
             months <- length(y)/(length(data$InitializationDates)-length(unique(y))+1)
       }
       
-      IND <- list()
-      yinit.sub <- list()
-      for (i in 1:length(yu)){
-            year <- which(y == yu[i])
+      InitializationDates <- list()
+      start <- list()
+      dat <- list()
+      
+      for (n in 1:length(ly)){
+            yl <- (length(data$InitializationDates)-length(unique(y))+1) - ly[n]
+      
+            IND <- list()
+            yinit.sub <- list()
+                  for (i in 1:length(yu)){
+                        year <- which(y == yu[i])
             
-            a <- yl*months
-            ind <- lapply(1:length(a), function(x){
-                  (a[x]-months+1):a[x]
+                        a <- yl*months
+                        ind <- lapply(1:length(a), function(x){
+                        (a[x]-months+1):a[x]
                   
-            })
+                        })
             
-            yinit <- as.numeric(substr(init, 1, 4))
-            initdates <- yu[i]-(length(data$InitializationDates)-length(unique(y))+1)+yl
-            initdates2 <- numeric()
-                  for (n in 1:length(initdates)){
-                        initdates2[n] <- which(yinit == initdates[n])
+                        yinit <- as.numeric(substr(init, 1, 4))
+                        initdates <- yu[i]-(length(data$InitializationDates)-length(unique(y))+1)+yl
+                        initdates2 <- numeric()
+                              for (k in 1:length(initdates)){
+                                    initdates2[k] <- which(yinit == initdates[k])
+                              }
+                        yinit.sub[[i]] <- initdates2
+                  
+                        IND[[i]] <- year[unlist(ind)]
+                         
                   }
-            yinit.sub[[i]] <- initdates2
-                  
-            IND[[i]] <- year[unlist(ind)]
             
+        
+            
+            ind <- sort(unlist(IND))
+            
+            
+            if(any(attr(data$Data, "dimensions") == "member")){
+                  subs <- data$Data[,ind,,]
+                  arr <- array(data = NA, dim = c(1, dim(subs)))
+                  arr[1,,,,]  <- subs
+                  dat[[n]] <- arr
+            }else{
+                  subs<- data$Data[ind,,]
+                  arr <- array(data = NA, dim = c(1, dim(subs)))
+                  arr[1,,,]  <- subs
+                  dat[[n]] <- arr
+            }
+            ind.init <- sort(unique(unlist(yinit.sub)))
+            if (length(ind.init ) == 0) {stop("ly (lead years) outside the extent of the number of initializations")}
+            InitializationDates[[n]] <- init[ind.init]
+            start <- dates[ind]
+      
+    
+      
       }
-      
-      ind <- sort(unlist(IND))
-      ind.init <- sort(unique(unlist(yinit.sub)))
-      if (length(ind.init ) == 0) {stop("ly (lead years) outside the extent of the number of initializations")}
-      data$InitializationDates <- init[ind.init]
-      data$Dates$start <- dates[ind]
-      data$Dates$end <- dates[ind]
-      
-      if(any(attr(data$Data, "dimensions") == "member")){
-            dat <- data$Data[,ind,,]  
+      if(length(ly)==1){
+            datbinded <- dat[[1]]
       }else{
-            dat <- data$Data[ind,,]  
+      datbinded <- unname(abind(dat, along = 1))
       }
-      attr(dat, "dimensions") <- attr(data$Data, "dimensions")
-      data$Data <- dat
+      names(InitializationDates) <- paste("Lead year = ", ly)
+      data$InitializationDates <- InitializationDates
+      data$Dates$start <- start
+      data$Dates$end <- start
+      
+     
+      attr(datbinded, "dimensions") <- c("leadyear", attr(data$Data, "dimensions"))
+      data$Data <- datbinded
       
       return(data)
 }
+
 #End
 
 
