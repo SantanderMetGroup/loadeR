@@ -30,4 +30,4 @@ Description: Enables homogenized, user-friendly access to climate databases
     remotely stored via OPeNDAP or to locally stored data, allowing the
     retrieval of user-defined dimensional slices from large climate datasets.
 License: file LICENSE
-RoxygenNote: 5.0.0
+RoxygenNote: 5.0.1
