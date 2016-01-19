@@ -192,7 +192,10 @@ stationInfo <- function(dataset, plot = TRUE) {
             x.ran <- c(min(ll[ ,1]) - x.off, max(ll[ ,1]) + x.off)
             y.ran <- c(min(ll[ ,2]) - y.off, max(ll[ ,2]) + y.off)
             plot(ll, asp = 1, xlim = x.ran, ylim = y.ran, col = "blue", pch = 10)
-            world(add = TRUE)
+            load(file.path(find.package("loadeR"), "wrl.Rda"))
+            for (i in 1:length(node.list)) {
+                  lines(node.list[[i]][,1], node.list[[i]][,2])            
+            }
             text(x = ll[,1], y = ll[,2], labels = stids, pos = 3, cex = .7, col = "red")
       }
       return(df)

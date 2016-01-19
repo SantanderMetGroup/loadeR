@@ -69,13 +69,17 @@ getLatLonDomain <- function(grid, lonLim, latLim) {
       spec <- .jnew("java/lang/String", paste(latLim[1], lonLim[1], deltaLat, deltaLon, sep = ", "))
       bboxRequest <- .jnew("ucar/unidata/geoloc/LatLonRect", spec)
       llbbox <- list()
+      llRanges <- list()
       if (bboxRequest$getLonMin() < 0 & bboxRequest$getLonMax() >= 0 & bboxDataset$crossDateline()) {
             spec1 <- .jnew("java/lang/String", paste(latLim[1], lonLim[1], deltaLat, 0 - lonLim[1], sep = ", "))
             spec2 <- .jnew("java/lang/String", paste(latLim[1], 0, deltaLat, lonLim[2], sep = ", "))
             llbbox[[1]] <- .jnew("ucar/unidata/geoloc/LatLonRect", spec1)
             llbbox[[2]] <- .jnew("ucar/unidata/geoloc/LatLonRect", spec2)
+            llRanges[[1]] <- gcs$getRangesFromLatLonRect(.jnew("ucar/unidata/geoloc/LatLonRect", spec1))
+            llRanges[[2]] <- gcs$getRangesFromLatLonRect(.jnew("ucar/unidata/geoloc/LatLonRect", spec2))
       } else {
             llbbox[[1]] <- .jnew("ucar/unidata/geoloc/LatLonRect", spec)
+            llRanges[[1]] <- gcs$getRangesFromLatLonRect(.jnew("ucar/unidata/geoloc/LatLonRect", spec))
       }
       if (pointXYindex[1] >= 0) {
             aux <- grid$makeSubset(.jnull(), .jnull(), .jnull(), 1L, 1L, 1L)
@@ -109,6 +113,6 @@ getLatLonDomain <- function(grid, lonLim, latLim) {
                   revLat <- TRUE
             }
       }
-      return(list("llbbox" = llbbox, "pointXYindex" = pointXYindex, "xyCoords" = list("x" = lonSlice, "y" = latSlice), "revLat" = revLat))
+      return(list("llRanges" = llRanges, "llbbox" = llbbox, "pointXYindex" = pointXYindex, "xyCoords" = list("x" = lonSlice, "y" = latSlice), "revLat" = revLat))
 }
 # End

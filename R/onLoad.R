@@ -1,2 +1,2 @@
-suppressMessages(library("maps"))
+suppressPackageStartupMessages(require("rJava"))
 suppressPackageStartupMessages(require("fields"))
