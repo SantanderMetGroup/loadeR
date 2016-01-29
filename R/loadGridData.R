@@ -213,8 +213,8 @@ adjustRCMgrid <- function(gds, latLon, lonLim, latLim) {
             ind.x <- which.min(abs(auxLon - lonLim))
             ind.y <- which.min(abs(auxLat - latLim))
             pointXYindex <- c(ind.y,ind.x)
-            latLon$xyCoords$x <- grid$getCoordinateSystem()$getXHorizAxis()$getCoordValues()[ind.x]
-            latLon$xyCoords$y <- grid$getCoordinateSystem()$getYHorizAxis()$getCoordValues()[ind.y]
+            latLon$xyCoords$x <- nc$findCoordinateAxis('rlon')$getCoordValues()[ind.x]
+            latLon$xyCoords$y <- nc$findCoordinateAxis('rlat')$getCoordValues()[ind.y]
             latLon$xyCoords$lon <- auxLon[ind.y,ind.x]
             latLon$xyCoords$lat <- auxLat[ind.y,ind.x]
       } else {
@@ -227,9 +227,9 @@ adjustRCMgrid <- function(gds, latLon, lonLim, latLim) {
             auxDis <- sqrt((auxLon - lonLim[2])^2+(auxLat - latLim[1])^2)
             lrrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
             llrowCol <- c(min(c(llrowCol[1],lrrowCol[1])), min(c(llrowCol[2],ulrowCol[2])))
-            urrowCol <- c(max(c(ulrowCol[1],urrowCol[1])),max(c(lrrowCol[2],ulrowCol[2])))
-            latLon$xyCoords$x <- grid$getCoordinateSystem()$getXHorizAxis()$getCoordValues()[llrowCol[2]:urrowCol[2]]
-            latLon$xyCoords$y <- grid$getCoordinateSystem()$getYHorizAxis()$getCoordValues()[llrowCol[1]:urrowCol[1]]
+            urrowCol <- c(max(c(ulrowCol[1],urrowCol[1])),max(c(lrrowCol[2],urrowCol[2])))
+            latLon$xyCoords$x <- nc$findCoordinateAxis('rlon')$getCoordValues()[llrowCol[2]:urrowCol[2]]
+            latLon$xyCoords$y <- nc$findCoordinateAxis('rlat')$getCoordValues()[llrowCol[1]:urrowCol[1]]
             latLon$xyCoords$lon <- auxLon[llrowCol[1]:urrowCol[1],llrowCol[2]:urrowCol[2]]
             latLon$xyCoords$lat <- auxLat[llrowCol[1]:urrowCol[1],llrowCol[2]:urrowCol[2]]
       }
@@ -238,6 +238,25 @@ adjustRCMgrid <- function(gds, latLon, lonLim, latLim) {
       return(latLon)
 }
 
+if(length(latLon$llRanges)>1){
+      latLon$lonRanges  <- list()
+      latLon$latRanges  <- list()
+      
+      range1 <- na.omit(as.integer(strsplit(latLon$llRanges[[1]]$toString(), "[^[:digit:]]")[[1]]))
+      range2 <- na.omit(as.integer(strsplit(latLon$llRanges[[2]]$toString(), "[^[:digit:]]")[[1]]))
+      for (i in 1:length(latLon$llRanges)){
+            latLon$lonRanges[[1]] <- .jnew("ucar/ma2/Range", range2[3], range2[4])
+            latLon$latRanges[[1]] <- .jnew("ucar/ma2/Range", as.integer(range2[1]), as.integer(range2[2]))
+            latLon$lonRanges[[2]] <- .jnew("ucar/ma2/Range", as.integer(range1[3] +1), as.integer(range1[4]))
+            latLon$latRanges[[2]] <- .jnew("ucar/ma2/Range", range1[1], range1[2])
+      }
+}else{
+      
+      latLon$lonRanges <- .jnew("ucar/ma2/Range", as.integer(llrowCol[2]-1), as.integer(urrowCol[2]-1))
+      latLon$latRanges <- .jnew("ucar/ma2/Range", as.integer(llrowCol[1]-1), as.integer(urrowCol[1]-1))
+}
+return(latLon)
+}
 
 #' Loads a user-defined subset of a gridded CDM dataset
 #' 
@@ -319,5 +338,3 @@ ndays <- function(d) {
       as.difftime(tail((28:31)[which(!is.na(as.Date(paste0(substr(d, 1, 8), 28:31), '%Y-%m-%d')))], 1), units = "days")
 }
 #End
-
-

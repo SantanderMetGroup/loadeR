@@ -54,33 +54,70 @@ getLatLonDomain <- function(grid, lonLim, latLim) {
             pointXYindex <- pointXYpars$pointXYindex
       } else {
             pointXYindex <- c(-1L, -1L)
+      }    
+      if (is.null(latLim)) {
+            latLim <- c(bboxDataset$getLatMin(), bboxDataset$getLatMax())
+            deltaLat <- latLim[2] - latLim[1]
       }
       if (is.null(lonLim)) {
             lonLim <- c(bboxDataset$getLonMin(), bboxDataset$getLonMax())
-            if (any(lonLim > 180)) {
-                  lonLim <- lonLim - 180
+            deltaLon <- lonLim[2] - lonLim[1]
+            spec <- .jnew("java/lang/String", paste(latLim[1], lonLim[1], deltaLat, deltaLon, sep = ", "))
+            bboxRequest <- .jnew("ucar/unidata/geoloc/LatLonRect", spec)
+            llbbox <- list()
+            llRanges <- list()
+            if (lonLim[1] > 180) {
+                  lonLim <- lonLim - 360
+                  lonLim <- sort(lonLim)
+                  spec1 <- .jnew("java/lang/String", paste(latLim[1], lonLim[1], deltaLat, deltaLon, sep = ", "))
+                  llbbox[[1]] <- .jnew("ucar/unidata/geoloc/LatLonRect", spec1)
+                  llRanges[[1]] <- gcs$getRangesFromLatLonRect(.jnew("ucar/unidata/geoloc/LatLonRect", spec1))
+            }else if (lonLim[2] > 180) {
+                  spec1 <- .jnew("java/lang/String", paste(latLim[1], -180, deltaLat, lonLim[2]-180, sep = ", "))
+                  spec2 <- .jnew("java/lang/String", paste(latLim[1], lonLim[1], deltaLat, 180-lonLim[1], sep = ", "))
+                  llbbox[[1]] <- .jnew("ucar/unidata/geoloc/LatLonRect", spec1)
+                  llbbox[[2]] <- .jnew("ucar/unidata/geoloc/LatLonRect", spec2)
+                  llRanges[[1]] <- gcs$getRangesFromLatLonRect(.jnew("ucar/unidata/geoloc/LatLonRect", spec1))
+                  llRanges[[2]] <- gcs$getRangesFromLatLonRect(.jnew("ucar/unidata/geoloc/LatLonRect", spec2))
+            }else{
+                  if (bboxRequest$getLonMin() < 0 & bboxRequest$getLonMax() >= 0 & bboxDataset$crossDateline()) {
+                        spec1 <- .jnew("java/lang/String", paste(latLim[1], lonLim[1], deltaLat, 0 - lonLim[1], sep = ", "))
+                        spec2 <- .jnew("java/lang/String", paste(latLim[1], 0, deltaLat, lonLim[2], sep = ", "))
+                        llbbox[[1]] <- .jnew("ucar/unidata/geoloc/LatLonRect", spec1)
+                        llbbox[[2]] <- .jnew("ucar/unidata/geoloc/LatLonRect", spec2)
+                        llRanges[[1]] <- gcs$getRangesFromLatLonRect(.jnew("ucar/unidata/geoloc/LatLonRect", spec1))
+                        llRanges[[2]] <- gcs$getRangesFromLatLonRect(.jnew("ucar/unidata/geoloc/LatLonRect", spec2))
+                  } else {
+                        spec1 <- .jnew("java/lang/String", paste(latLim[1], lonLim[1], deltaLat, deltaLon, sep = ", "))
+                        llbbox[[1]] <- .jnew("ucar/unidata/geoloc/LatLonRect", spec1)
+                        llRanges[[1]] <- gcs$getRangesFromLatLonRect(.jnew("ucar/unidata/geoloc/LatLonRect", spec1))
+                  }
             }
+      }else{
+      
+      ##################3
+            deltaLat <- latLim[2] - latLim[1]
+            deltaLon <- lonLim[2] - lonLim[1]
+            spec <- .jnew("java/lang/String", paste(latLim[1], lonLim[1], deltaLat, deltaLon, sep = ", "))
+            bboxRequest <- .jnew("ucar/unidata/geoloc/LatLonRect", spec)
+            llbbox <- list()
+            llRanges <- list()
+                  if (bboxRequest$getLonMin() < 0 & bboxRequest$getLonMax() >= 0 & bboxDataset$crossDateline()) {
+                        spec1 <- .jnew("java/lang/String", paste(latLim[1], lonLim[1], deltaLat, 0 - lonLim[1], sep = ", "))
+                        spec2 <- .jnew("java/lang/String", paste(latLim[1], 0, deltaLat, lonLim[2], sep = ", "))
+                        
+                        llbbox[[1]] <- .jnew("ucar/unidata/geoloc/LatLonRect", spec1)
+                        llbbox[[2]] <- .jnew("ucar/unidata/geoloc/LatLonRect", spec2)
+                        llRanges[[1]] <- gcs$getRangesFromLatLonRect(.jnew("ucar/unidata/geoloc/LatLonRect", spec1))
+                        llRanges[[2]] <- gcs$getRangesFromLatLonRect(.jnew("ucar/unidata/geoloc/LatLonRect", spec2))
+                  } else {
+                        llbbox[[1]] <- .jnew("ucar/unidata/geoloc/LatLonRect", spec)
+                        llRanges[[1]] <- gcs$getRangesFromLatLonRect(.jnew("ucar/unidata/geoloc/LatLonRect", spec))
+                  }
+            
       }
-      if (is.null(latLim)) {
-            latLim <- c(bboxDataset$getLatMin(), bboxDataset$getLatMax())
-      }
-      deltaLat <- latLim[2] - latLim[1]
-      deltaLon <- lonLim[2] - lonLim[1]
-      spec <- .jnew("java/lang/String", paste(latLim[1], lonLim[1], deltaLat, deltaLon, sep = ", "))
-      bboxRequest <- .jnew("ucar/unidata/geoloc/LatLonRect", spec)
-      llbbox <- list()
-      llRanges <- list()
-      if (bboxRequest$getLonMin() < 0 & bboxRequest$getLonMax() >= 0 & bboxDataset$crossDateline()) {
-            spec1 <- .jnew("java/lang/String", paste(latLim[1], lonLim[1], deltaLat, 0 - lonLim[1], sep = ", "))
-            spec2 <- .jnew("java/lang/String", paste(latLim[1], 0, deltaLat, lonLim[2], sep = ", "))
-            llbbox[[1]] <- .jnew("ucar/unidata/geoloc/LatLonRect", spec1)
-            llbbox[[2]] <- .jnew("ucar/unidata/geoloc/LatLonRect", spec2)
-            llRanges[[1]] <- gcs$getRangesFromLatLonRect(.jnew("ucar/unidata/geoloc/LatLonRect", spec1))
-            llRanges[[2]] <- gcs$getRangesFromLatLonRect(.jnew("ucar/unidata/geoloc/LatLonRect", spec2))
-      } else {
-            llbbox[[1]] <- .jnew("ucar/unidata/geoloc/LatLonRect", spec)
-            llRanges[[1]] <- gcs$getRangesFromLatLonRect(.jnew("ucar/unidata/geoloc/LatLonRect", spec))
-      }
+      
+      ##################
       if (pointXYindex[1] >= 0) {
             aux <- grid$makeSubset(.jnull(), .jnull(), .jnull(), 1L, 1L, 1L)
             lonSlice <- aux$getCoordinateSystem()$getLonAxis()$getCoordValue(pointXYindex[1])
