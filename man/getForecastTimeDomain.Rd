@@ -24,7 +24,6 @@ verifying at 06:00:00). Only applies for sub-daily datasets.}
 }
 \value{
 A list with the following elements:
-
 \item{forecastDates}{A list with POSIXlt dates defining the start and end of the 
 representative verification time. If start and end are identical, the variable is instantaneous
 and therefore the representative time interval is 0}
@@ -36,13 +35,12 @@ forecast times selected along the \emph{i-th} run time axis.}
 the first time of the runtime axis or not respectively. If FALSE, an additional runtime is added at the beginning
 of each element of the runTimeList to avoid losing the first day when performing deaccumulation.}
 \item{doDailyMean}{Logical. Are the forecast time values going to be used for data aggregation?. This argument is passed
-to \code{\link{makeSubset.S4}} to undertake the pertinent aggregation if TRUE.}
+to \code{makeSubset} family functions to undertake the pertinent aggregation if TRUE.}
 }
 \description{
-Calculates parameters for forecast time determination along the runtime axis. 
-This is a subroutine of \code{\link{loadSeasonalForecast.S4}}
+Calculates parameters for forecast time determination along the runtime axis.
 }
 \author{
-S. Herrera
+J.Bedia, S. Herrera
 }
 

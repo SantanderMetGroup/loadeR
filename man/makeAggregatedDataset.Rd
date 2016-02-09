@@ -65,7 +65,7 @@ J. Bedia
 NcML Tutorial \url{http://www.unidata.ucar.edu/software/thredds/current/netcdf-java/ncml/Tutorial.html}. Accessed 28 Feb 2015.).
 }
 \seealso{
-Other loading: \code{\link{loadDecadalForecast}},
-  \code{\link{loadGridData}}, \code{\link{loadStationData}}
+Other loading: \code{\link{loadGridData}},
+  \code{\link{loadStationData}}
 }
 

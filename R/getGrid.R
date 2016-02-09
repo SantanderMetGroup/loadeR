@@ -1,24 +1,15 @@
 #' @title Get regular grid definition 
-#' 
 #' @description Get the (regular) grid definition from an existing (gridded) dataset
-#' 
 #' @param gridData A grid data object coming from \code{\link{loadGridData}} or \code{\link{interpData}}
 #'  or the function \code{\link[ecomsUDG.Raccess]{loadECOMS}} of package \pkg{ecomsUDG.Raccess}.
-#'  
 #' @return A list of two named components, \code{x} and \code{y}, consisting of a vector of length two each one, defining
 #' the x/y lower and upper bounds. The grid-cell resolution is given by the attributes \code{'resX'} and
 #'  \code{'resY'} respectively.
-#'  
-#' 
 #' @details In case of irregular grid definitions, the function forces the grid to regularity.
 #' The returned grid object inherits the attributes from the input \code{xyCoords} definition.
-#' 
 #' @export
-#' 
 #' @family loading.grid
-#' 
 #' @author S. Herrera and J. Bedia 
-#' 
 #' @examples \donttest{
 #' # Iberia domain
 #' data(iberia_ncep_hus850)
@@ -39,7 +30,7 @@
 #' 
 
 getGrid <- function(gridData) {
-      if (!any(attr(gridData$Data, "dimensions") == "station")){
+      if (!any(attr(gridData$Data, "dimensions") == "station")) {
             grid.x <- c(gridData$xyCoords$x[1], tail(gridData$xyCoords$x, 1))
             grid.y <- c(gridData$xyCoords$y[1], tail(gridData$xyCoords$y, 1))
             out <- list(x = grid.x, y = grid.y)

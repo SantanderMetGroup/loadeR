@@ -75,19 +75,14 @@ plotMeanField <- function (gridData, multi.member = FALSE) {
 
 
 #' @title Make multi-panel plots
-#' 
 #' @description Sub-routine of plotMeanField for dividing the graphical window into different subplots,
 #' for multi-member or multi-variable displays
-#' 
 #' @param gridData a grid dataset as returned by any of the loading functions
 #' @param name of the dimension used for splitting: either \code{var} or \code{member} for multi-predictor and
 #' multi-member displays respectively
-#' 
 #' @return Prints the graphical display
-#' 
 #' @importFrom abind asub
 #' @importFrom fields image.plot
-#' 
 #' @keywords internal
 #' @author J Bedia 
 

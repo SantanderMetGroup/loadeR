@@ -1,13 +1,11 @@
-#' Computes run time definition according to the time specifications
-#' 
-#' This is a sub-routine of \code{\link{loadECOMS}}. Its output is passed to the loading functions
-#' (the \code{makeSubset\\.*} and \code{derive*} interfaces).
-#' 
-#' @param dataset Target hindcast dataset (see \code{\link{loadECOMS}})
+#' @title  Run time definition according to the time specifications
+#' @description Define index positions of runtimes. 
+#' Its output is passed to the loading functions (the \code{makeSubset\\.*} and \code{derive*} interfaces).
+#' @param dataset Target hindcast dataset 
 #' @param grid A java \dQuote{GeoGrid} containing the target(leading) variable
-#' @param members Member selection (see \code{\link{loadECOMS}})
-#' @param season Season selection (see \code{\link{loadECOMS}})
-#' @param years Years selected (see \code{\link{loadECOMS}})
+#' @param members Member selection 
+#' @param season Season selection 
+#' @param years Years selected 
 #' @return A list of parameters:
 #' \itemize{
 #' \item validMonth An integer in the range [1,12] indicating the month to take the initialization

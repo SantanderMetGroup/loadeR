@@ -2,14 +2,18 @@
 % Please edit documentation in R/loadDecadalForecast.R
 \name{adjustDates.forecast}
 \alias{adjustDates.forecast}
-\title{Adjust dates in forecast data}
+\title{Date adjustment}
 \usage{
 adjustDates.forecast(foreTimePars)
 }
 \arguments{
 \item{foreTimePars}{A list of elements as returned by \code{\link{getRunTimeDomain}}}
 }
+\description{
+Adjust dates in forecast data
+}
 \author{
 S. Herrera
 }
+\keyword{internal}
 

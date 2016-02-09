@@ -166,8 +166,7 @@ plotMeanField(tasmax)
 J. Bedia, S. Herrera, M. Iturbide, J.M. Gutierrez
 }
 \seealso{
-Other loading: \code{\link{loadDecadalForecast}},
-  \code{\link{loadStationData}},
+Other loading: \code{\link{loadStationData}},
   \code{\link{makeAggregatedDataset}}
 
 Other loading.grid: \code{\link{getGrid}},

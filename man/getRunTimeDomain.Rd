@@ -2,20 +2,20 @@
 % Please edit documentation in R/getRunTimeDomain.R
 \name{getRunTimeDomain}
 \alias{getRunTimeDomain}
-\title{Computes run time definition according to the time specifications}
+\title{Run time definition according to the time specifications}
 \usage{
 getRunTimeDomain(dataset, grid, members, season, years)
 }
 \arguments{
-\item{dataset}{Target hindcast dataset (see \code{\link{loadECOMS}})}
+\item{dataset}{Target hindcast dataset}
 
 \item{grid}{A java \dQuote{GeoGrid} containing the target(leading) variable}
 
-\item{members}{Member selection (see \code{\link{loadECOMS}})}
+\item{members}{Member selection}
 
-\item{season}{Season selection (see \code{\link{loadECOMS}})}
+\item{season}{Season selection}
 
-\item{years}{Years selected (see \code{\link{loadECOMS}})}
+\item{years}{Years selected}
 }
 \value{
 A list of parameters:
@@ -30,8 +30,8 @@ A list of parameters:
 }
 }
 \description{
-This is a sub-routine of \code{\link{loadECOMS}}. Its output is passed to the loading functions
-(the \code{makeSubset\\.*} and \code{derive*} interfaces).
+Define index positions of runtimes. 
+Its output is passed to the loading functions (the \code{makeSubset\\.*} and \code{derive*} interfaces).
 }
 \details{
 The function calls to specific subroutines for CFS or System4 requests, given their different

@@ -81,8 +81,7 @@ J. Bedia
 \url{https://github.com/SantanderMetGroup/downscaleR/wiki/Observation-Data-format}
 }
 \seealso{
-Other loading: \code{\link{loadDecadalForecast}},
-  \code{\link{loadGridData}},
+Other loading: \code{\link{loadGridData}},
   \code{\link{makeAggregatedDataset}}
 }
 
