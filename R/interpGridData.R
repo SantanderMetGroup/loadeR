@@ -30,6 +30,7 @@
 #' @note To avoid unnecessary NA values, the function will not extrapolate using a new grid outside the
 #' current extent of the dataset, returning an error message.
 #' @keywords internal
+#' @export
 #' @family loading.grid
 #' @author J. Bedia and S. Herrera
 

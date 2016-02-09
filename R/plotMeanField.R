@@ -84,6 +84,7 @@ plotMeanField <- function (gridData, multi.member = FALSE) {
 #' @importFrom abind asub
 #' @importFrom fields image.plot
 #' @keywords internal
+#' @export
 #' @author J Bedia 
 
 
