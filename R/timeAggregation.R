@@ -334,6 +334,7 @@ annualAggregationMain <- function(data, FUN = c("mean", "min", "max", "sum"), id
 #' @param obj Any object extending the station or field classes
 #' @return A list with x and y components
 #' @author J. Bedia \email{joaquin.bedia@@gmail.com}
+#' @export
 #' 
 
 getCoordinates <- function(obj) {
