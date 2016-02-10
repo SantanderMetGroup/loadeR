@@ -365,11 +365,11 @@ annualAggregationMain <- function(data, FUN = c("mean", "min", "max", "sum"), id
             nly <- dim(obj$Data)[lind]
             
             if(any(attr(obj$Data, "dimensions")=="member")){
+                  mind <- which(attr(obj$Data, "dimensions")=="member")
+                  nmem <- dim(obj$Data)[mind]
                   dat <- array(dim = c(nly,nmem,length(unique(id)), length(y.coord), ncol = length(x.coord)))
                   for (n in 1:nly){
                         message(names(obj$InitializationDates)[n], " :")
-                        mind <- which(attr(obj$Data, "dimensions")=="member")
-                        nmem <- dim(obj$Data)[mind]
                         
                         r <- array(dim = c(1,length(unique(id)), length(y.coord), ncol = length(x.coord)))
                         
