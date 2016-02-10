@@ -128,7 +128,7 @@ subsetDecadalForecast <- function(data, ly = c(1,2)){
       data$Dates$end <- start
       
      
-      attr(datbinded, "dimensions") <- c("leadyear", attr(data$Data, "dimensions"))
+      attr(datbinded, "dimensions") <- c("runtime", attr(data$Data, "dimensions"))
       data$Data <- datbinded
       
       return(data)

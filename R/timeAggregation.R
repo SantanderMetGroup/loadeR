@@ -41,75 +41,97 @@ timeAggregation <- function(obj, aggr.d = NULL, aggr.m = NULL, aggr.y = NULL){
             if(is.null(aggr.d)){
                   warning("Data is sub-daily, define aggr.d for daily aggregation")
             }else{
-            
-            yrs <- aux.dates$year + 1900
-            #     
-            yy <- unique(yrs)
-            
-            dys <- lapply(1:length(yy), function(i){
-                  if(i == 1){
-                        aux.dates$yday[which(yrs == yy[i])] 
-                  }else{
-                        aux.dates$yday[which(yrs == yy[i])] + (i-1)*365
-                  }
-            })
-            period.id <- do.call("abind", dys)
-            #       if (any(dys != unique(dys)){
-            
-            
-            
-            
-            if(any(attr(obj$Data, "dimensions")=="var")){
-                  vars <- obj$Variable$varName
-                  if(length(aggr.d)==1){
-                        aggr.d <- rep(aggr.d, length(vars))    
-                  }else if(length(aggr.d)!=length(vars)){
-                        message("NOTE: Argument 'aggr.d' is not of the same length as the number of variables in the multifield, 
-                                only the first function will be applied to all the variables")
-                        aggr.d <- rep(aggr.d[1], length(vars)) 
+                  
+                  yrs <- aux.dates$year + 1900
+                  #     
+                  yy <- unique(yrs)
+                  
+                  dys <- lapply(1:length(yy), function(i){
+                        if(i == 1){
+                              aux.dates$yday[which(yrs == yy[i])] 
+                        }else{
+                              aux.dates$yday[which(yrs == yy[i])] + (i-1)*365
+                        }
+                  })
+                  period.id <- do.call("abind", dys)
+                  #       if (any(dys != unique(dys)){
+                  
+                  
+                  
+                  
+                  if(any(attr(obj$Data, "dimensions")=="var")){
+                        vars <- obj$Variable$varName
+                        if(length(aggr.d)==1){
+                              aggr.d <- rep(aggr.d, length(vars))    
+                        }else if(length(aggr.d)!=length(vars)){
+                              message("NOTE: Argument 'aggr.d' is not of the same length as the number of variables in the multifield, 
+                                      only the first function will be applied to all the variables")
+                              aggr.d <- rep(aggr.d[1], length(vars)) 
+                              
+                              
+                        }else{
+                              aggr.d <- aggr.d   
+                        }
+                        
+                        if (any(attr(obj$Data, "dimensions")=="runtime")){
+                              lind <- which(attr(obj$Data, "dimensions")=="runtime")
+                              nly <- dim(obj$Data)[lind]
+                              if(any(attr(obj$Data, "dimensions")=="member")){
+                                    mind <- which(attr(obj$Data, "dimensions")=="member")
+                                    nmem <- dim(obj$Data)[mind]
+                                    fin <- array(dim = c(1,nly,nmem,length(unique(period.id)), length(y.coord), ncol = length(x.coord)))
+                                    lfin <- lapply(1:length(aggr.d), function(i){
+                                          message("Applying ", aggr.d[i], " annual aggregation function to var ", vars[i])
+                                          
+                                          fin[,,,,,] <- annualAggregationMain(obj$Data[i,,,,,], FUN = aggr.d[i], id = period.id, y.coord, x.coord, coords, obj)                                                                
+                                          return(fin)
+                                    })
+                              }else{
+                                    fin <- array(dim = c(1,nly,length(unique(period.id)), length(y.coord), ncol = length(x.coord)))  
+                                    lfin <- lapply(1:length(aggr.d), function(i){ 
+                                          message("Applying ", aggr.d[i], " annual aggregation function to var ", vars[i])
+                                          fin[,,,,] <- annualAggregationMain(obj$Data[i,,,,], FUN = aggr.d[i], id = period.id, y.coord, x.coord, coords, obj)
+                                          return(fin)
+                                    })
+                              }
+                              
+                        }else if (any(attr(obj$Data, "dimensions")=="member")){
+                              mind <- which(attr(obj$Data, "dimensions")=="member")
+                              nmem <- dim(obj$Data)[mind]
+                              fin <- array(dim = c(1,nmem,length(unique(period.id)), length(x.coord), ncol = length(y.coord)))
+                              lfin <- lapply(1:length(aggr.d), function(i){
+                                    message("Applying ", aggr.d[i], " daily aggregation function to var ", vars[i])
+                                    fin[,,,,] <- annualAggregationMain(obj$Data[i,,,,], FUN = aggr.d[i], id = period.id, y.coord, x.coord, coords, obj)
+                                    return(fin)
+                              })
+                              
+                        }else{
+                              fin <- array(dim = c(1,length(unique(period.id)), length(x.coord), ncol = length(y.coord)))  
+                              lfin <- lapply(1:length(aggr.d), function(i){ 
+                                    message("Applying ", aggr.d[i], " daily aggregation function to var ", vars[i])
+                                    fin[,,,] <- annualAggregationMain(obj$Data[i,,,], FUN = aggr.d[i], id = period.id, y.coord, x.coord, coords, obj)
+                                    return(fin)
+                              })
+                        }
                         
                         
-                  }else{
-                        aggr.d <- aggr.d   
-                  }
-                  
-                  if (any(attr(obj$Data, "dimensions")=="member")){
-                        mind <- which(attr(obj$Data, "dimensions")=="member")
-                        nmem <- dim(obj$Data)[mind]
-                        fin <- array(dim = c(1,nmem,length(unique(period.id)), length(x.coord), ncol = length(y.coord)))
-                        lfin <- lapply(1:length(aggr.d), function(i){
-                              message("Applying ", aggr.d[i], " daily aggregation function to var ", vars[i])
-                              fin[,,,,] <- annualAggregationMain(obj$Data[i,,,,], FUN = aggr.d[i], id = period.id, y.coord, x.coord, coords, obj)
-                              return(fin)
-                        })
+                        dato <- do.call("abind", c(lfin, along = 1))
                         
                   }else{
-                        fin <- array(dim = c(1,length(unique(period.id)), length(x.coord), ncol = length(y.coord)))  
-                        lfin <- lapply(1:length(aggr.d), function(i){ 
-                              message("Applying ", aggr.d[i], " daily aggregation function to var ", vars[i])
-                              fin[,,,] <- annualAggregationMain(obj$Data[i,,,], FUN = aggr.d[i], id = period.id, y.coord, x.coord, coords, obj)
-                              return(fin)
-                        })
+                        message("Applying ", aggr.d, " daily aggregation function")
+                        dato <- annualAggregationMain(obj$Data, FUN =aggr.d, id = period.id, y.coord, x.coord, coords, obj)
                   }
-                  
-                  
-                  dato <- do.call("abind", c(lfin, along = 1))
-                  
-            }else{
-                  message("Applying ", aggr.d, " daily aggregation function")
-                  dato <- annualAggregationMain(obj$Data, FUN =aggr.d, id = period.id, y.coord, x.coord, coords, obj)
-            }
-            dims <- attr(obj$Data, "dimensions")
-            obj$Data <- unname(dato)
-            attr(obj$Data, "dimensions") <- dims
-            attr(obj$Variable, "daily_agg_cellfun") <- aggr.d
-            if(any(attr(obj$Data, "dimensions")=="var")){
-                  obj$Dates <- list("start" = unname(tapply(obj$Dates[[1]]$start, INDEX = period.id, FUN = min)), 
-                                    "end" = unname(tapply(obj$Dates[[1]]$end, INDEX = period.id, FUN = min)))       
-            }else{
-                  obj$Dates <- list("start" = unname(tapply(obj$Dates$start, INDEX = period.id, FUN = min)), 
-                                    "end" = unname(tapply(obj$Dates$end, INDEX = period.id, FUN = min))) 
-            }
+                  dims <- attr(obj$Data, "dimensions")
+                  obj$Data <- unname(dato)
+                  attr(obj$Data, "dimensions") <- dims
+                  attr(obj$Variable, "daily_agg_cellfun") <- aggr.d
+                  if(any(attr(obj$Data, "dimensions")=="var")){
+                        obj$Dates <- list("start" = unname(tapply(obj$Dates[[1]]$start, INDEX = period.id, FUN = min)), 
+                                          "end" = unname(tapply(obj$Dates[[1]]$end, INDEX = period.id, FUN = min)))       
+                  }else{
+                        obj$Dates <- list("start" = unname(tapply(obj$Dates$start, INDEX = period.id, FUN = min)), 
+                                          "end" = unname(tapply(obj$Dates$end, INDEX = period.id, FUN = min))) 
+                  }
             }
             
       }else if(!is.null(aggr.d)){
@@ -164,21 +186,43 @@ timeAggregation <- function(obj, aggr.d = NULL, aggr.m = NULL, aggr.y = NULL){
                               aggr.m <- aggr.m   
                         }
                         
-                        if (any(attr(obj$Data, "dimensions")=="member")){
+                        if (any(attr(obj$Data, "dimensions")=="runtime")){
+                              lind <- which(attr(obj$Data, "dimensions")=="runtime")
+                              nly <- dim(obj$Data)[lind]
+                              if(any(attr(obj$Data, "dimensions")=="member")){
+                                    mind <- which(attr(obj$Data, "dimensions")=="member")
+                                    nmem <- dim(obj$Data)[mind]
+                                    fin <- array(dim = c(1,nly,nmem,length(unique(period.id)), length(y.coord), ncol = length(x.coord)))
+                                    lfin <- lapply(1:length(aggr.m), function(k){
+                                          message("Applying ", aggr.m[k], " annual aggregation function to var ", vars[k])
+                                          
+                                          fin[,,,,,] <- annualAggregationMain(obj$Data[k,,,,,], FUN = aggr.m[k], id = period.id, y.coord, x.coord, coords, obj)                                                                
+                                          return(fin)
+                                    })
+                              }else{
+                                    fin <- array(dim = c(1,nly,length(unique(period.id)), length(y.coord), ncol = length(x.coord)))  
+                                    lfin <- lapply(1:length(aggr.m), function(k){ 
+                                          message("Applying ", aggr.m[k], " annual aggregation function to var ", vars[k])
+                                          fin[,,,,] <- annualAggregationMain(obj$Data[k,,,,], FUN = aggr.m[k], id = period.id, y.coord, x.coord, coords, obj)
+                                          return(fin)
+                                    })
+                              }
+                              
+                        }else if (any(attr(obj$Data, "dimensions")=="member")){
                               mind <- which(attr(obj$Data, "dimensions")=="member")
                               nmem <- dim(obj$Data)[mind]
                               fin <- array(dim = c(1,nmem,length(unique(period.id)), length(x.coord), ncol = length(y.coord)))
-                              lfin <- lapply(1:length(aggr.m), function(i){
-                                    message("Applying ", aggr.m[i], " monthly aggregation function to var ", vars[i])
-                                    fin[,,,,] <- annualAggregationMain(obj$Data[i,,,,], FUN = aggr.m[i], id = period.id, y.coord, x.coord, coords, obj)
+                              lfin <- lapply(1:length(aggr.m), function(k){
+                                    message("Applying ", aggr.m[k], " monthly aggregation function to var ", vars[k])
+                                    fin[,,,,] <- annualAggregationMain(obj$Data[k,,,,], FUN = aggr.m[k], id = period.id, y.coord, x.coord, coords, obj)
                                     return(fin)
                               })
                               
                         }else{
                               fin <- array(dim = c(1,length(unique(period.id)), length(x.coord), ncol = length(y.coord)))  
-                              lfin <- lapply(1:length(aggr.m), function(i){ 
-                                    message("Applying ", aggr.m[i], " monthly aggregation function to var ", vars[i])
-                                    fin[,,,] <- annualAggregationMain(obj$Data[i,,,], FUN = aggr.m[i], id = period.id, y.coord, x.coord, coords, obj)
+                              lfin <- lapply(1:length(aggr.m), function(k){ 
+                                    message("Applying ", aggr.m[k], " monthly aggregation function to var ", vars[k])
+                                    fin[,,,] <- annualAggregationMain(obj$Data[k,,,], FUN = aggr.m[k], id = period.id, y.coord, x.coord, coords, obj)
                                     return(fin)
                               })
                         }
@@ -226,21 +270,44 @@ timeAggregation <- function(obj, aggr.d = NULL, aggr.m = NULL, aggr.y = NULL){
                         aggr.f <- aggr.y   
                   }
                   ###
-                  if (any(attr(obj$Data, "dimensions")=="member")){
+                  if (any(attr(obj$Data, "dimensions")=="runtime")){
+                        lind <- which(attr(obj$Data, "dimensions")=="runtime")
+                        nly <- dim(obj$Data)[lind]
+                        if(any(attr(obj$Data, "dimensions")=="member")){
+                              mind <- which(attr(obj$Data, "dimensions")=="member")
+                              nmem <- dim(obj$Data)[mind]
+                              fin <- array(dim = c(1,nly,nmem,length(unique(period.id)), length(y.coord), ncol = length(x.coord)))
+                              lfin <- lapply(1:length(aggr.f), function(k){
+                                    message("Applying ", aggr.f[k], " annual aggregation function to var ", vars[k])
+                                    
+                                    fin[,,,,,] <- annualAggregationMain(obj$Data[k,,,,,], FUN = aggr.f[k], id = period.id, y.coord, x.coord, coords, obj)                                                                
+                                    return(fin)
+                              })
+                        }else{
+                              fin <- array(dim = c(1,nly,length(unique(period.id)), length(y.coord), ncol = length(x.coord)))  
+                              lfin <- lapply(1:length(aggr.f), function(k){ 
+                                    message("Applying ", aggr.f[k], " annual aggregation function to var ", vars[k])
+                                    fin[,,,,] <- annualAggregationMain(obj$Data[k,,,,], FUN = aggr.f[k], id = period.id, y.coord, x.coord, coords, obj)
+                                    return(fin)
+                              })
+                        }
+                        
+                  }else if (any(attr(obj$Data, "dimensions")=="member")){
                         mind <- which(attr(obj$Data, "dimensions")=="member")
                         nmem <- dim(obj$Data)[mind]
                         fin <- array(dim = c(1,nmem,length(unique(period.id)), length(y.coord), ncol = length(x.coord)))
-                        lfin <- lapply(1:length(aggr.f), function(i){
-                              message("Applying ", aggr.f[i], " annual aggregation function to var ", vars[i])
-                              fin[,,,,] <- annualAggregationMain(obj$Data[i,,,,], FUN = aggr.f[i], id = period.id, y.coord, x.coord, coords, obj)                                                                
+                        lfin <- lapply(1:length(aggr.f), function(k){
+                              message("Applying ", aggr.f[k], " annual aggregation function to var ", vars[k])
+                              
+                              fin[,,,,] <- annualAggregationMain(obj$Data[k,,,,], FUN = aggr.f[k], id = period.id, y.coord, x.coord, coords, obj)                                                                
                               return(fin)
                         })
                         
                   }else{
                         fin <- array(dim = c(1,length(unique(period.id)), length(y.coord), ncol = length(x.coord)))  
-                        lfin <- lapply(1:length(aggr.f), function(i){ 
-                              message("Applying ", aggr.f[i], " annual aggregation function to var ", vars[i])
-                              fin[,,,] <- annualAggregationMain(obj$Data[i,,,], FUN = aggr.f[i], id = period.id, y.coord, x.coord, coords, obj)
+                        lfin <- lapply(1:length(aggr.f), function(k){ 
+                              message("Applying ", aggr.f[k], " annual aggregation function to var ", vars[k])
+                              fin[,,,] <- annualAggregationMain(obj$Data[k,,,], FUN = aggr.f[k], id = period.id, y.coord, x.coord, coords, obj)
                               return(fin)
                         })
                   }
@@ -290,61 +357,76 @@ timeAggregation <- function(obj, aggr.d = NULL, aggr.m = NULL, aggr.y = NULL){
 #' @author M. Iturbide \email{maibide@@gmail.com}
 
 annualAggregationMain <- function(data, FUN = c("mean", "min", "max", "sum"), id, y.coord, x.coord, coords, obj){
-   
+      
       aggr <- match.arg(FUN, choices = c("mean", "min", "max", "sum"))
-
-
-            if (any(attr(obj$Data, "dimensions")=="member")){
-                  mind <- which(attr(obj$Data, "dimensions")=="member")
-                  nmem <- dim(obj$Data)[mind]
-                  r <- array(dim = c(1,length(unique(id)), length(y.coord), ncol = length(x.coord)))
-                  
-                  w <- lapply(1:nmem, function(m){
-                        message("[", Sys.time(), "] Aggregating member ", m, " out of ", nmem)
-                        for (i in 1:nrow(coords)){
-                  
-                              r[,,coords[i,2],coords[i,1]] <- tapply(data[m,, coords[i,2], coords[i,1]],
-                                     INDEX = id, FUN = aggr)
-                         }
-                        return(r)
-                  })
-                  message("[", Sys.time(), "] Done.")
-            dat <- unname(do.call("abind", c(w, along=mind)))
+      
+      if (any(attr(obj$Data, "dimensions")=="runtime")){
+            lind <- which(attr(obj$Data, "dimensions")=="runtime")
+            nly <- dim(obj$Data)[lind]
+            
+            if(any(attr(obj$Data, "dimensions")=="member")){
+                  dat <- array(dim = c(nly,nmem,length(unique(id)), length(y.coord), ncol = length(x.coord)))
+                  for (n in 1:nly){
+                        message(names(obj$InitializationDates)[n], " :")
+                        mind <- which(attr(obj$Data, "dimensions")=="member")
+                        nmem <- dim(obj$Data)[mind]
+                        
+                        r <- array(dim = c(1,length(unique(id)), length(y.coord), ncol = length(x.coord)))
+                        
+                        w <- lapply(1:nmem, function(m){
+                              message("[", Sys.time(), "] Aggregating member ", m, " out of ", nmem)
+                              for (i in 1:nrow(coords)){
+                                    
+                                    r[,,coords[i,2],coords[i,1]] <- tapply(data[n,m,, coords[i,2], coords[i,1]],
+                                                                           INDEX = id, FUN = aggr)
+                              }
+                              return(r)
+                        })
+                        message("[", Sys.time(), "] Done.")
+                        dat[n,,,,] <- unname(do.call("abind", c(w, along=1)))    
+                  }
             }else{
-                  dat <- array(dim = c(length(unique(id)), length(y.coord), ncol = length(x.coord)))
-                  message("[", Sys.time(), "] Aggregating...")
+                  for (n in 1:nly){
+                        message(names(obj$InitializationDates)[n], " :")
+                        dat <- array(dim = c(nly, length(unique(id)), length(y.coord), ncol = length(x.coord)))
+                        message("[", Sys.time(), "] Aggregating...")
+                        for (i in 1:nrow(coords)){
+                              
+                              dat[n,,coords[i,2],coords[i,1]] <- tapply(data[n,, coords[i,2], coords[i,1]],
+                                                                        INDEX = id, FUN = aggr)
+                        }
+                        message("[", Sys.time(), "] Done.")
+                  }
+            }
+            
+      }else if (any(attr(obj$Data, "dimensions")=="member")){
+            mind <- which(attr(obj$Data, "dimensions")=="member")
+            nmem <- dim(obj$Data)[mind]
+            r <- array(dim = c(1,length(unique(id)), length(y.coord), ncol = length(x.coord)))
+            
+            w <- lapply(1:nmem, function(m){
+                  message("[", Sys.time(), "] Aggregating member ", m, " out of ", nmem)
                   for (i in 1:nrow(coords)){
                         
-                        dat[,coords[i,2],coords[i,1]] <- tapply(data[, coords[i,2], coords[i,1]],
-                                                             INDEX = id, FUN = aggr)
+                        r[,,coords[i,2],coords[i,1]] <- tapply(data[m,, coords[i,2], coords[i,1]],
+                                                               INDEX = id, FUN = aggr)
                   }
-                  message("[", Sys.time(), "] Done.")
+                  return(r)
+            })
+            message("[", Sys.time(), "] Done.")
+            dat <- unname(do.call("abind", c(w, along=mind)))
+      }else{
+            dat <- array(dim = c(length(unique(id)), length(y.coord), ncol = length(x.coord)))
+            message("[", Sys.time(), "] Aggregating...")
+            for (i in 1:nrow(coords)){
+                  
+                  dat[,coords[i,2],coords[i,1]] <- tapply(data[, coords[i,2], coords[i,1]],
+                                                          INDEX = id, FUN = aggr)
             }
+            message("[", Sys.time(), "] Done.")
+      }
       
       return(dat)
 }
 
 #end    
-
-
-
-#' @title Get geographical coordinates of a climate data object
-#' @description Returns the coordinates of a climate data object, either stations
-#'  or field
-#' @param obj Any object extending the station or field classes
-#' @return A list with x and y components
-#' @author J. Bedia \email{joaquin.bedia@@gmail.com}
-#' @export
-#' 
-
-getCoordinates <- function(obj) {
-      if ("station" %in% attr(obj$Data, "dimensions")) {
-            x <- obj$xyCoords[ ,1]
-            y <- obj$xyCoords[ ,2]
-      } else {
-            x <- obj$xyCoords$x
-            y <- obj$xyCoords$y
-      }
-      return(list("x" = x, "y" = y))
-}
-# End
