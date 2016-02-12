@@ -7,14 +7,14 @@ Imports:
     utils,
     abind,
     RCurl,
-    fields
+    fields,
+    akima
 Suggests:
     downscaleR,
-    ecomsUDG.Raccess
 Type: Package
-Title: R Package for Remote and Local Climate Data Loading into R
-Version: 0.0-1
-Date: 2015-11-17
+Title: R Package for Climate Data Loading and Manipulation
+Version: 0.1-0
+Date: 2016-02-12
 Authors@R: as.person(c(
     "Santander Meteorology Group <http://meteo.unican.es> [aut]",
     "Joaquin Bedia <bediaj@unican.es> [ctb,cre]",
@@ -30,4 +30,4 @@ Description: Enables homogenized, user-friendly access to climate databases
     remotely stored via OPeNDAP or to locally stored data, allowing the
     retrieval of user-defined dimensional slices from large climate datasets.
 License: file LICENSE
-RoxygenNote: 5.0.0
+RoxygenNote: 5.0.1

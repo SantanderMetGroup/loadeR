@@ -1,4 +1,8 @@
 loadeR
 ======
 
+* Full support for rotated grid datasets (RCMs)
+* Improved bilinear interpolation routine
 * Eliminated dependency from package maps
+* Other minor bug fixes and enhancements
+

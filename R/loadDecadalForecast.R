@@ -15,13 +15,9 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 #' @title Load a field from decadal forecasts
-#' 
 #' @description Load a user-defined spatio-temporal slice from decadal forecasts
-#' 
 #' @import rJava
-#' 
 #' @template templateParams
 #' @param dictionary Default to TRUE, indicating that a dictionary is used and the .dic file is stored in the same path than the
 #' dataset. If the .dic file is stored elsewhere, then the argument is the full path to the .dic file (including the extension,
@@ -47,7 +43,6 @@
 #' @template templateGeolocation
 #' @export
 #' @author J. Bedia, S. Herrera, M. Iturbide, J.M. Gutierrez 
-#' @family loading
 #' @family loading.grid
 #'
 #' @examples \dontrun{
@@ -68,9 +63,9 @@
 
 
 loadDecadalForecast <- function(dataset, var, dictionary = FALSE, 
-                     members = NULL, lonLim = NULL, latLim = NULL, season = NULL,
-                     years = NULL, time = "none",
-                     aggr.d = "none", aggr.m = "none") {
+                                members = NULL, lonLim = NULL, latLim = NULL, season = NULL,
+                                years = NULL, time = "none",
+                                aggr.d = "none", aggr.m = "none") {
       time <- match.arg(time, choices = c("none","00","03","06","09","12","15","18","21","DD"))
       aggr.d <- match.arg(aggr.d, choices = c("none", "mean", "min", "max", "sum"))
       if (time != "DD" & aggr.d != "none") {
@@ -82,17 +77,17 @@ loadDecadalForecast <- function(dataset, var, dictionary = FALSE,
       var <- aux.level$var
       level <- aux.level$level
       if (dictionary == FALSE) {
-        dic <- NULL
-        shortName <- var
+            dic <- NULL
+            shortName <- var
       } else {
-        if (isTRUE(dictionary)) {
-          dicPath <- gsub("ncml$", "dic", dataset)
-        }
-        if (is.character(dictionary)) {
-          dicPath <- dictionary
-        }
-        dic <- dictionaryLookup(dicPath, var, time)
-        shortName <- dic$short_name          
+            if (isTRUE(dictionary)) {
+                  dicPath <- gsub("ncml$", "dic", dataset)
+            }
+            if (is.character(dictionary)) {
+                  dicPath <- dictionary
+            }
+            dic <- dictionaryLookup(dicPath, var, time)
+            shortName <- dic$short_name          
       }
       message("[", Sys.time(), "] ", "Opening connection with the UDG...")
       gds <- tryCatch(expr = {
@@ -115,7 +110,7 @@ loadDecadalForecast <- function(dataset, var, dictionary = FALSE,
       }
       # Forecasts
       if (!is.null(members)) {
-        members <- sort(members)
+            members <- sort(members)
       }
       # latLon <- getLatLonDomainForecast(grid, lonLim, latLim)      
       latLon <- getLatLonDomain(grid, lonLim, latLim)      
@@ -125,47 +120,47 @@ loadDecadalForecast <- function(dataset, var, dictionary = FALSE,
       verticalPars <- getVerticalLevelPars(grid, level)
       cube <- makeSubsetDecadal(grid, latLon, runTimePars, memberRangeList, foreTimePars, verticalPars)
       auxDates <- as.POSIXlt(cube$foreTimePars$forecastDates$start, tz = "GMT")
-      indMonthValid <- which(is.element(auxDates$mon+1,season))
-      if (length(indMonthValid)<dim(cube$mdArray)[grep("^time$", attr(cube$mdArray,"dimensions"))]){
-        dimName <- attr(cube$mdArray, "dimensions")
-        cube$mdArray <- cube$mdArray[,,indMonthValid,]
-        attr(cube$mdArray, "dimensions") <- dimName
-        cube$foreTimePars$forecastDates$start <- cube$foreTimePars$forecastDates$start[indMonthValid]
-        cube$foreTimePars$forecastDates$end <- cube$foreTimePars$forecastDates$end[indMonthValid]
+      indMonthValid <- which(is.element(auxDates$mon + 1,season))
+      if (length(indMonthValid) < dim(cube$mdArray)[grep("^time$", attr(cube$mdArray,"dimensions"))]) {
+            dimName <- attr(cube$mdArray, "dimensions")
+            cube$mdArray <- cube$mdArray[,,indMonthValid,]
+            attr(cube$mdArray, "dimensions") <- dimName
+            cube$foreTimePars$forecastDates$start <- cube$foreTimePars$forecastDates$start[indMonthValid]
+            cube$foreTimePars$forecastDates$end <- cube$foreTimePars$forecastDates$end[indMonthValid]
       }
-        foreTimePars <- NULL
-        if (!is.null(dic)) {
-          isStandard <- TRUE
-          cube$mdArray <- dictionaryTransformForecast(dic, cube$foreTimePars, cube$mdArray)
-          var <- derInterface$origVar
-        } else {
-          isStandard <- FALSE
-        }
-        if (isTRUE(latLon$revLat)) {
-          cube$mdArray <- revArrayLatDim(cube$mdArray, grid)
-        }
-        # formatting initialization dates
-        runTimePars$runDates <- format(as.POSIXct(runTimePars$runDates, tz = "GMT"), format = "%Y-%m-%d %H:%M:%S", usetz = TRUE)
-        Variable <- list("varName" = var, "level" = level)
-        attr(Variable, "is_standard") <- isStandard
-        if (isStandard) {
-          data(vocabulary, envir = environment())
-          attr(Variable, "units") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier,), 3])
-          attr(Variable, "longname") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier,), 2])
-        } else {
-          attr(Variable, "units") <- grid$getUnitsString()
-          attr(Variable, "longname") <- grid$getFullName()
-        }
-        attr(Variable, "daily_agg_cellfun") <- cube$foreTimePars$aggr.d
-        attr(Variable, "monthly_agg_cellfun") <- cube$foreTimePars$aggr.m
-        attr(Variable, "verification_time") <- time
-        out <- list("Variable" = Variable,
-                    "Data" = cube$mdArray,
-                    "xyCoords" = latLon$xyCoords,
-                    "Dates" = cube$foreTimePars$forecastDates,
-                    "InitializationDates" = runTimePars$runDates,
-                    "Members" = names(memberRangeList))
-
+      foreTimePars <- NULL
+      if (!is.null(dic)) {
+            isStandard <- TRUE
+            cube$mdArray <- dictionaryTransformForecast(dic, cube$foreTimePars, cube$mdArray)
+            # var <- derInterface$origVar
+      } else {
+            isStandard <- FALSE
+      }
+      if (isTRUE(latLon$revLat)) {
+            cube$mdArray <- revArrayLatDim(cube$mdArray, grid)
+      }
+      # formatting initialization dates
+      runTimePars$runDates <- format(as.POSIXct(runTimePars$runDates, tz = "GMT"), format = "%Y-%m-%d %H:%M:%S", usetz = TRUE)
+      Variable <- list("varName" = var, "level" = level)
+      attr(Variable, "is_standard") <- isStandard
+      if (isStandard) {
+            vocabulary <- showVocabulary()
+            attr(Variable, "units") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier,), 3])
+            attr(Variable, "longname") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier,), 2])
+      } else {
+            attr(Variable, "units") <- grid$getUnitsString()
+            attr(Variable, "longname") <- grid$getFullName()
+      }
+      attr(Variable, "daily_agg_cellfun") <- cube$foreTimePars$aggr.d
+      attr(Variable, "monthly_agg_cellfun") <- cube$foreTimePars$aggr.m
+      attr(Variable, "verification_time") <- time
+      out <- list("Variable" = Variable,
+                  "Data" = cube$mdArray,
+                  "xyCoords" = latLon$xyCoords,
+                  "Dates" = cube$foreTimePars$forecastDates,
+                  "InitializationDates" = runTimePars$runDates,
+                  "Members" = names(memberRangeList))
+      
       gds$close()
       message("[", Sys.time(), "]", " Done")
       attr(out$xyCoords, "projection") <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0"
@@ -187,9 +182,11 @@ loadDecadalForecast <- function(dataset, var, dictionary = FALSE,
 # End
 
 
-#' @title Adjust dates in forecast data
+#' @title Date adjustment
+#' @description Adjust dates in forecast data
 #' @param foreTimePars A list of elements as returned by \code{\link{getRunTimeDomain}}
 #' @author S. Herrera
+#' @keywords internal
 
 adjustDates.forecast <- function(foreTimePars) {
       dates <- as.POSIXct(do.call("c", foreTimePars$forecastDates[[1]]))

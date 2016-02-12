@@ -7,6 +7,7 @@ huss,2-meter specific humidity,kg.kg-1
 ps,air pressure at surface level,Pa
 psl,air pressure at sea level,Pa
 rlds,surface downwelling longwave radiation,W.m-2
+rlut,toa outgoing longwave flux,W.m-2
 rsds,surface downwelling shortwave radiation,W.m-2
 ta,air temperature,degrees Celsius
 tas,2-meter air temperature,degrees Celsius

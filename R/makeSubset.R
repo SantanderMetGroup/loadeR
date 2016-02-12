@@ -38,7 +38,11 @@ makeSubset <- function(grid, timePars, levelPars, latLon) {
             aux.list2 <- rep(list(bquote()), length(latLon$llbbox))
             for (j in 1:length(aux.list2)) {
                   if (!proj$isLatLon()){
-                        subSet <- grid$makeSubset(levelPars$zRange, levelPars$zRange, timePars$tRanges[[i]], levelPars$zRange, latLon$latRanges, latLon$lonRanges)
+                        if(length(aux.list2)>1){
+                        subSet <- grid$makeSubset(levelPars$zRange, levelPars$zRange, timePars$tRanges[[i]], levelPars$zRange, latLon$latRanges[[j]], latLon$lonRanges[[j]])
+                        }else{
+                              subSet <- grid$makeSubset(levelPars$zRange, levelPars$zRange, timePars$tRanges[[i]], levelPars$zRange, latLon$latRanges, latLon$lonRanges)      
+                        }
                   }else{
                         subSet <- grid$makeSubset(timePars$tRanges[[i]], levelPars$zRange, latLon$llbbox[[j]], 1L, 1L, 1L)
                   }
