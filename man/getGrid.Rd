@@ -47,8 +47,6 @@ S. Herrera and J. Bedia
 }
 \seealso{
 Other loading.grid: \code{\link{interpData}},
-  \code{\link{interpGridData}},
-  \code{\link{interpLocData}},
   \code{\link{loadDecadalForecast}},
   \code{\link{loadGridData}}
 }
