@@ -7,7 +7,8 @@ Imports:
     utils,
     abind,
     RCurl,
-    fields
+    fields,
+    akima
 Suggests:
     downscaleR,
 Type: Package
