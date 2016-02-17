@@ -23,7 +23,7 @@
 #' @import rJava
 #' 
 #' @template templateParams
-#' @param dictionary Default to TRUE, indicating that a dictionary is used and the .dic file is stored in the same path than the
+#' @param dictionary Default to FALSE, if TRUE a dictionary is used and the .dic file is stored in the same path than the
 #' dataset. If the .dic file is stored elsewhere, then the argument is the full path to the .dic file (including the extension,
 #' e.g.: \code{"/path/to/the/dictionary_file.dic"}). This is the case for instance when the dataset is stored in a remote URL,
 #' and we have a locally stored dictionary for that particular dataset. If FALSE no variable homogenization takes place,
@@ -101,7 +101,7 @@
 #' }
 #' 
 
-loadGridData <- function(dataset, var, dictionary = TRUE, lonLim = NULL,
+loadGridData <- function(dataset, var, dictionary = FALSE, lonLim = NULL,
                          latLim = NULL, season = NULL, years = NULL, time = "none",
                          aggr.d = "none", aggr.m = "none") {
       time <- match.arg(time, choices = c("none","00","03","06","09","12","15","18","21","DD"))
