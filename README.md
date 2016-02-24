@@ -1,13 +1,13 @@
 What is loadeR?
 ===============
 
-`loadeR` is an R package for climate data data access and manipulation, including:
- * Reading local and remote (OPeNDAP) climate datasets
+`loadeR` is an R package for climate data data access and manipulation powered by NetCDF-Java (trough the `rJava` package). It allows:
+ * Reading local and remote (OPeNDAP) climate datasets (NetCDF, Grib, HDF, etc.)
  * Creation of catalogs
  * Integration with the User Data Gateway ([UDG](http://www.meteo.unican.es/udg-wiki))
  * Basic data maniputation 
 
-`loadeR` is powered by NetCDF-Java trough the `rJava` package. Thus, a large variety of files can be read, including the most common NetCDF, Grib, HDF, etc. Find out more about this package (including [installation information](https://github.com/SantanderMetGroup/loadeR/wiki/Installation)) in the [loadeR's WIKI](https://github.com/SantanderMetGroup/loadeR/wiki).
+Find out more about this package (including [installation information](https://github.com/SantanderMetGroup/loadeR/wiki/Installation)) in the [loadeR's WIKI](https://github.com/SantanderMetGroup/loadeR/wiki).
 
 # Other packages of the `loadeR` bundle
 
