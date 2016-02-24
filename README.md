@@ -5,7 +5,7 @@ What is loadeR?
  * Reading local and remote (OPeNDAP) climate datasets (NetCDF, Grib, HDF, etc.)
  * Creation of catalogs
  * Integration with the User Data Gateway ([UDG](http://www.meteo.unican.es/udg-wiki))
- * Basic data maniputation 
+ * Basic data maniputation, homogeneization and spatiotemporal collocation.
 
 Find out more about this package (including [installation information](https://github.com/SantanderMetGroup/loadeR/wiki/Installation)) in the [loadeR's WIKI](https://github.com/SantanderMetGroup/loadeR/wiki).
 
