@@ -169,8 +169,6 @@ J. Bedia, S. Herrera, M. Iturbide, J.M. Gutierrez
 Other loading: \code{\link{loadStationData}},
   \code{\link{makeAggregatedDataset}}
 
-Other loading.grid: \code{\link{getGrid}},
-  \code{\link{interpData}},
-  \code{\link{loadDecadalForecast}}
+Other loading.grid: \code{\link{loadDecadalForecast}}
 }
 

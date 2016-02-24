@@ -133,7 +133,6 @@ tasDECA <- loadDecadalForecast(
 J. Bedia, S. Herrera, M. Iturbide, J.M. Gutierrez
 }
 \seealso{
-Other loading.grid: \code{\link{getGrid}},
-  \code{\link{interpData}}, \code{\link{loadGridData}}
+Other loading.grid: \code{\link{loadGridData}}
 }
 
