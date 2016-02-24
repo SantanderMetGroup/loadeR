@@ -1,7 +1,7 @@
 #' @title Get regular grid definition 
 #' @description Get the (regular) grid definition from an existing (gridded) dataset
 #' @param gridData A grid data object coming from \code{\link{loadGridData}} or \code{\link{interpData}}
-#'  or the function \code{\link[ecomsUDG.Raccess]{loadECOMS}} of package \pkg{ecomsUDG.Raccess}.
+#'  or the function \code{loadECOMS} of package \pkg{loadeR.ECOMS}.
 #' @return A list of two named components, \code{x} and \code{y}, consisting of a vector of length two each one, defining
 #' the x/y lower and upper bounds. The grid-cell resolution is given by the attributes \code{'resX'} and
 #'  \code{'resY'} respectively.
@@ -25,12 +25,13 @@
 #' # The other way round, using nearest neighbour interpolation:
 #' int2 <- interpData(tasmin_forecast, getGrid(iberia_ncep_hus850))
 #' plotMeanField(int2)
-#' #' # In this case, the mismatch in domain extent occurs only in the longitudes (to the west)
+#' # In this case, the mismatch in domain extent occurs only in the longitudes (to the west)
 #' }
 #' 
 
 getGrid <- function(gridData) {
       if (!any(attr(gridData$Data, "dimensions") == "station")) {
+            if ("lon" %in% names(gridData$xyCoords)) stop("Not a regular grid")
             grid.x <- c(gridData$xyCoords$x[1], tail(gridData$xyCoords$x, 1))
             grid.y <- c(gridData$xyCoords$y[1], tail(gridData$xyCoords$y, 1))
             out <- list(x = grid.x, y = grid.y)

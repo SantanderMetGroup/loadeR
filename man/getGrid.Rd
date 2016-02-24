@@ -8,7 +8,7 @@ getGrid(gridData)
 }
 \arguments{
 \item{gridData}{A grid data object coming from \code{\link{loadGridData}} or \code{\link{interpData}}
-or the function \code{\link[ecomsUDG.Raccess]{loadECOMS}} of package \pkg{ecomsUDG.Raccess}.}
+or the function \code{loadECOMS} of package \pkg{loadeR.ECOMS}.}
 }
 \value{
 A list of two named components, \code{x} and \code{y}, consisting of a vector of length two each one, defining
@@ -38,7 +38,7 @@ plotMeanField(int)
 # The other way round, using nearest neighbour interpolation:
 int2 <- interpData(tasmin_forecast, getGrid(iberia_ncep_hus850))
 plotMeanField(int2)
-#' # In this case, the mismatch in domain extent occurs only in the longitudes (to the west)
+# In this case, the mismatch in domain extent occurs only in the longitudes (to the west)
 }
 
 }
