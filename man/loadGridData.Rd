@@ -4,7 +4,7 @@
 \alias{loadGridData}
 \title{Load a field from a dataset}
 \usage{
-loadGridData(dataset, var, dictionary = TRUE, lonLim = NULL,
+loadGridData(dataset, var, dictionary = FALSE, lonLim = NULL,
   latLim = NULL, season = NULL, years = NULL, time = "none",
   aggr.d = "none", aggr.m = "none")
 }
@@ -18,7 +18,7 @@ this is the path to the directory the dataset lives in.}
  by the \dQuote{@} symbol (e.g. \code{var = "z@700"} for geopotential heigth at 700 mb isobaric surface pressure level).
  It is also possible to enter the variable name as originally coded in the dataset to skip data homogenization.}
 
-\item{dictionary}{Default to TRUE, indicating that a dictionary is used and the .dic file is stored in the same path than the
+\item{dictionary}{Default to FALSE, if TRUE a dictionary is used and the .dic file is stored in the same path than the
 dataset. If the .dic file is stored elsewhere, then the argument is the full path to the .dic file (including the extension,
 e.g.: \code{"/path/to/the/dictionary_file.dic"}). This is the case for instance when the dataset is stored in a remote URL,
 and we have a locally stored dictionary for that particular dataset. If FALSE no variable homogenization takes place,

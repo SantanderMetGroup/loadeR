@@ -29,4 +29,4 @@ devtools::install_github(c("SantanderMetGroup/loadeR.java", "SantanderMetGroup/l
 
 The [`loadeR.ECOMS`](https://github.com/SantanderMetGroup/loadeR.ECOMS/) package extends the `loadeR` capabilities by providing homogenized access to the User Data Gateway, the Santander MetGroup's central data repository, including different seasonal and decadal forecast datasets.
 
-
+The [`loadeR.2nc`](https://github.com/SantanderMetGroup/loadeR.2nc/) package provides support for exporting to NetCDF.
