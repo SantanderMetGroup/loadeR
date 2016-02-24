@@ -25,8 +25,10 @@ devtools::install_github(c("SantanderMetGroup/loadeR.java", "SantanderMetGroup/l
 
 # See also...
 
-[`downscaleR`](https://github.com/SantanderMetGroup/downscaleR) is an R package for climate data analysis, with a special focus on empirical-statistical downscaling of daily data. Find more about this package in the [downscaleR's wiki](https://github.com/SantanderMetGroup/downscaleR/wiki).
+ *[`loadeR.ECOMS`](https://github.com/SantanderMetGroup/loadeR.ECOMS/) extends `loadeR` by providing homogenized access to the [User Data Gateway](http://meteo.unican.es/trac/wiki/udg), the Santander MetGroup's OPeNDAP central data repository, including different reanalysis products and seasonal to decadal forecast datasets.
 
-The [`loadeR.ECOMS`](https://github.com/SantanderMetGroup/loadeR.ECOMS/) package extends the `loadeR` capabilities by providing homogenized access to the User Data Gateway, the Santander MetGroup's central data repository, including different seasonal and decadal forecast datasets.
+ *[`loadeR.2nc`](https://github.com/SantanderMetGroup/loadeR.2nc/) provides support for exporting `loadeR` grids to NetCDF.
 
-The [`loadeR.2nc`](https://github.com/SantanderMetGroup/loadeR.2nc/) package provides support for exporting to NetCDF.
+ *[`downscaleR`](https://github.com/SantanderMetGroup/downscaleR) is an R package for climate data analysis, with a special focus on bias correction and empirical-statistical downscaling of daily data, fully integrated with the `loadeR` bundle. Find more about this package in the [downscaleR's wiki](https://github.com/SantanderMetGroup/downscaleR/wiki).
+
+
