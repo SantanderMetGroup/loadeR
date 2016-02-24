@@ -25,8 +25,8 @@ devtools::install_github(c("SantanderMetGroup/loadeR.java", "SantanderMetGroup/l
 
 # See also...
 
-`downscaleR` is an R package for climate data analysis, with a special focus on empirical-statistical downscaling of daily data. Find more about this package in the [downscaleR's wiki](https://github.com/SantanderMetGroup/downscaleR/wiki).
+[`downscaleR`](https://github.com/SantanderMetGroup/downscaleR) is an R package for climate data analysis, with a special focus on empirical-statistical downscaling of daily data. Find more about this package in the [downscaleR's wiki](https://github.com/SantanderMetGroup/downscaleR/wiki).
 
-The [`ecomsUDG.Raccess`](https://github.com/SantanderMetGroup/ecomsUDG.Raccess/) package extends the `loadeR` capabilities by providing homogenized access to the User Data Gateway, the Santander MetGroup's central data repository, including different seasonal2decadal forecast datasets.
+The [`loadeR.ECOMS`](https://github.com/SantanderMetGroup/loadeR.ECOMS/) package extends the `loadeR` capabilities by providing homogenized access to the User Data Gateway, the Santander MetGroup's central data repository, including different seasonal and decadal forecast datasets.
 
 

@@ -283,10 +283,17 @@ interpData <- function(obj, new.Coordinates = list(x = NULL, y = NULL), method =
             obj$xyCoords$y <- new.Coordinates$y
             attr(obj$xyCoords, "resX") <- abs(new.Coordinates$x[2] - new.Coordinates$x[1])
             attr(obj$xyCoords, "resY") <- abs(new.Coordinates$y[2] - new.Coordinates$y[1]) 
+            if(is.null(attr(obj$xyCoords, "projection")) & !is.null(attr(new.Coordinates, "projection"))){
+                  attr(obj$xyCoords, "projection") <- attr(new.Coordinates, "projection")
+            }
       } else {
             tab <- c("member", "time", "level", "station")
             obj$xyCoords <- matrix(abind(new.Coordinates$x,new.Coordinates$y), nrow = length(new.Coordinates$x), ncol = 2)
             attr(obj$xyCoords, "type") <- "location"
+            if(!is.null(attr(new.Coordinates, "projection"))){
+                  attr(obj$xyCoords, "projection") <- attr(new.Coordinates, "projection")
+            }
+            
       }
       attr(obj$xyCoords, "interpolation") <-  method
       x <- attr(obj$Data, "dimensions")
