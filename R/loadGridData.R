@@ -1,6 +1,6 @@
 # loadGridData.R Load a user-defined spatio-temporal slice from a gridded dataset
 #
-#     Copyright (C) 2015 Santander Meteorology Group (http://www.meteo.unican.es)
+#     Copyright (C) 2016 Santander Meteorology Group (http://www.meteo.unican.es)
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -16,12 +16,9 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#' @title Load a field from a dataset
-#' 
+#' @title Load a grid from a gridded dataset
 #' @description Load a user-defined spatio-temporal slice from a gridded dataset
-#' 
 #' @import rJava
-#' 
 #' @template templateParams
 #' @param dictionary Default to FALSE, if TRUE a dictionary is used and the .dic file is stored in the same path than the
 #' dataset. If the .dic file is stored elsewhere, then the argument is the full path to the .dic file (including the extension,
@@ -60,15 +57,14 @@
 #' ncep <- "mydirectory/Iberia_NCEP/Iberia_NCEP.ncml"
 #' # Load air temperature at 850 millibar isobaric surface pressure level from the built-in
 #' # NCEP dataset, for the Iberian Peninsula in summer (JJA):
-#' field <- loadGridData(ncep, var = "ta@@850", dictionary = TRUE, lonLim = c(-10,5),
+#' grid <- loadGridData(ncep, var = "ta@@850", dictionary = TRUE, lonLim = c(-10,5),
 #'    latLim = c(35.5, 44.5), season = 6:8, years = 1981:2010)
-#' str(field)   
-#' plotMeanField(field)
+#' str(grid)   
 #' # Calculation of monthly mean temperature:
-#' field.mm <- loadGridData(ncep, var = "ta@@850", dictionary = TRUE, lonLim = c(-10,5),
+#' grid.mm <- loadGridData(ncep, var = "ta@@850", dictionary = TRUE, lonLim = c(-10,5),
 #'                          latLim = c(35.5, 44.5), season = 6:8,
 #'                          years = 1981:2010, aggr.m = "mean")
-#' str(field.mm)
+#' str(grid.mm)
 #' 
 #' # Same but using the original variable (not homogenized via dictionary):
 #' di <- dataInventory(ncep)
@@ -76,13 +72,11 @@
 #' showVocabulary()
 #' # Variable is named 'T', instead of the standard name 'ta' in the vocabulary
 #' # Vertical level is indicated using the '@@' symbol:
-#' non.standard.field <- loadGridData(ncep, var = "T@@850", dictionary = FALSE, lonLim = c(-10,5),
+#' non.standard.grid <- loadGridData(ncep, var = "T@@850", dictionary = FALSE, lonLim = c(-10,5),
 #'                                   latLim = c(35.5, 44.5), season = 6:8, 
 #'                                   years = 1981:2010, aggr.m = "mean")
-#' str(non.standard.field$Variable)
+#' str(non.standard.grid$Variable)
 #' # Note the units are now in Kelvin, as originally stored
-#' plotMeanField(non.standard.field)
-#' 
 #' ## Example of data load from a remote repository via OPeNDAP (NASA dataserver)
 #  Definition of the OPeNDAP URL of the dataset
 #' ds <- "http://dataserver3.nccs.nasa.gov/thredds/dodsC/bypass/NEX-GDDP/bcsd/rcp85/r1i1p1/tasmax/MIROC-ESM.ncml"
@@ -97,9 +91,8 @@
 #'                        years = 2021,
 #'                        time = "12",
 #'                        aggr.m = "mean")
-#' plotMeanField(tasmax)
 #' }
-#' 
+
 
 loadGridData <- function(dataset, var, dictionary = FALSE, lonLim = NULL,
                          latLim = NULL, season = NULL, years = NULL, time = "none",
@@ -135,13 +128,13 @@ loadGridData <- function(dataset, var, dictionary = FALSE, lonLim = NULL,
             message("[", Sys.time(), "] ", "Opening connection with remote server...")
             gds <- tryCatch(expr = J("ucar.nc2.dt.grid.GridDataset")$open(dataset), error = function(e) {
                   if (grepl("return status=503", e)) {
-                        stop("Service temporarily unavailable\nThe server is temporarily unable to service your request due to maintenance downtime or capacity problems, please try again later.")
+                        stop("Service temporarily unavailable\nThe server is temporarily unable to service your request due to maintenance downtime or capacity problems, please try again later.", call. = FALSE)
                   } else if (grepl("return status=404", e)) {
-                        stop(dataset," is not a valid URL)")
+                        stop(dataset," is not a valid URL)", call. = FALSE)
                   }
             })
             if (is.null(gds)) {
-                  stop("Requested URL not found\nThe problem may be momentary.")      
+                  stop("Requested URL not found\nThe problem may be momentary.", call. = FALSE)      
             }
             message("[", Sys.time(), "] ", "Connected successfuly")
       } else {
@@ -149,7 +142,7 @@ loadGridData <- function(dataset, var, dictionary = FALSE, lonLim = NULL,
       }
       grid <- gds$findGridByShortName(shortName)
       if (is.null(grid)) {
-            stop("Variable requested not found\nCheck 'dataInventory' output and/or dictionary 'identifier'.")
+            stop("Variable requested not found\nCheck 'dataInventory' output and/or dictionary 'identifier'.", call. = FALSE)
       }
       latLon <- getLatLonDomain(grid, lonLim, latLim)
       proj <- grid$getCoordinateSystem()$getProjection()

@@ -2,7 +2,7 @@
 % Please edit documentation in R/loadDecadalForecast.R
 \name{loadDecadalForecast}
 \alias{loadDecadalForecast}
-\title{Load a field from decadal forecasts}
+\title{Load a grid from a decadal forecast}
 \usage{
 loadDecadalForecast(dataset, var, dictionary = FALSE, members = NULL,
   lonLim = NULL, latLim = NULL, season = NULL, years = NULL,

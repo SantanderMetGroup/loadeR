@@ -1,8 +1,23 @@
+# makeAggregatedDataset.R Create a virtual dataset (ncml)
+#
+#     Copyright (C) 2016 Santander Meteorology Group (http://www.meteo.unican.es)
+#
+#     This program is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+# 
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+# 
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #' @description Creates virtual datasets by modifying and combining other datasets via NcML.
 #' @title Create a dataset from a collection of (netCDF) files
-#' 
 #' @import rJava
-
 #' @details The NetCDF Markup Language (NcML) is an XML dialect that allows creating
 #' CDM datasets (i.e.: any collection of scientific data which can be accessed
 #' through the NetCDF-Java / CDM library). The NcML document refers to
@@ -17,7 +32,6 @@
 #' metadata and variables to be renamed, added, deleted and restructured.
 #' This function is intended for a simple operation of aggregation of collections of netCDF files,
 #' as it is the most common case of gridded climate datasets.
-#'
 #' @param source.dir Parent directory containing the files to be aggregated
 #' @param ncml.file Full path of the output NcML file
 #' @param file.ext Character string indicating the extension of the CDM datasets
@@ -29,7 +43,7 @@
 #' (see \link[base]{regexp}). This argument can be useful in order to save time
 #' when only a particular subset of variables from the whole collection is 
 #' needed. Default to \code{NULL}, meaning that all files in the search path
-#' are included (See next argument).
+#' are included (See next argument). See Notes.
 #' @param recursive Logical. Should the listing of files to be aggregated recurse
 #' into directories?. Default to \code{FALSE}. This is useful for instance when 
 #' each variable is stored in a sepparate subdirectory.
@@ -39,7 +53,11 @@
 #' @export
 #' @note The current implementation of the function only considers datasets in which each file stores
 #' one single variable. For other dataset configurations, please refer to the NcML tutorial.
-#' @references NcML Tutorial \url{http://www.unidata.ucar.edu/software/thredds/current/netcdf-java/ncml/Tutorial.html}. Accessed 28 Feb 2015.).
+#' 
+#' \emph{Wildcards} (or \emph{globbing}) patterns as used by most shells can be mapped to regular expression in R 
+#' using \code{\link[utils]{glob2rx}}.
+#' 
+#' @references NcML Tutorial \url{http://www.unidata.ucar.edu/software/thredds/current/netcdf-java/ncml/Tutorial.html}. (Last accessed 14 Mar 2016.).
 #' @author J. Bedia
 #' @family loading
 

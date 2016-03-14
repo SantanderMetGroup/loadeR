@@ -1,3 +1,20 @@
+# dataInventory.R Get an overview of the contents of a dataset
+#
+#     Copyright (C) 2016 Santander Meteorology Group (http://www.meteo.unican.es)
+#
+#     This program is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+# 
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+# 
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #' @title Dataset inventory
 #' @description Function to provide a quick overview of a climate dataset
 #'  (either stations or gridded data)
@@ -7,12 +24,9 @@
 #'  see \code{\link{loadGridData}} for details).
 #' @param return.stats Optional logical flag indicating if summary statistics of the dataset
 #'  should be returned with the inventory. Only used for station data.
-#'  
 #' @return A list of components describing the variables and other characteristics of the target dataset.
-#' 
 #' @note The variable names returned correspond to the original names of the variables as stored in the dataset,
 #' and not to the standard naming convention defined in the vocabulary.
-#' 
 #' @examples \donttest{
 #' dir.create("mydirectory")
 #' download.file("http://meteo.unican.es/work/downscaler/data/VALUE_ECA_86_v2.tar.gz", 
@@ -27,7 +41,6 @@
 #' di.stats <- dataInventory(value, return.stats = TRUE)
 #' print(di.stats$Summary.stats)
 #' } 
-#' 
 #' @seealso \code{\link{stationInfo}} for a quick overview of available stations in station datasets.
 #' @export
 #' @author J Bedia 
@@ -44,7 +57,7 @@ dataInventory <- function(dataset, return.stats = FALSE) {
       return(out)
 }
 # End
-################################################################################
+
 
 #' @title Data inventory of standard ASCII station datasets
 #' @description Make data inventory from a station dataset in standard ASCII format
@@ -101,24 +114,18 @@ dataInventory.ASCII <- function(dataset, rs) {
       return(info)
 }
 # End
-################################################################################
+
 
 #' @title Inventory of a gridded dataset
-#' 
 #' @description Returns a list with summary information about the variables stored in a gridded dataset.
 #' Sub-routine of \code{dataInventory}
-#' 
 #' @param dataset A full path to the file describing the dataset (NcML)
-#' 
 #' @return A (named) list whose length is determined by the number of variables stored in the dataset,
 #' its names corresponding to the short names of the variables.
 #' For each variable, information on the variable long name, data type, units and
 #' characteristics of its dimensions is provided.
-#' 
 #' @author J. Bedia 
-#' 
 #' @keywords internal
-#' 
 #' @import rJava
 
 
@@ -150,7 +157,6 @@ dataInventory.NetCDF <- function(dataset) {
       return(var.list)
 }
 # End
-################################################################################
 
 
 #' @title Retrieve station info

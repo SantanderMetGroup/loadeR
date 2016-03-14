@@ -1,6 +1,6 @@
 # loadDecadalForecast.R Load a user-defined spatio-temporal slice from decadal forecasts
 #
-#     Copyright (C) 2015 Santander Meteorology Group (http://www.meteo.unican.es)
+#     Copyright (C) 2016 Santander Meteorology Group (http://www.meteo.unican.es)
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#' @title Load a field from decadal forecasts
+#' @title Load a grid from a decadal forecast
 #' @description Load a user-defined spatio-temporal slice from decadal forecasts
 #' @import rJava
 #' @template templateParams

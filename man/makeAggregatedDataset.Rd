@@ -23,7 +23,7 @@ regular expression will be considered in the aggregation
 (see \link[base]{regexp}). This argument can be useful in order to save time
 when only a particular subset of variables from the whole collection is 
 needed. Default to \code{NULL}, meaning that all files in the search path
-are included (See next argument).}
+are included (See next argument). See Notes.}
 
 \item{recursive}{Logical. Should the listing of files to be aggregated recurse
 into directories?. Default to \code{FALSE}. This is useful for instance when 
@@ -57,12 +57,15 @@ as it is the most common case of gridded climate datasets.
 \note{
 The current implementation of the function only considers datasets in which each file stores
 one single variable. For other dataset configurations, please refer to the NcML tutorial.
+
+\emph{Wildcards} (or \emph{globbing}) patterns as used by most shells can be mapped to regular expression in R 
+using \code{\link[utils]{glob2rx}}.
 }
 \author{
 J. Bedia
 }
 \references{
-NcML Tutorial \url{http://www.unidata.ucar.edu/software/thredds/current/netcdf-java/ncml/Tutorial.html}. Accessed 28 Feb 2015.).
+NcML Tutorial \url{http://www.unidata.ucar.edu/software/thredds/current/netcdf-java/ncml/Tutorial.html}. (Last accessed 14 Mar 2016.).
 }
 \seealso{
 Other loading: \code{\link{loadGridData}},

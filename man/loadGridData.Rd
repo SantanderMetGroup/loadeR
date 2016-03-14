@@ -2,7 +2,7 @@
 % Please edit documentation in R/loadGridData.R
 \name{loadGridData}
 \alias{loadGridData}
-\title{Load a field from a dataset}
+\title{Load a grid from a gridded dataset}
 \usage{
 loadGridData(dataset, var, dictionary = FALSE, lonLim = NULL,
   latLim = NULL, season = NULL, years = NULL, time = "none",
@@ -122,15 +122,14 @@ untar("mydirectory/NCEP_Iberia.tar.gz", exdir = "mydirectory")
 ncep <- "mydirectory/Iberia_NCEP/Iberia_NCEP.ncml"
 # Load air temperature at 850 millibar isobaric surface pressure level from the built-in
 # NCEP dataset, for the Iberian Peninsula in summer (JJA):
-field <- loadGridData(ncep, var = "ta@850", dictionary = TRUE, lonLim = c(-10,5),
+grid <- loadGridData(ncep, var = "ta@850", dictionary = TRUE, lonLim = c(-10,5),
    latLim = c(35.5, 44.5), season = 6:8, years = 1981:2010)
-str(field)   
-plotMeanField(field)
+str(grid)   
 # Calculation of monthly mean temperature:
-field.mm <- loadGridData(ncep, var = "ta@850", dictionary = TRUE, lonLim = c(-10,5),
+grid.mm <- loadGridData(ncep, var = "ta@850", dictionary = TRUE, lonLim = c(-10,5),
                          latLim = c(35.5, 44.5), season = 6:8,
                          years = 1981:2010, aggr.m = "mean")
-str(field.mm)
+str(grid.mm)
 
 # Same but using the original variable (not homogenized via dictionary):
 di <- dataInventory(ncep)
@@ -138,13 +137,11 @@ names(di)
 showVocabulary()
 # Variable is named 'T', instead of the standard name 'ta' in the vocabulary
 # Vertical level is indicated using the '@' symbol:
-non.standard.field <- loadGridData(ncep, var = "T@850", dictionary = FALSE, lonLim = c(-10,5),
+non.standard.grid <- loadGridData(ncep, var = "T@850", dictionary = FALSE, lonLim = c(-10,5),
                                   latLim = c(35.5, 44.5), season = 6:8, 
                                   years = 1981:2010, aggr.m = "mean")
-str(non.standard.field$Variable)
+str(non.standard.grid$Variable)
 # Note the units are now in Kelvin, as originally stored
-plotMeanField(non.standard.field)
-
 ## Example of data load from a remote repository via OPeNDAP (NASA dataserver)
 ds <- "http://dataserver3.nccs.nasa.gov/thredds/dodsC/bypass/NEX-GDDP/bcsd/rcp85/r1i1p1/tasmax/MIROC-ESM.ncml"
 # Monthly mean maximum summer 2m temperature at 12:00 UTC over the Iberian Peninsula:
@@ -158,9 +155,7 @@ tasmax <- loadGridData(dataset = ds,
                        years = 2021,
                        time = "12",
                        aggr.m = "mean")
-plotMeanField(tasmax)
 }
-
 }
 \author{
 J. Bedia, S. Herrera, M. Iturbide, J.M. Gutierrez
