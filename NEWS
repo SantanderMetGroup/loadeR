@@ -1,8 +1,6 @@
 loadeR
 ======
 
-* Full support for rotated grid datasets (RCMs)
-* Improved bilinear interpolation routine
-* Eliminated dependency from package maps
+* Bug fix in latlon coordinates retrieval for global selections on 0-360 datasets (thanks to Matteo de Felice for reporting bug)
 * Other minor bug fixes and enhancements
 
