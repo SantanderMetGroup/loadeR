@@ -6,7 +6,7 @@
 #' @export
 #' @author J. Bedia
 
-open.dataset <- function(dataset) {
+openDataset <- function(dataset) {
       if (grepl("^http", dataset)) {
             message("[", Sys.time(), "] ", "Opening connection with remote server...")
             gds <- tryCatch(expr = J("ucar.nc2.dt.grid.GridDataset")$open(dataset), error = function(e) {
