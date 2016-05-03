@@ -19,9 +19,9 @@
 #' @details The function calls to specific subroutines for CFS or System4 requests, given their different
 #' runtime configurations. The function also takes care of selecting the appropriate initialization
 #' in the case of year-crossing seasons 
-#' @author J Bedia \email{joaquin.bedia@@gmail.com}
+#' @author J. Bedia, S. Herrera
 
-getRunTimeDomain <- function(dataset, grid, members, season, years) {
+getRunTimeDomain.decadal <- function(dataset, grid, members, season, years) {
       message("[", Sys.time(), "] Defining initialization time parameters")
       gcs <- grid$getCoordinateSystem()
       if (is.null(season)) {
