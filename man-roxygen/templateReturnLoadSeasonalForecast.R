@@ -23,6 +23,6 @@
 #' \item{Members}{A character vector with the names of the ensemble members returned,
 #'  in the same order as arranged in the \code{Data} array. Only for forecast datasets. NA for static variables (e.g. orography). See details.
 #' }
-#' 
+#' }
 #' Additionally, there are three global attributes with metadata, (\code{"dataset"}, which is always present.
 #'  In addition \code{"source"} and \code{"URL"} are added for datasets from the User Data Gateway.

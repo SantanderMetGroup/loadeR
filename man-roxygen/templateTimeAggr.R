@@ -13,4 +13,4 @@
 #'          In the same way, if the variable is a daily maximum/minimum (i.e., \code{var = "tasmax"} / \code{var = "tasmin"}), 
 #'          the corresponding function (\code{aggr.d = "max"} or \code{aggr.d = "min"}) could be applied to the subdaily outputs
 #'           on a daily basis to obtain absolute maximum/minimum daily values.
-#'           .
+#'           }
