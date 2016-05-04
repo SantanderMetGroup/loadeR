@@ -21,7 +21,7 @@ dictionaryLookup <- function(dicPath, var, time) {
       dictionary <- tryCatch({read.csv(dicPath, stringsAsFactors = FALSE)}, error = function(e) stop("Dictionary not found"))
       dicRow <- grep(paste("^", var, "$", sep = ""), dictionary$identifier) 
       if (length(dicRow) == 0) {
-            stop("Variable requested does not match any identifier in the dictionary\nType 'help(UDG.vocabulary)' for help on standard variable naming", call. = FALSE)
+            stop("Variable requested does not match any identifier in the dictionary\nType 'help(UDG.vocabulary)' for help on standard variable nomenclature", call. = FALSE)
       }
       if (length(dicRow) > 1) {
             if (time == "DD") {

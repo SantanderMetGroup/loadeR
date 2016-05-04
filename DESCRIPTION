@@ -14,11 +14,12 @@ Suggests:
 Type: Package
 Title: R Package for Climate Data Loading and Manipulation
 Version: 1.0-0
-Date: 2016-03-23
+Date: 2016-05-03
 Authors@R: as.person(c(
     "Santander Meteorology Group <http://meteo.unican.es> [aut]",
     "Joaquin Bedia <bediaj@unican.es> [ctb,cre]",
     "Antonio Cofino <antonio.cofino@unican.es> [ctb]",
+    "Matteo de Felice <matteo.defelice@enea.it> [ctb]",
     "Jose Manuel Gutierrez <gutierjm@unican.es> [ctb]",
     "Sixto Herrera <herreras@unican.es> [ctb]",
     "Maialen Iturbide <miturbide@ifca,unican.es> [ctb]",

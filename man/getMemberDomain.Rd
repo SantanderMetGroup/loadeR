@@ -27,6 +27,7 @@ rather than integers than in the former version. Otherwise, the getCoordValues()
 method should be used instead of getNames() on the ensemble axis.
 }
 \author{
-J. Bedia \email{joaquin.bedia@gmail.com}
+J. Bedia
 }
+\keyword{internal}
 

@@ -27,9 +27,9 @@
 #' @return A list of components describing the variables and other characteristics of the target dataset.
 #' @note The variable names returned correspond to the original names of the variables as stored in the dataset,
 #' and not to the standard naming convention defined in the vocabulary.
-#' @examples \donttest{
+#' @examples \dontrun{
 #' dir.create("mydirectory")
-#' download.file("http://meteo.unican.es/work/downscaler/data/VALUE_ECA_86_v2.tar.gz", 
+#' download.file("http://meteo.unican.es/work/loadeR/data/VALUE_ECA_86_v2.tar.gz", 
 #'               destfile = "mydirectory/VALUE_ECA_86_v2.tar.gz")
 #' # Extract files from the tar.gz file
 #' untar("mydirectory/VALUE_ECA_86_v2.tar.gz", exdir = "mydirectory")
@@ -172,14 +172,14 @@ dataInventory.NetCDF <- function(dataset) {
 #' @author J. Bedia 
 #' @examples \donttest{
 #' dir.create("mydirectory")
-#' download.file("http://meteo.unican.es/work/downscaler/data/VALUE_ECA_86_v2.tar.gz", 
+#' download.file("http://meteo.unican.es/work/loadeR/data/VALUE_ECA_86_v2.tar.gz", 
 #'               destfile = "mydirectory/VALUE_ECA_86_v2.tar.gz")
 #' # Extract files from the tar.gz file
 #' untar("mydirectory/VALUE_ECA_86_v2.tar.gz", exdir = "mydirectory")
 #' # Data inventory
 #' value <- "mydirectory/VALUE_ECA_86_v2"
 #' print(stationInfo(value))
-#' } 
+#' }
 #' 
 
 stationInfo <- function(dataset, plot = TRUE) {

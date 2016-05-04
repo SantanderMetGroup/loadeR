@@ -1,4 +1,6 @@
-#' @section Geolocation parameters: Regarding the selection of the spatial domain,
+#' @section Geolocation parameters:
+#' 
+#'  Regarding the selection of the spatial domain,
 #'  it is possible to select the whole spatial domain of the dataset by defining the arguments \code{lonLim=NULL}
 #'  and \code{latLim=NULL}. More often, rectangular domains are defined by the minimum and maximum coordinates
 #'  in longitude and latitude (for instance \code{lonLim=c(-10,10)} and \code{latLim=c(35,45)} indicates a
@@ -11,4 +13,8 @@
 #'  of rectangular domains, all stations falling inside that window will be loaded. For single-point selections,
 #'  the closest station will be chosen, and a note on-screen will inform about the distance from the selected point
 #'  to the chosen station.
+#'  
+#'  In case of irregular grids (e.g. the typical RCM rotated pole projections), the regular coordinates are included in the
+#'  \code{x} and \code{y} elements of the \code{xyCoords} list, while the corresponding geographical coordinates are insode two matrices inside 
+#'  the \code{lon} and \code{lat} elements.
 #'  

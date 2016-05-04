@@ -1,5 +1,5 @@
-#' @title  Run time definition according to the time specifications
-#' @description Define index positions of runtimes. 
+#' @title  Run time definition according to the time specifications in decadal forecasts
+#' @description Define index positions of runtimes in decadal forecasts. 
 #' Its output is passed to the loading functions (the \code{makeSubset\\.*} and \code{derive*} interfaces).
 #' @param dataset Target hindcast dataset 
 #' @param grid A java \dQuote{GeoGrid} containing the target(leading) variable
@@ -20,6 +20,7 @@
 #' runtime configurations. The function also takes care of selecting the appropriate initialization
 #' in the case of year-crossing seasons 
 #' @author J. Bedia, S. Herrera
+#' @keywords internal
 
 getRunTimeDomain.decadal <- function(dataset, grid, members, season, years) {
       message("[", Sys.time(), "] Defining initialization time parameters")
@@ -33,7 +34,7 @@ getRunTimeDomain.decadal <- function(dataset, grid, members, season, years) {
       endDay <- javaCalendarDate2rPOSIXlt(rt.axis$getCalendarDateRange()$getEnd())
       startYear <- startDay$year + 1900
       endYear <- endDay$year + 1900
-      allYears <- startYear : endYear
+      allYears <- startYear:endYear
       if (is.null(years)) {
         years <- allYears
       } 
@@ -51,16 +52,10 @@ getRunTimeDomain.decadal <- function(dataset, grid, members, season, years) {
       }
       # Month to take the initialization 
       validMonth <- 1
-      # validMonth <- season[1] - leadMonth 
-      # if ((season[1] - leadMonth) < 1) {
-      #       validMonth <- validMonth + 12
-      #       years <- years - 1 
-      # }
-      # Year-crossing seasons - year to take the initialization
       if (!identical(season, sort(season))) {
             year.cross.ind <- which(diff(season) < 0) # indicates the position of year-crossing within season
             if (years[1] == startYear) { 
-                  warning(paste("First forecast date in dataset: ", startDay, ".\nRequested seasonal data for ", startYear," not available", sep=""))
+                  warning(paste0("First forecast date in dataset: ", startDay, ".\nRequested seasonal data for ", startYear," not available"))
                   years <- years[-length(years)]
             } else {
                   years <- years - 1      
@@ -78,15 +73,13 @@ getRunTimeDomain.decadal <- function(dataset, grid, members, season, years) {
       })
       validYears <- array(data = 0, dim = c(length(runTimeRanges),1))
       for (i in 1:length(runTimeRanges)) {
-        auxDates <- javaCalendarDate2rPOSIXlt(gcs$getTimeAxisForRun(runTimeRanges[[i]]$element(0L))$getCalendarDates())
-        if (any((auxDates$year+1900) %in% years)){
-          validYears[i] <- 1
-        }
+            auxDates <- javaCalendarDate2rPOSIXlt(gcs$getTimeAxisForRun(runTimeRanges[[i]]$element(0L))$getCalendarDates())
+            if (any((auxDates$year + 1900) %in% years)) {
+                  validYears[i] <- 1
+            }
       }
       runTimes <- runTimesAll[which(validYears == 1)]
-#       runDatesValidMonth <- runDatesAll[runTimesAll]
-#       runTimes <- runTimesAll[which((runDatesValidMonth$year + 1900) %in% years)]
-      runDatesValidMonth <- runTimesAll <- NULL
+      runTimesAll <- NULL
       runDates <- runDatesAll[runTimes]
       # java ranges
       runTimeRanges <- lapply(1:length(runTimes), function(x) {

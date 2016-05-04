@@ -1,11 +1,11 @@
 #' Makes a logical subset of a System4 GeoGrid
 #' 
 #' Makes a logical subset of a System4 GeoGrid using the parameters specified by the user,
-#' applying the java methods makeSubset and readDataSlice. Subroutine of loadSeasonalForecast.S4
+#' applying the java methods makeSubset and readDataSlice. 
 #' 
 #' @param grid An input java GeoGrid
 #' @param latLon A list of geolocation parameters, as returned by getLatLonDomainForecast
-#' @param runTimePars A list of run time definition parameters, as returned by getRunTimeDomain
+#' @param runTimePars A list of run time definition parameters, as returned by getRunTimeDomain.decadal
 #' @param memberRangeList A list of ensemble java ranges as returned by getMemberDomain.S4
 #' @param foreTimePars A list of forecast time definition parameters, as returned by getForecastTimeDomain.S4
 #' @param verticalPars A list with vertical level definition, as returned by \code{getVerticalLevelPars.ECOMS}. Only the last element (the kava index position) is used
@@ -15,10 +15,12 @@
 #' In the current version the Z dimension is ignored (and dropped), as it is not planned to include multi-level variables
 #' in the ECOMS-UDG by the moment.
 #' 
+#' @keywords internal
+#' 
 #' @references \url{http://www.unidata.ucar.edu/software/thredds/v4.3/netcdf-java/v4.3/javadocAll/ucar/nc2/dt/grid/GeoGrid.html}
-#' @author J Bedia \email{joaquin.bedia@@gmail.com} and A. Cofi\~no
+#' @author J Bedia, A. Cofino
 
-makeSubsetDecadal <- function(grid, latLon, runTimePars, memberRangeList, foreTimePars, verticalPars) {
+makeSubset.decadal <- function(grid, latLon, runTimePars, memberRangeList, foreTimePars, verticalPars) {
       message("[", Sys.time(), "] Retrieving data subset ..." )
       gcs <- grid$getCoordinateSystem()
       dimNames <- rev(names(scanVarDimensions(grid))) # reversed!

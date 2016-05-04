@@ -13,7 +13,7 @@ getForecastTimeDomain(grid, dataset, dic, runTimePars, time, aggr.d, aggr.m)
 
 \item{dic}{dictionary information}
 
-\item{runTimePars}{A list of elements as returned by \code{\link{getRunTimeDomain}}}
+\item{runTimePars}{A list of elements as returned by \code{getRunTimeDomain*}}
 
 \item{time}{Verification time defined as a character string (e.g. \dQuote{06} for data
 verifying at 06:00:00). Only applies for sub-daily datasets.}
@@ -43,4 +43,5 @@ Calculates parameters for forecast time determination along the runtime axis.
 \author{
 J.Bedia, S. Herrera
 }
+\keyword{internal}
 

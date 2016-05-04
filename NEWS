@@ -1,6 +1,7 @@
 loadeR
 ======
 
+* New generic function loadSeasonalForecast
 * Bug fix in latlon coordinates retrieval for global selections on 0-360 datasets (thanks to Matteo de Felice for reporting bug)
 * Other minor bug fixes and enhancements
 

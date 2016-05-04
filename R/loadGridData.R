@@ -40,6 +40,7 @@
 #' 
 #' @template templateReturnGridData
 #' @template templateDicDetails  
+#' @template templateTimeAggr
 #' @template templateGeolocation
 #' @export
 #' @author J. Bedia, S. Herrera, M. Iturbide, J.M. Gutierrez 
@@ -49,7 +50,7 @@
 #' @examples \dontrun{
 #' #Download dataset
 #' dir.create("mydirectory")
-#' download.file("http://meteo.unican.es/work/downscaler/data/Iberia_NCEP.tar.gz", 
+#' download.file("http://meteo.unican.es/work/loadeR/data/Iberia_NCEP.tar.gz", 
 #' destfile = "mydirectory/Iberia_NCEP.tar.gz")
 #' # Extract files from the tar.gz file
 #' untar("mydirectory/NCEP_Iberia.tar.gz", exdir = "mydirectory")
@@ -69,7 +70,7 @@
 #' # Same but using the original variable (not homogenized via dictionary):
 #' di <- dataInventory(ncep)
 #' names(di)
-#' showVocabulary()
+#' UDG.vocabulary()
 #' # Variable is named 'T', instead of the standard name 'ta' in the vocabulary
 #' # Vertical level is indicated using the '@@' symbol:
 #' non.standard.grid <- loadGridData(ncep, var = "T@@850", dictionary = FALSE, lonLim = c(-10,5),
@@ -84,7 +85,6 @@
 #' # (CMIP5 MIROC-ESM model, RCP 8.5)
 #' tasmax <- loadGridData(dataset = ds,
 #'                        var = "tasmax",
-#'                        dictionary = FALSE,
 #'                        lonLim = c(-10,5),
 #'                        latLim = c(35,44),
 #'                        season = 6:8,
@@ -94,9 +94,16 @@
 #' }
 
 
-loadGridData <- function(dataset, var, dictionary = FALSE, lonLim = NULL,
-                         latLim = NULL, season = NULL, years = NULL, time = "none",
-                         aggr.d = "none", aggr.m = "none") {
+loadGridData <- function(dataset,
+                         var,
+                         dictionary = FALSE,
+                         lonLim = NULL,
+                         latLim = NULL,
+                         season = NULL,
+                         years = NULL,
+                         time = "none",
+                         aggr.d = "none",
+                         aggr.m = "none") {
       time <- match.arg(time, choices = c("none","00","03","06","09","12","15","18","21","DD"))
       aggr.d <- match.arg(aggr.d, choices = c("none", "mean", "min", "max", "sum"))
       if (time != "DD" & aggr.d != "none") {
@@ -108,38 +115,13 @@ loadGridData <- function(dataset, var, dictionary = FALSE, lonLim = NULL,
       var <- aux.level$var
       level <- aux.level$level
       # Dictionary lookup
-      if (dictionary == FALSE) {
-            dic <- NULL
-            shortName <- var
-      } else {
-            if (isTRUE(dictionary)) {
-                  dicPath <- gsub("ncml$", "dic", dataset)
-            }
-            if (is.character(dictionary)) {
-                  dicPath <- dictionary
-            }
-            dic <- dictionaryLookup(dicPath, var, time)
-            shortName <- dic$short_name          
-      }
+      cd <- check.dictionary(dataset, var, dictionary, time)
+      shortName <- cd$shortName
+      dic <- cd$dic
       if (!is.null(season) && (min(season) < 1 | max(season) > 12)) {
-            stop("Invalid season definition")
+            stop("Invalid season definition", call. = FALSE)
       }
-      if (grepl("^http://", dataset)) {
-            message("[", Sys.time(), "] ", "Opening connection with remote server...")
-            gds <- tryCatch(expr = J("ucar.nc2.dt.grid.GridDataset")$open(dataset), error = function(e) {
-                  if (grepl("return status=503", e)) {
-                        stop("Service temporarily unavailable\nThe server is temporarily unable to service your request due to maintenance downtime or capacity problems, please try again later.", call. = FALSE)
-                  } else if (grepl("return status=404", e)) {
-                        stop(dataset," is not a valid URL)", call. = FALSE)
-                  }
-            })
-            if (is.null(gds)) {
-                  stop("Requested URL not found\nThe problem may be momentary.", call. = FALSE)      
-            }
-            message("[", Sys.time(), "] ", "Connected successfuly")
-      } else {
-            gds <- J("ucar.nc2.dt.grid.GridDataset")$open(dataset)
-      }
+      gds <- openDataset(dataset)
       grid <- gds$findGridByShortName(shortName)
       if (is.null(grid)) {
             stop("Variable requested not found\nCheck 'dataInventory' output and/or dictionary 'identifier'.", call. = FALSE)
@@ -151,6 +133,7 @@ loadGridData <- function(dataset, var, dictionary = FALSE, lonLim = NULL,
       # Definition of projection
       proj <- proj$toString()
       attr(out$xyCoords, which = "projection") <- proj
+      gds$close()
       # Dimension ordering
       tab <- c("time", "level", "lat", "lon")
       x <- attr(out$Data, "dimensions")
@@ -162,74 +145,15 @@ loadGridData <- function(dataset, var, dictionary = FALSE, lonLim = NULL,
       }
       # Source Dataset and other metadata 
       attr(out, "dataset") <- dataset
-      gds$close()
+      if (grepl("http://meteo\\.unican\\.es", dataset)) {
+            attr(out, "source") <- "User Data Gateway"
+            attr(out, "URL") <- "<http://meteo.unican.es/trac/wiki/udg>"
+      }
       message("[",Sys.time(),"]", " Done")
       return(out)
 }     
 # End
 
-
-#' @title RCM grid adjustment
-#' @description Performs operations to adequately handle 2D XY axis (typically from RCMs)
-#' @param gds a Java GridDataSet object
-#' @param latLon latLon definition (see \code{\link{getLatLonDomain}})
-#' @return a new latLon definition
-#' @keywords internal
-#' @author S. Herrera, M. Iturbide
-
-
-adjustRCMgrid <- function(gds, latLon, lonLim, latLim) {
-      nc <- gds$getNetcdfDataset()
-      lonAxis <- nc$findVariable('lon')
-      auxLon <- t(matrix(data = lonAxis$getCoordValues(), nrow = lonAxis$getShape()[2], ncol = lonAxis$getShape()[1]))
-      latAxis <- nc$findVariable('lat')
-      auxLat <- t(matrix(data = latAxis$getCoordValues(), nrow = latAxis$getShape()[2], ncol = latAxis$getShape()[1]))
-      if (is.null(lonLim)){
-            lonLim <- c(auxLon[arrayInd(which.min(auxLat), dim(auxLat))[1],
-                               which.min(auxLon[arrayInd(which.min(auxLat),
-                                                         dim(auxLat))[1],])],
-                        auxLon[arrayInd(which.max(auxLat),
-                                        dim(auxLat))[1],
-                               which.max(auxLon[arrayInd(which.max(auxLat),
-                                                         dim(auxLat))[1],])])
-      }
-      if (is.null(latLim)){
-            latLim <- c(auxLat[arrayInd(which.min(auxLat), dim(auxLat))[1],
-                               which.min(auxLon[arrayInd(which.min(auxLat),
-                                                         dim(auxLat))[1],])],
-                        auxLat[arrayInd(which.max(auxLat),
-                                        dim(auxLat))[1],
-                               which.max(auxLon[arrayInd(which.max(auxLat),
-                                                         dim(auxLat))[1],])])
-      }
-      if (length(lonLim) == 1 | length(latLim) == 1) {
-            ind.x <- which.min(abs(auxLon - lonLim))
-            ind.y <- which.min(abs(auxLat - latLim))
-            pointXYindex <- c(ind.y,ind.x)
-            latLon$xyCoords$x <- nc$findCoordinateAxis('rlon')$getCoordValues()[ind.x]
-            latLon$xyCoords$y <- nc$findCoordinateAxis('rlat')$getCoordValues()[ind.y]
-            latLon$xyCoords$lon <- auxLon[ind.y,ind.x]
-            latLon$xyCoords$lat <- auxLat[ind.y,ind.x]
-      } else {
-            auxDis <- sqrt((auxLon - lonLim[1])^2+(auxLat - latLim[1])^2)
-            llrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
-            auxDis <- sqrt((auxLon - lonLim[2])^2+(auxLat - latLim[2])^2)
-            urrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
-            auxDis <- sqrt((auxLon - lonLim[1])^2+(auxLat - latLim[2])^2)
-            ulrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
-            auxDis <- sqrt((auxLon - lonLim[2])^2+(auxLat - latLim[1])^2)
-            lrrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
-            llrowCol <- c(min(c(llrowCol[1],lrrowCol[1])), min(c(llrowCol[2],ulrowCol[2])))
-            urrowCol <- c(max(c(ulrowCol[1],urrowCol[1])),max(c(lrrowCol[2],urrowCol[2])))
-            latLon$xyCoords$x <- nc$findCoordinateAxis('rlon')$getCoordValues()[llrowCol[2]:urrowCol[2]]
-            latLon$xyCoords$y <- nc$findCoordinateAxis('rlat')$getCoordValues()[llrowCol[1]:urrowCol[1]]
-            latLon$xyCoords$lon <- auxLon[llrowCol[1]:urrowCol[1],llrowCol[2]:urrowCol[2]]
-            latLon$xyCoords$lat <- auxLat[llrowCol[1]:urrowCol[1],llrowCol[2]:urrowCol[2]]
-      }
-      latLon$lonRanges <- .jnew("ucar/ma2/Range", as.integer(llrowCol[2]-1), as.integer(urrowCol[2]-1))
-      latLon$latRanges <- .jnew("ucar/ma2/Range", as.integer(llrowCol[1]-1), as.integer(urrowCol[1]-1))
-      return(latLon)
-}
 
 
 #' Loads a user-defined subset of a gridded CDM dataset
@@ -259,9 +183,9 @@ loadGridDataset <- function(var, grid, dic, level, season, years, time, latLon, 
       attr(Variable, "use_dictionary") <- isStandard
       attr(Variable, "description") <- grid$getDescription()
       if (isStandard) {
-            vocabulary <- showVocabulary()
-            attr(Variable, "units") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier,), 3])
-            attr(Variable, "longname") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier,), 2])
+            vocabulary <- UDG.vocabulary()
+            attr(Variable, "units") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier), 3])
+            attr(Variable, "longname") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier), 2])
       } else {
             attr(Variable, "units") <- grid$getUnitsString()
             attr(Variable, "longname") <- grid$getFullName()
@@ -271,7 +195,6 @@ loadGridDataset <- function(var, grid, dic, level, season, years, time, latLon, 
       attr(Variable, "verification_time") <- time
       out <- list("Variable" = Variable, "Data" = cube$mdArray, "xyCoords" = latLon$xyCoords, "Dates" = adjustDates(cube$timePars))
       return(out)
-      
 }
 # End
 

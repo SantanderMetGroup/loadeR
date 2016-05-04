@@ -4,12 +4,10 @@
 \alias{dictionaryTransformForecast}
 \title{Performs variable transformation}
 \usage{
-dictionaryTransformForecast(dic, foreTimePars, mdArray)
+dictionaryTransformForecast(dic, mdArray)
 }
 \arguments{
 \item{dic}{Dictionary line for the variable, as returned by \code{dictionaryLookup.ECOMS}}
-
-\item{foreTimePars}{A list of time selection parameters, as returned by \code{getTimeDomain}}
 
 \item{mdArray}{A n-dimensional array, as returned by \code{makeSubset}}
 }
@@ -18,9 +16,10 @@ The transformed n dimensional array of data. See details.
 }
 \description{
 Performs variable transformation according to dictionary specifications.
-Sub-routine of the \code{loadSeasonalForecast} methods.
+Sub-routine of the \code{load*Forecast} methods.
 }
 \author{
-J. Bedia \email{joaquin.bedia@gmail.com}
+J. Bedia
 }
+\keyword{internal}
 
