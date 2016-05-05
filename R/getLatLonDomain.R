@@ -215,7 +215,28 @@ adjustRCMgrid <- function(gds, latLon, lonLim, latLim) {
             latLon$xyCoords$lon <- auxLon[llrowCol[1]:urrowCol[1],llrowCol[2]:urrowCol[2]]
             latLon$xyCoords$lat <- auxLat[llrowCol[1]:urrowCol[1],llrowCol[2]:urrowCol[2]]
       }
-      latLon$lonRanges <- .jnew("ucar/ma2/Range", as.integer(llrowCol[2] - 1), as.integer(urrowCol[2] - 1))
-      latLon$latRanges <- .jnew("ucar/ma2/Range", as.integer(llrowCol[1] - 1), as.integer(urrowCol[1] - 1))
+      lonRanges  <- list()
+      latRanges  <- list()
+      if (length(latLon$llRanges) > 1) {
+            range1 <- na.omit(as.integer(strsplit(latLon$llRanges[[1]]$toString(), "[^[:digit:]]")[[1]]))
+            range2 <- na.omit(as.integer(strsplit(latLon$llRanges[[2]]$toString(), "[^[:digit:]]")[[1]]))
+            for (i in 1:length(latLon$llRanges)){
+                  lonRanges[[1]] <- .jnew("ucar/ma2/Range", range2[3], range2[4])
+                  latRanges[[1]] <- .jnew("ucar/ma2/Range", as.integer(range2[1]), as.integer(range2[2]))
+                  lonRanges[[2]] <- .jnew("ucar/ma2/Range", as.integer(range1[3] +1), as.integer(range1[4]))
+                  latRanges[[2]] <- .jnew("ucar/ma2/Range", range1[1], range1[2])
+            }
+      } else {
+            lonRanges[[1]] <- .jnew("ucar/ma2/Range", as.integer(llrowCol[2]-1), as.integer(urrowCol[2]-1))
+            latRanges[[1]] <- .jnew("ucar/ma2/Range", as.integer(llrowCol[1]-1), as.integer(urrowCol[1]-1))
+      }
+      latLon$llRanges <- lapply(1:length(latLon$llRanges), function(x) {
+            aux <- .jnew("java.util.ArrayList")
+            aux$add(latRanges[[x]])
+            aux$add(lonRanges[[x]])
+            aux
+      })
       return(latLon)
 }
+
+

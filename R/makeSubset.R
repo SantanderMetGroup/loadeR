@@ -35,17 +35,9 @@ makeSubset <- function(grid, timePars, levelPars, latLon) {
       proj <- gcs$getProjection()
       for (i in 1:length(aux.list)) {
             dimNamesRef <- dimNames
-            aux.list2 <- rep(list(bquote()), length(latLon$llbbox))
+            aux.list2 <- rep(list(bquote()), length(latLon$llRanges))
             for (j in 1:length(aux.list2)) {
-                  if (!proj$isLatLon()){
-                        if(length(aux.list2)>1){
-                        subSet <- grid$makeSubset(levelPars$zRange, levelPars$zRange, timePars$tRanges[[i]], levelPars$zRange, latLon$latRanges[[j]], latLon$lonRanges[[j]])
-                        }else{
-                              subSet <- grid$makeSubset(levelPars$zRange, levelPars$zRange, timePars$tRanges[[i]], levelPars$zRange, latLon$latRanges, latLon$lonRanges)      
-                        }
-                  }else{
-                        subSet <- grid$makeSubset(timePars$tRanges[[i]], levelPars$zRange, latLon$llbbox[[j]], 1L, 1L, 1L)
-                  }
+                  subSet <- grid$makeSubset(levelPars$zRange, levelPars$zRange, timePars$tRanges[[i]], levelPars$zRange, latLon$llRanges[[j]]$get(0L), latLon$llRanges[[j]]$get(1L))
                   shapeArray <- rev(subSet$getShape()) # Reversed!!
                   # shape of the output depending on spatial selection
                   if (latLon$pointXYindex[1] >= 0) {
@@ -110,8 +102,7 @@ makeSubset <- function(grid, timePars, levelPars, latLon) {
       }
       mdArray <- unname(mdArray)
       attr(mdArray, "dimensions") <- dimNames
-      # if (do.aggr) format <- ifelse(timePars$aggr.m == "none", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d")
-      timePars$dateSliceList <- as.POSIXct(do.call("c", timePars$dateSliceList), tz = "GMT")#, format = format, tz = "GMT", usetz = TRUE)      
+      timePars$dateSliceList <- as.POSIXct(do.call("c", timePars$dateSliceList), tz = "GMT")      
       return(list("timePars" = timePars, "mdArray" = mdArray))
 }
 # End
