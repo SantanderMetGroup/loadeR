@@ -9,14 +9,31 @@
 #' Prior to data access, users must log in. Registration can be obtained via the THREDDS Administration Panel (\href{http://www.meteo.unican.es/tap}{TAP}),
 #'  indicating the group (Project) you belong to (e.g. CORDEX, SPECS ...), which will grant access to certain databases.
 #'  Further details on registration for data access can be viewed in this \href{http://meteo.unican.es/ecoms-udg/DataServer/Registration}{example link}.
-#' @author J Bedia, M. Vega.
+#' @author J Bedia, M. Vega, A. Cofino
 #' @export
+#' @importFrom RCurl getURL
 
 
 loginUDG <- function(username, password, proxy.host = NULL, proxy.port = NULL) {
       proxy.port <- as.integer(proxy.port)
       if (!is.character(username) | !is.character(password)) {
-            stop("\'username\' and \'password\' must be character strings")
+            stop("\'username\' and \'password\' must be character strings", call. = FALSE)
+      }
+      url.check <- paste0("https://meteo.unican.es/udg-tap/rest/v1/signin/verify?username=", username, "&password=", password)
+      message("[",Sys.time(), "] Setting credentials...")
+      con <- tryCatch(getURL(url.check, ssl.verifypeer = FALSE), error = function(er) {
+            er <- NULL
+            return(er)
+      })
+      if (is.null(con)) {
+            stop("Could not establish a connection.", call. = FALSE)
+      } else {
+            b <- readLines(textConnection(con))
+            if (grepl("SUCCESS", strsplit(b, split = "\\\""))) {
+                  message("[",Sys.time(), "] Success!\nGo to <http://www.meteo.unican.es/udg-tap/home> for details on your authorized groups and datasets")
+            } else {
+                  stop("User name and password do not match\nPlease check your registration details or visit <http://www.meteo.unican.es/udg-tap/home> if in doubt")
+            }
       }
       if (!is.null(proxy.host)) {
             J("ucar.nc2.util.net.HTTPSession")$setGlobalProxy(proxy.host, proxy.port)
@@ -24,4 +41,8 @@ loginUDG <- function(username, password, proxy.host = NULL, proxy.port = NULL) {
       J("ucar.httpservices.MyHTTPFactory")$setCredentials(username, password)
 }
 # End
+
+
+
+
 
