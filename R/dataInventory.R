@@ -66,6 +66,8 @@ dataInventory <- function(dataset, return.stats = FALSE) {
 #' @return A data inventory 
 #' @author J Bedia 
 #' @keywords internal
+#' @importFrom utils read.csv
+
 
 dataInventory.ASCII <- function(dataset, rs) {
       lf <- list.files(dataset, full.names = TRUE)
@@ -170,6 +172,10 @@ dataInventory.NetCDF <- function(dataset) {
 #' @seealso \code{\link{dataInventory}} to obtain a more exhaustive report the dataset.
 #' @export
 #' @author J. Bedia 
+#' 
+#' @importFrom graphics lines
+#' @importFrom graphics text
+#' 
 #' @examples \donttest{
 #' dir.create("mydirectory")
 #' download.file("http://meteo.unican.es/work/loadeR/data/VALUE_ECA_86_v2.tar.gz", 

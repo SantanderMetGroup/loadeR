@@ -31,6 +31,9 @@
 #' @template templateGeolocation
 #' @template templateDeaccumulation
 #' @template templateTimeSeasonal
+#' 
+#' @importFrom stats na.exclude
+#' 
 #' @export
 #' @author J. Bedia
 #' @import rJava

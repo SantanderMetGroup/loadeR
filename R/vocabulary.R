@@ -5,6 +5,7 @@
 #' @note The function assumes that the user has read permission to the package installation directory
 #' @author J Bedia
 #' @export
+#' @importFrom utils read.csv
 #' @examples
 #' # Default built-in vocabulary
 #' (voc <- UDG.vocabulary())
@@ -22,6 +23,7 @@ UDG.vocabulary <- function() {
 #' @param units A vector containing the units of the new variable(s) to be appended to the dictionary. 
 #' @seealso UDG.vocabulary, to access the vocabulary contents
 #' @export
+#' @importFrom utils write.table
 #' @author J Bedia
 #' @references Standard name table of the CF convention: http://cfconventions.org/standard-names.html
 #' @examples \dontrun{

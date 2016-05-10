@@ -160,7 +160,8 @@ getLatLonDomain <- function(grid, lonLim, latLim) {
 #' @return a new latLon definition
 #' @keywords internal
 #' @export
-#' @author S. Herrera, M. Iturbide
+#' @importFrom stats na.omit
+#' @author S. Herrera, M. Iturbide, J. Bedia
 
 
 adjustRCMgrid <- function(gds, latLon, lonLim, latLim) {

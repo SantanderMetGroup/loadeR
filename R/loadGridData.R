@@ -47,6 +47,8 @@
 #' @family loading
 #' @family loading.grid
 #' 
+#' @importFrom stats na.exclude
+#' 
 #' @examples \dontrun{
 #' #Download dataset
 #' dir.create("mydirectory")
