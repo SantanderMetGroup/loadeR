@@ -19,6 +19,3 @@ Find out more about this package (including [installation information](https://g
 
 ---
 *Since November 2015, this package supersedes the data loading capabilities of package [`downscaleR`](https://github.com/SantanderMetGroup/downscaleR).*
-
-
-
