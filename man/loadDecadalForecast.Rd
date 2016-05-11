@@ -2,7 +2,7 @@
 % Please edit documentation in R/loadDecadalForecast.R
 \name{loadDecadalForecast}
 \alias{loadDecadalForecast}
-\title{Load a field from decadal forecasts}
+\title{Load a grid from a decadal forecast}
 \usage{
 loadDecadalForecast(dataset, var, dictionary = FALSE, members = NULL,
   lonLim = NULL, latLim = NULL, season = NULL, years = NULL,
@@ -82,7 +82,9 @@ provides geo-referencing information as stored in the original dataset.}
 Load a user-defined spatio-temporal slice from decadal forecasts
 }
 \section{Variable homogenization}{
- The different nature of the various databases, models and variables, 
+ 
+
+The different nature of the various databases, models and variables, 
 and the idiosyncratic naming and storage conventions often applied by the different 
 modelling centres, makes necessary a previous homogeneization across datasets in 
 order to implement a truly user-friendly toolbox for data access. 
@@ -91,13 +93,13 @@ climate datasets. The particular variables of each dataset are translated -and t
 to the standard variables by means of a dictionary, provided by the argument \code{dictionary}.
 In essence, the \file{dictionary} is a csv file particular for each individual dataset, 
 containing the necessary information for performing the unit conversions to match the standard variable 
-definitions contained in the vocabulary (see \code{\link{showVocabulary}}). This feature is described in more detail
- in the 
-\href{http://meteo.unican.es/trac/wiki/udg/ecoms/RPackage/homogeneization}{User Data Gateway wiki}
-of the Santander Meteorology Group. There are also some built-in dictionaries in this package.
+definitions contained in the vocabulary (see \code{\link{UDG.vocabulary}}). This feature is described in more detail
+ in the \href{https://github.com/SantanderMetGroup/loadeR/wiki/Homogeneization}{loadeR wiki}..
 }
 
 \section{Geolocation parameters}{
+
+
  Regarding the selection of the spatial domain,
  it is possible to select the whole spatial domain of the dataset by defining the arguments \code{lonLim=NULL}
  and \code{latLim=NULL}. More often, rectangular domains are defined by the minimum and maximum coordinates
@@ -111,6 +113,10 @@ of the Santander Meteorology Group. There are also some built-in dictionaries in
  of rectangular domains, all stations falling inside that window will be loaded. For single-point selections,
  the closest station will be chosen, and a note on-screen will inform about the distance from the selected point
  to the chosen station.
+ 
+ In case of irregular grids (e.g. the typical RCM rotated pole projections), the regular coordinates are included in the
+ \code{x} and \code{y} elements of the \code{xyCoords} list, while the corresponding geographical coordinates are insode two matrices inside 
+ the \code{lon} and \code{lat} elements.
 }
 \examples{
 \dontrun{
@@ -118,13 +124,12 @@ latLim <- c(40,50)
 lonLim <-  c(-5,10)
 season <- 3:5
 period <- 1981:1991
-loginUDG(username = "myuser", password = "mypassword") #type help(loginUDG)
+loginUDG(username = "myuser", password = "mypassword") 
 tasDECA <- loadDecadalForecast(
    dataset = "http://www.meteo.unican.es/tds5/dodsC/specs/gfdl_specs_decadal.ncml", 
    latLim = latLim, 
    lonLim = lonLim,
    var = "tas", 
-   dictionary = F, 
    years = period, 
    season = season)
 }
@@ -133,7 +138,6 @@ tasDECA <- loadDecadalForecast(
 J. Bedia, S. Herrera, M. Iturbide, J.M. Gutierrez
 }
 \seealso{
-Other loading.grid: \code{\link{getGrid}},
-  \code{\link{interpData}}, \code{\link{loadGridData}}
+Other loading.grid: \code{\link{loadGridData}}
 }
 

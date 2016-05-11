@@ -34,7 +34,7 @@
 #' 
 #' @references \url{https://www.unidata.ucar.edu/software/thredds/current/netcdf-java/v4.0/javadocAll/ucar/nc2/dt/GridCoordSystem.html#getRangesFromLatLonRect\%28ucar.unidata.geoloc.LatLonRect\%29}
 #' 
-#' @author J. Bedia and A. Cofin\~no
+#' @author J. Bedia, A. Cofino, M. Iturbide, S. Herrera
 #' 
 #' @keywords internal
 #' @export
@@ -72,14 +72,14 @@ getLatLonDomain <- function(grid, lonLim, latLim) {
                   spec1 <- .jnew("java/lang/String", paste(latLim[1], lonLim[1], deltaLat, deltaLon, sep = ", "))
                   llbbox[[1]] <- .jnew("ucar/unidata/geoloc/LatLonRect", spec1)
                   llRanges[[1]] <- gcs$getRangesFromLatLonRect(.jnew("ucar/unidata/geoloc/LatLonRect", spec1))
-            }else if (lonLim[2] > 180) {
-                  spec1 <- .jnew("java/lang/String", paste(latLim[1], -180, deltaLat, lonLim[2]-180, sep = ", "))
-                  spec2 <- .jnew("java/lang/String", paste(latLim[1], lonLim[1], deltaLat, 180-lonLim[1], sep = ", "))
+            } else if (lonLim[2] > 180) {
+                  spec1 <- .jnew("java/lang/String", paste(latLim[1], -180, deltaLat, lonLim[2] - 180, sep = ", "))
+                  spec2 <- .jnew("java/lang/String", paste(latLim[1], lonLim[1], deltaLat, (lonLim[2] - 180) - lonLim[1], sep = ", "))
                   llbbox[[1]] <- .jnew("ucar/unidata/geoloc/LatLonRect", spec1)
                   llbbox[[2]] <- .jnew("ucar/unidata/geoloc/LatLonRect", spec2)
                   llRanges[[1]] <- gcs$getRangesFromLatLonRect(.jnew("ucar/unidata/geoloc/LatLonRect", spec1))
                   llRanges[[2]] <- gcs$getRangesFromLatLonRect(.jnew("ucar/unidata/geoloc/LatLonRect", spec2))
-            }else{
+            } else {
                   if (bboxRequest$getLonMin() < 0 & bboxRequest$getLonMax() >= 0 & bboxDataset$crossDateline()) {
                         spec1 <- .jnew("java/lang/String", paste(latLim[1], lonLim[1], deltaLat, 0 - lonLim[1], sep = ", "))
                         spec2 <- .jnew("java/lang/String", paste(latLim[1], 0, deltaLat, lonLim[2], sep = ", "))
@@ -93,9 +93,7 @@ getLatLonDomain <- function(grid, lonLim, latLim) {
                         llRanges[[1]] <- gcs$getRangesFromLatLonRect(.jnew("ucar/unidata/geoloc/LatLonRect", spec1))
                   }
             }
-      }else{
-      
-      ##################3
+      } else {
             deltaLat <- latLim[2] - latLim[1]
             deltaLon <- lonLim[2] - lonLim[1]
             spec <- .jnew("java/lang/String", paste(latLim[1], lonLim[1], deltaLat, deltaLon, sep = ", "))
@@ -105,7 +103,6 @@ getLatLonDomain <- function(grid, lonLim, latLim) {
                   if (bboxRequest$getLonMin() < 0 & bboxRequest$getLonMax() >= 0 & bboxDataset$crossDateline()) {
                         spec1 <- .jnew("java/lang/String", paste(latLim[1], lonLim[1], deltaLat, 0 - lonLim[1], sep = ", "))
                         spec2 <- .jnew("java/lang/String", paste(latLim[1], 0, deltaLat, lonLim[2], sep = ", "))
-                        
                         llbbox[[1]] <- .jnew("ucar/unidata/geoloc/LatLonRect", spec1)
                         llbbox[[2]] <- .jnew("ucar/unidata/geoloc/LatLonRect", spec2)
                         llRanges[[1]] <- gcs$getRangesFromLatLonRect(.jnew("ucar/unidata/geoloc/LatLonRect", spec1))
@@ -116,8 +113,6 @@ getLatLonDomain <- function(grid, lonLim, latLim) {
                   }
             
       }
-      
-      ##################
       if (pointXYindex[1] >= 0) {
             aux <- grid$makeSubset(.jnull(), .jnull(), .jnull(), 1L, 1L, 1L)
             lonSlice <- aux$getCoordinateSystem()$getLonAxis()$getCoordValue(pointXYindex[1])
@@ -153,3 +148,96 @@ getLatLonDomain <- function(grid, lonLim, latLim) {
       return(list("llRanges" = llRanges, "llbbox" = llbbox, "pointXYindex" = pointXYindex, "xyCoords" = list("x" = lonSlice, "y" = latSlice), "revLat" = revLat))
 }
 # End
+
+
+
+#' @title RCM grid adjustment
+#' @description Performs operations to adequately handle 2D XY axis (typically from RCMs)
+#' @param gds a Java GridDataSet object
+#' @param latLon latLon definition (see \code{\link{getLatLonDomain}})
+#' @param lonLim lonLim
+#' @param latLim latLim
+#' @return a new latLon definition
+#' @keywords internal
+#' @export
+#' @importFrom stats na.omit
+#' @author S. Herrera, M. Iturbide, J. Bedia
+
+
+adjustRCMgrid <- function(gds, latLon, lonLim, latLim) {
+      nc <- gds$getNetcdfDataset()
+      lonAxis <- nc$findVariable('lon')
+      auxLon <- t(matrix(data = lonAxis$getCoordValues(),
+                         nrow = lonAxis$getShape()[2],
+                         ncol = lonAxis$getShape()[1]))
+      latAxis <- nc$findVariable('lat')
+      auxLat <- t(matrix(data = latAxis$getCoordValues(),
+                         nrow = latAxis$getShape()[2],
+                         ncol = latAxis$getShape()[1]))
+      if (is.null(lonLim)) {
+            lonLim <- c(auxLon[arrayInd(which.min(auxLat), dim(auxLat))[1],
+                               which.min(auxLon[arrayInd(which.min(auxLat),
+                                                         dim(auxLat))[1],])],
+                        auxLon[arrayInd(which.max(auxLat),
+                                        dim(auxLat))[1],
+                               which.max(auxLon[arrayInd(which.max(auxLat),
+                                                         dim(auxLat))[1],])])
+      }
+      if (is.null(latLim)) {
+            latLim <- c(auxLat[arrayInd(which.min(auxLat), dim(auxLat))[1],
+                               which.min(auxLon[arrayInd(which.min(auxLat),
+                                                         dim(auxLat))[1],])],
+                        auxLat[arrayInd(which.max(auxLat),
+                                        dim(auxLat))[1],
+                               which.max(auxLon[arrayInd(which.max(auxLat),
+                                                         dim(auxLat))[1],])])
+      }
+      if (length(lonLim) == 1 | length(latLim) == 1) {
+            ind.x <- which.min(abs(auxLon - lonLim))
+            ind.y <- which.min(abs(auxLat - latLim))
+            pointXYindex <- c(ind.y,ind.x)
+            latLon$xyCoords$x <- nc$findCoordinateAxis('rlon')$getCoordValues()[ind.x]
+            latLon$xyCoords$y <- nc$findCoordinateAxis('rlat')$getCoordValues()[ind.y]
+            latLon$xyCoords$lon <- auxLon[ind.y,ind.x]
+            latLon$xyCoords$lat <- auxLat[ind.y,ind.x]
+      } else {
+            auxDis <- sqrt((auxLon - lonLim[1]) ^ 2 + (auxLat - latLim[1]) ^ 2)
+            llrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
+            auxDis <- sqrt((auxLon - lonLim[2]) ^ 2 + (auxLat - latLim[2]) ^ 2)
+            urrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
+            auxDis <- sqrt((auxLon - lonLim[1]) ^ 2 + (auxLat - latLim[2]) ^ 2)
+            ulrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
+            auxDis <- sqrt((auxLon - lonLim[2]) ^ 2 + (auxLat - latLim[1]) ^ 2)
+            lrrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
+            llrowCol <- c(min(c(llrowCol[1],lrrowCol[1])), min(c(llrowCol[2],ulrowCol[2])))
+            urrowCol <- c(max(c(ulrowCol[1],urrowCol[1])),max(c(lrrowCol[2],urrowCol[2])))
+            latLon$xyCoords$x <- nc$findCoordinateAxis('rlon')$getCoordValues()[llrowCol[2]:urrowCol[2]]
+            latLon$xyCoords$y <- nc$findCoordinateAxis('rlat')$getCoordValues()[llrowCol[1]:urrowCol[1]]
+            latLon$xyCoords$lon <- auxLon[llrowCol[1]:urrowCol[1],llrowCol[2]:urrowCol[2]]
+            latLon$xyCoords$lat <- auxLat[llrowCol[1]:urrowCol[1],llrowCol[2]:urrowCol[2]]
+      }
+      lonRanges  <- list()
+      latRanges  <- list()
+      if (length(latLon$llRanges) > 1) {
+            range1 <- na.omit(as.integer(strsplit(latLon$llRanges[[1]]$toString(), "[^[:digit:]]")[[1]]))
+            range2 <- na.omit(as.integer(strsplit(latLon$llRanges[[2]]$toString(), "[^[:digit:]]")[[1]]))
+            for (i in 1:length(latLon$llRanges)){
+                  lonRanges[[1]] <- .jnew("ucar/ma2/Range", range2[3], range2[4])
+                  latRanges[[1]] <- .jnew("ucar/ma2/Range", as.integer(range2[1]), as.integer(range2[2]))
+                  lonRanges[[2]] <- .jnew("ucar/ma2/Range", as.integer(range1[3] +1), as.integer(range1[4]))
+                  latRanges[[2]] <- .jnew("ucar/ma2/Range", range1[1], range1[2])
+            }
+      } else {
+            lonRanges[[1]] <- .jnew("ucar/ma2/Range", as.integer(llrowCol[2]-1), as.integer(urrowCol[2]-1))
+            latRanges[[1]] <- .jnew("ucar/ma2/Range", as.integer(llrowCol[1]-1), as.integer(urrowCol[1]-1))
+      }
+      latLon$llRanges <- lapply(1:length(latLon$llRanges), function(x) {
+            aux <- .jnew("java.util.ArrayList")
+            aux$add(latRanges[[x]])
+            aux$add(lonRanges[[x]])
+            aux
+      })
+      return(latLon)
+}
+
+

@@ -27,9 +27,9 @@ The variable names returned correspond to the original names of the variables as
 and not to the standard naming convention defined in the vocabulary.
 }
 \examples{
-\donttest{
+\dontrun{
 dir.create("mydirectory")
-download.file("http://meteo.unican.es/work/downscaler/data/VALUE_ECA_86_v2.tar.gz", 
+download.file("http://meteo.unican.es/work/loadeR/data/VALUE_ECA_86_v2.tar.gz", 
               destfile = "mydirectory/VALUE_ECA_86_v2.tar.gz")
 # Extract files from the tar.gz file
 untar("mydirectory/VALUE_ECA_86_v2.tar.gz", exdir = "mydirectory")
@@ -41,7 +41,6 @@ str(di)
 di.stats <- dataInventory(value, return.stats = TRUE)
 print(di.stats$Summary.stats)
 } 
-
 }
 \author{
 J Bedia

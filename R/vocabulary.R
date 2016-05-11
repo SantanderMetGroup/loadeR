@@ -1,16 +1,17 @@
-#' @title Show vocabulary
+#' @title Show UDG vocabulary
 #' @description Access the installed user's vocabulary
 #' @return The vocabulary table, in the form of a data.frame
-#' @seealso vocabularyUpdate, for the inclusion of new standard variables defined by the user
+#' @seealso UDG.vocabulary.update, for the inclusion of new standard variables defined by the user
 #' @note The function assumes that the user has read permission to the package installation directory
 #' @author J Bedia
 #' @export
+#' @importFrom utils read.csv
 #' @examples
 #' # Default built-in vocabulary
-#' (voc <- showVocabulary())
+#' (voc <- UDG.vocabulary())
 #' voc[grep("^ta", voc$identifier), ]
 
-showVocabulary <- function() {
+UDG.vocabulary <- function() {
       read.csv(file.path(find.package("loadeR"), "vocabulary.txt"))
 }
 
@@ -20,30 +21,31 @@ showVocabulary <- function() {
 #' @param identifier A vector containing the identifier(s) of the new variable(s) to be appended to the dictionary. 
 #' @param standard_name A vector containing the standard name(s) of the new variable(s) to be appended to the dictionary. 
 #' @param units A vector containing the units of the new variable(s) to be appended to the dictionary. 
-#' @seealso showVocabulary, to access the vocabulary contents
+#' @seealso UDG.vocabulary, to access the vocabulary contents
 #' @export
+#' @importFrom utils write.table
 #' @author J Bedia
 #' @references Standard name table of the CF convention: http://cfconventions.org/standard-names.html
 #' @examples \dontrun{
 #' # Inclusion of a new variable ("Total snowfall amount")
-#' vocabularyUpdate(identifier = "prsn",
+#' UDG.vocabulary.update(identifier = "prsn",
 #'                  standard_name = "total snowfall amount",
 #'                  units = "mm")
-#' showVocabulary()                 
+#' UDG.vocabulary()                 
 #' # Inclusion of 2 new variables: 
-#' vocabularyUpdate(identifier = c("wap",
+#' UDG.vocabulary.update(identifier = c("wap",
 #'                                 "plev"),
 #'                  standard_name = c("lagrangian tendency of air pressure",
 #'                                    "air pressure"),
 #'                  units = c("Pa.s-1",
 #'                            "Pa"))
-#' showVocabulary() 
+#' UDG.vocabulary() 
 #' }
 
-vocabularyUpdate <- function(identifier, standard_name, units) {
-      ref <- showVocabulary()
+UDG.vocabulary.update <- function(identifier, standard_name, units) {
+      ref <- UDG.vocabulary()
       if (any(identifier %in% ref$identifier)) {
-            stop("One or more identifiers already exist in the vocabulary")      
+            stop("One or more identifiers already exist in the vocabulary", call. = FALSE)      
       }
       a <- cbind(identifier, standard_name, units)
       write.table(a, append = TRUE, file = file.path(find.package("loadeR"), "vocabulary.txt"),

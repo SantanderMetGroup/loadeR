@@ -1,24 +1,25 @@
 Package: loadeR
 Depends:
     R(>= 3.0.0),
-    loadeR.java,
-    rJava
+    rJava,
+    loadeR.java
 Imports:
     utils,
     abind,
-    RCurl,
-    fields,
-    akima
+    RCurl
 Suggests:
-    downscaleR,
+    loadeR.ECOMS,
+    loadeR.2nc,
+    downscaleR
 Type: Package
 Title: R Package for Climate Data Loading and Manipulation
-Version: 0.2-0
-Date: 2016-02-12
+Version: 1.0-0
+Date: 2016-05-11
 Authors@R: as.person(c(
     "Santander Meteorology Group <http://meteo.unican.es> [aut]",
     "Joaquin Bedia <bediaj@unican.es> [ctb,cre]",
     "Antonio Cofino <antonio.cofino@unican.es> [ctb]",
+    "Matteo de Felice <matteo.defelice@enea.it> [ctb]",
     "Jose Manuel Gutierrez <gutierjm@unican.es> [ctb]",
     "Sixto Herrera <herreras@unican.es> [ctb]",
     "Maialen Iturbide <miturbide@ifca,unican.es> [ctb]",

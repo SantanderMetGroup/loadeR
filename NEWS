@@ -1,8 +1,10 @@
 loadeR
 ======
 
-* Full support for rotated grid datasets (RCMs)
-* Improved bilinear interpolation routine
-* Eliminated dependency from package maps
+* New generic function loadSeasonalForecast
+* New service in loginUDG for checking user credentials
+* Immproved connectionn error handling in opening remote datasets
+* Bug fix in latlon coordinates retrieval for global selections on 0-360 datasets
+* Bug fix in temporal aggregation
 * Other minor bug fixes and enhancements
 

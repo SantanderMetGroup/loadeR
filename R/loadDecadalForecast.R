@@ -1,6 +1,6 @@
 # loadDecadalForecast.R Load a user-defined spatio-temporal slice from decadal forecasts
 #
-#     Copyright (C) 2015 Santander Meteorology Group (http://www.meteo.unican.es)
+#     Copyright (C) 2016 Santander Meteorology Group (http://www.meteo.unican.es)
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#' @title Load a field from decadal forecasts
+#' @title Load a grid from a decadal forecast
 #' @description Load a user-defined spatio-temporal slice from decadal forecasts
 #' @import rJava
 #' @template templateParams
@@ -50,22 +50,28 @@
 #' lonLim <-  c(-5,10)
 #' season <- 3:5
 #' period <- 1981:1991
-#' loginUDG(username = "myuser", password = "mypassword") #type help(loginUDG)
+#' loginUDG(username = "myuser", password = "mypassword") 
 #' tasDECA <- loadDecadalForecast(
 #'    dataset = "http://www.meteo.unican.es/tds5/dodsC/specs/gfdl_specs_decadal.ncml", 
 #'    latLim = latLim, 
 #'    lonLim = lonLim,
 #'    var = "tas", 
-#'    dictionary = F, 
 #'    years = period, 
 #'    season = season)
 #' }
 
 
-loadDecadalForecast <- function(dataset, var, dictionary = FALSE, 
-                                members = NULL, lonLim = NULL, latLim = NULL, season = NULL,
-                                years = NULL, time = "none",
-                                aggr.d = "none", aggr.m = "none") {
+loadDecadalForecast <- function(dataset,
+                                var,
+                                dictionary = FALSE, 
+                                members = NULL,
+                                lonLim = NULL,
+                                latLim = NULL,
+                                season = NULL,
+                                years = NULL,
+                                time = "none",
+                                aggr.d = "none",
+                                aggr.m = "none") {
       time <- match.arg(time, choices = c("none","00","03","06","09","12","15","18","21","DD"))
       aggr.d <- match.arg(aggr.d, choices = c("none", "mean", "min", "max", "sum"))
       if (time != "DD" & aggr.d != "none") {
@@ -114,11 +120,11 @@ loadDecadalForecast <- function(dataset, var, dictionary = FALSE,
       }
       # latLon <- getLatLonDomainForecast(grid, lonLim, latLim)      
       latLon <- getLatLonDomain(grid, lonLim, latLim)      
-      runTimePars <- getRunTimeDomain(dataset, grid, members, season, years)
+      runTimePars <- getRunTimeDomain.decadal(dataset, grid, members, season, years)
       memberRangeList <- getMemberDomain(grid, dataset, members)
       foreTimePars <- getForecastTimeDomain(grid, dataset, dic, runTimePars, time, aggr.d, aggr.m)
       verticalPars <- getVerticalLevelPars(grid, level)
-      cube <- makeSubsetDecadal(grid, latLon, runTimePars, memberRangeList, foreTimePars, verticalPars)
+      cube <- makeSubset.decadal(grid, latLon, runTimePars, memberRangeList, foreTimePars, verticalPars)
       auxDates <- as.POSIXlt(cube$foreTimePars$forecastDates$start, tz = "GMT")
       indMonthValid <- which(is.element(auxDates$mon + 1,season))
       if (length(indMonthValid) < dim(cube$mdArray)[grep("^time$", attr(cube$mdArray,"dimensions"))]) {
@@ -131,7 +137,7 @@ loadDecadalForecast <- function(dataset, var, dictionary = FALSE,
       foreTimePars <- NULL
       if (!is.null(dic)) {
             isStandard <- TRUE
-            cube$mdArray <- dictionaryTransformForecast(dic, cube$foreTimePars, cube$mdArray)
+            cube$mdArray <- dictionaryTransformForecast(dic, cube$mdArray)
             # var <- derInterface$origVar
       } else {
             isStandard <- FALSE
@@ -144,9 +150,9 @@ loadDecadalForecast <- function(dataset, var, dictionary = FALSE,
       Variable <- list("varName" = var, "level" = level)
       attr(Variable, "is_standard") <- isStandard
       if (isStandard) {
-            vocabulary <- showVocabulary()
-            attr(Variable, "units") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier,), 3])
-            attr(Variable, "longname") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier,), 2])
+            vocabulary <- UDG.vocabulary()
+            attr(Variable, "units") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier), 3])
+            attr(Variable, "longname") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier), 2])
       } else {
             attr(Variable, "units") <- grid$getUnitsString()
             attr(Variable, "longname") <- grid$getFullName()
@@ -182,25 +188,4 @@ loadDecadalForecast <- function(dataset, var, dictionary = FALSE,
 # End
 
 
-#' @title Date adjustment
-#' @description Adjust dates in forecast data
-#' @param foreTimePars A list of elements as returned by \code{\link{getRunTimeDomain}}
-#' @author S. Herrera
-#' @keywords internal
 
-adjustDates.forecast <- function(foreTimePars) {
-      dates <- as.POSIXct(do.call("c", foreTimePars$forecastDates[[1]]))
-      interval <- 0
-      if (foreTimePars$aggr.m != "none") {
-            mon.len <- sapply(dates, ndays)
-            interval <- mon.len * 86400
-      } else if (foreTimePars$aggr.d != "none") {
-            dates <- format(as.Date(substr(dates, 1, 10)), format = "%Y-%m-%d %H:%M:%S", usetz = TRUE) 
-            interval <- 86400
-      }
-      formato <- ifelse(interval[1] == 0, "%Y-%m-%d %H:%M:%S", "%Y-%m-%d")
-      dates.end <- format(as.POSIXct(as.POSIXlt(dates, tz = "GMT") + interval), format = formato, usetz = TRUE)
-      dates.start <- format(as.POSIXct(as.POSIXlt(dates, tz = "GMT"), tz = "GMT"), format = formato, usetz = TRUE)
-      return(list("start" = dates.start, "end" = dates.end))
-}
-# End

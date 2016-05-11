@@ -3,7 +3,7 @@
 #' @param grid a java \sQuote{GeoGrid}
 #' @param dataset character string of the dataset
 #' @param dic dictionary information
-#' @param runTimePars A list of elements as returned by \code{\link{getRunTimeDomain}}
+#' @param runTimePars A list of elements as returned by \code{getRunTimeDomain*}
 #' @param time Verification time defined as a character string (e.g. \dQuote{06} for data
 #' verifying at 06:00:00). Only applies for sub-daily datasets.
 #' @param aggr.d Aggregation function for subdaily to daily
@@ -21,7 +21,7 @@
 #' of each element of the runTimeList to avoid losing the first day when performing deaccumulation.}
 #' \item{doDailyMean}{Logical. Are the forecast time values going to be used for data aggregation?. This argument is passed
 #' to \code{makeSubset} family functions to undertake the pertinent aggregation if TRUE.}
-#' @export
+#' @keywords internal
 #' @author J.Bedia, S. Herrera
 
 getForecastTimeDomain <- function(grid, dataset, dic, runTimePars, time, aggr.d, aggr.m) {
@@ -86,7 +86,10 @@ getForecastTimeDomain <- function(grid, dataset, dic, runTimePars, time, aggr.d,
                   as.integer(tail(foreTimesList[[x]], 1L) - 1),
                   foreTimeStride)$shiftOrigin(foreTimeShift)
       })
-      return(list("forecastDates" = foreDatesList, "ForeTimeRangesList" = foreTimeRangesList, "deaccum" = deaccum,
-                  "aggr.d" = aggr.d, "aggr.m" = aggr.m))
+      return(list("forecastDates" = foreDatesList,
+                  "ForeTimeRangesList" = foreTimeRangesList,
+                  "deaccum" = deaccum,
+                  "aggr.d" = aggr.d,
+                  "aggr.m" = aggr.m))
 }
 # End
