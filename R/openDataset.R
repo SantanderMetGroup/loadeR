@@ -13,8 +13,7 @@ openDataset <- function(dataset) {
       url.check <- paste0(dataset, ".html")
       txt <- url.exists(url.check, .header = TRUE)
       if (!is.logical(txt)) {
-            message("[", Sys.time(), "] ", "Opening connection with remote server...")
-            url.check <- paste0(dataset,".html")
+            message("[", Sys.time(), "] ", "Opening dataset...")
             htmlheader <- getURL(url.check, ssl.verifypeer = FALSE)
             if (grepl("code = 404", htmlheader)) {
                   stop("The requested dataset URL was not found (HTTP error 404)", call. = FALSE)
@@ -39,7 +38,7 @@ openDataset <- function(dataset) {
             if (is.null(gds)) {
                   stop("Requested URL not found\nThe problem may be momentary.", call. = FALSE)      
             }
-            message("[", Sys.time(), "] ", "Connected successfuly")
+            message("[", Sys.time(), "] ", "The dataset was successfuly opened")
       } else {
             gds <- J("ucar.nc2.dt.grid.GridDataset")$open(dataset)
       }
