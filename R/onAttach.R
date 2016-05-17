@@ -18,7 +18,7 @@
             latest.ver <- package_version(gsub("Version: ", "", b[grep("Version", b)]))
             if (ver < latest.ver) {
                   ver.mess1 <- paste("WARNING: Your current version of ", pkgname, " (v", ver, ") is not up-to-date", sep = "")
-                  ver.mess <- paste("Get the latest stable version (", latest.ver, ") using <devtools::install_github('SantanderMetGroup/loadeR'>)", sep = "")
+                  ver.mess <- paste("Get the latest stable version (", latest.ver, ") using <devtools::install_github('SantanderMetGroup/loadeR')>", sep = "")
                   packageStartupMessage(ver.mess1)
                   packageStartupMessage(ver.mess)
             }
