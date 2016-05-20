@@ -13,8 +13,8 @@ Suggests:
     downscaleR
 Type: Package
 Title: R Package for Climate Data Loading and Manipulation
-Version: 1.0-0
-Date: 2016-05-11
+Version: 1.0-1
+Date: 2016-05-20
 Authors@R: as.person(c(
     "Santander Meteorology Group <http://meteo.unican.es> [aut]",
     "Joaquin Bedia <bediaj@unican.es> [ctb,cre]",

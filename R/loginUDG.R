@@ -39,7 +39,7 @@ loginUDG <- function(username, password, proxy.host = NULL, proxy.port = NULL) {
       if (!is.null(proxy.host)) {
             J("ucar.nc2.util.net.HTTPSession")$setGlobalProxy(proxy.host, proxy.port)
       }
-      J("ucar.httpservices.MyHTTPFactory")$setCredentials(username, password)
+      J("ucar.httpservices.HTTPFactory")$setCredentials(username, password)
 }
 # End
 
