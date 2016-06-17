@@ -57,8 +57,8 @@ getLatLonDomain <- function(grid, lonLim, latLim) {
       }    
       if (is.null(latLim)) {
             latLim <- c(bboxDataset$getLatMin(), bboxDataset$getLatMax())
-            deltaLat <- latLim[2] - latLim[1]
       }
+            deltaLat <- latLim[2] - latLim[1]
       if (is.null(lonLim)) {
             lonLim <- c(bboxDataset$getLonMin(), bboxDataset$getLonMax())
             deltaLon <- lonLim[2] - lonLim[1]
