@@ -56,8 +56,10 @@ makeSubset <- function(grid, timePars, levelPars, latLon) {
             aux.list2 <- NULL
             # Daily aggregator 
             if (timePars$aggr.d != "none") {
-                  aux.string <- paste(as.POSIXlt(timePars$dateSliceList[[i]])$mon, as.POSIXlt(timePars$dateSliceList[[i]])$mday, sep = "-")
-                  aux.factor <- factor(aux.string, levels = unique(aux.string))
+                  aux.string <- paste(substr(timePars$dateSliceList[[i]],6,7), 
+                                      substr(timePars$dateSliceList[[i]],9,10), sep = "-")
+                  ## aux.string <- paste(as.POSIXlt(timePars$dateSliceList[[i]])$mon, as.POSIXlt(timePars$dateSliceList[[i]])$mday, sep = "-")
+                  aux.factor <- factor(aux.string, levels = unique(aux.string), ordered = TRUE)
                   mar <- grep("^time", dimNamesRef, invert = TRUE)
                   aux.list[[i]] <- apply(aux.list[[i]], MARGIN = mar, FUN = function(x) {
                         tapply(x, INDEX = aux.factor, FUN = timePars$aggr.d, na.rm = TRUE)
@@ -69,7 +71,9 @@ makeSubset <- function(grid, timePars, levelPars, latLon) {
             }
             # Monthly aggregator
             if (timePars$aggr.m != "none") {
-                  mes <- as.POSIXlt(timePars$dateSliceList[[i]])$mon
+                  mes <- as.numeric(substr(timePars$dateSliceList[[i]],6,7))
+                  ## mes <- as.POSIXlt(timePars$dateSliceList[[i]])$mon
+                  mes <- factor(mes, levels = unique(mes), ordered = TRUE)
                   day <- as.POSIXlt(timePars$dateSliceList[[i]])$mday
                   mar <- grep("^time", dimNamesRef, invert = TRUE)
                   aux.list[[i]] <- apply(aux.list[[i]], MARGIN = mar, FUN = function(x) {
