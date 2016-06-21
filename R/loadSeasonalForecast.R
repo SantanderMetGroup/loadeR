@@ -117,9 +117,11 @@ loadSeasonalForecast <- function(dataset,
       runTimePars$runDates <- format(as.POSIXct(runTimePars$runDates, tz = "GMT"),
                                      format = "%Y-%m-%d %H:%M:%S", usetz = TRUE)
       # Static fields
-      if (dic$time_step == "static") {
-            runTimePars$runDates <- NA
-            names(memberRangeList) <- NA
+      if (!is.null(dic)){
+            if(dic$time_step == "static") {
+                  runTimePars$runDates <- NA
+                  names(memberRangeList) <- NA
+            }
       }
       # Variable attributes -------
       Variable <- list("varName" = var, "level" = level)

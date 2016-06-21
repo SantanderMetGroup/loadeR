@@ -16,6 +16,8 @@ Find out more about this package (including [installation information](https://g
  * [`loadeR.2nc`](https://github.com/SantanderMetGroup/loadeR.2nc/) provides support for **exporting to NetCDF**.
 
  * [`downscaleR`](https://github.com/SantanderMetGroup/downscaleR) is an R package for **empirical-statistical downscaling** of daily data, including bias correction techniques.  
+ 
+ * [`visualizeR`](https://github.com/SantanderMetGroup/visualizeR) is an R package implementing a set of advanced **visualization tools for forecast verification**.
 
 ---
 *Since November 2015, this package supersedes the data loading capabilities of package [`downscaleR`](https://github.com/SantanderMetGroup/downscaleR).*

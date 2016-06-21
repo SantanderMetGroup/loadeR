@@ -14,7 +14,6 @@
 #' @export
 #' @importFrom RCurl getURL
 
-
 loginUDG <- function(username, password, proxy.host = NULL, proxy.port = NULL) {
       proxy.port <- as.integer(proxy.port)
       if (!is.character(username) | !is.character(password)) {
@@ -42,7 +41,6 @@ loginUDG <- function(username, password, proxy.host = NULL, proxy.port = NULL) {
       J("ucar.httpservices.MyHTTPFactory")$setCredentials(username, password)
 }
 # End
-
 
 
 
