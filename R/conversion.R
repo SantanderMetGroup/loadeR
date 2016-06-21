@@ -97,3 +97,34 @@ tdps2hurs <- function(tas, tdps) {
       return(hurs)
 }
 # End 
+
+
+##' Convert specific humidity to relative humidity
+##'
+##' Converting specific humidity into relative humidity from pressure and temperature
+##' 
+##' \url{http://www.eol.ucar.edu/projects/ceop/dm/documents/refdata_report/eqns.html}
+##' @title huss2hurs
+##' @param huss specific humidity, dimensionless (e.g. kg/kg) ratio of water mass / total air mass
+##' @param tas temperature in degrees C
+##' @param ps pressure in mb
+##' @return relative humidity (in \%), ratio of actual water mixing ratio to saturation mixing ratio
+##' @keywords internal
+##' @export
+##' @author David LeBauer  \email{dlebauer@@illinois.edu},
+##'  with a minor modification by J. Bedia to return as \%.
+##' @source PEcAn Project Repository: 
+##' \url{https://github.com/PecanProject/pecan/blob/master/modules/data.atmosphere/R/metutils.R}
+
+huss2hurs <- function(huss, tas, ps) {
+      es <-  6.112 * exp((17.67 * tas)/(tas + 243.5))
+      e <- huss * ps / (0.378 * huss + 0.622)
+      hurs <- e / es
+      hurs[hurs > 1] <- 1
+      hurs[hurs < 0] <- 0
+      hurs <- hurs * 100
+      return(hurs)
+}
+
+
+
