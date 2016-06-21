@@ -14,7 +14,6 @@
 #' @export
 #' @importFrom RCurl getURL
 
-
 loginUDG <- function(username, password, proxy.host = NULL, proxy.port = NULL) {
       proxy.port <- as.integer(proxy.port)
       if (!is.character(username) | !is.character(password)) {
@@ -39,10 +38,9 @@ loginUDG <- function(username, password, proxy.host = NULL, proxy.port = NULL) {
       if (!is.null(proxy.host)) {
             J("ucar.nc2.util.net.HTTPSession")$setGlobalProxy(proxy.host, proxy.port)
       }
-      J("ucar.httpservices.HTTPFactory")$setCredentials(username, password)
+      J("ucar.httpservices.MyHTTPFactory")$setCredentials(username, password)
 }
 # End
-
 
 
 
