@@ -1,6 +1,6 @@
 loadeR
 ======
 
-* Bug fix in temporal aggregations of year-crossing seasons
+* Vocabulary update (land mask, land area fraction and orography added)
 * Other minor bug fixes and enhancements
 

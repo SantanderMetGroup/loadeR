@@ -4,6 +4,7 @@
 #' @seealso UDG.vocabulary.update, for the inclusion of new standard variables defined by the user
 #' @note The function assumes that the user has read permission to the package installation directory
 #' @author J Bedia
+#' @references Standard name table of the CF convention: http://cfconventions.org/standard-names.html
 #' @export
 #' @importFrom utils read.csv
 #' @examples

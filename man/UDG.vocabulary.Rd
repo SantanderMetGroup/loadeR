@@ -23,6 +23,9 @@ voc[grep("^ta", voc$identifier), ]
 \author{
 J Bedia
 }
+\references{
+Standard name table of the CF convention: http://cfconventions.org/standard-names.html
+}
 \seealso{
 UDG.vocabulary.update, for the inclusion of new standard variables defined by the user
 }

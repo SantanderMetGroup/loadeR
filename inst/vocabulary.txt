@@ -4,11 +4,14 @@ hursmax,maximum 2-meter relative humidity,%
 hursmin,minimum 2-meter relative humidity,%
 hus,specific humidity,kg.kg-1
 huss,2-meter specific humidity,kg.kg-1
+lm,land binary mask,1
+orog,surface altitude,m
 ps,air pressure at surface level,Pa
 psl,air pressure at sea level,Pa
 rlds,surface downwelling longwave radiation,W.m-2
 rlut,toa outgoing longwave flux,W.m-2
 rsds,surface downwelling shortwave radiation,W.m-2
+sftlf,land area fraction,1
 ta,air temperature,degrees Celsius
 tas,2-meter air temperature,degrees Celsius
 tasmax,maximum 2-m air temperature,degrees Celsius
