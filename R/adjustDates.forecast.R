@@ -8,7 +8,8 @@
 adjustDates.forecast <- function(foreTimePars) {
       dates <- as.POSIXct(do.call("c", foreTimePars$forecastDates[[1]]))
       interval <- 0
-      if (foreTimePars$aggr.m != "none") {
+      dif <- difftime(dates[2], dates[1], units = "days")
+      if (foreTimePars$aggr.m != "none" | (dif > 27 & dif < 32)) {
             mon.len <- sapply(dates, ndays)
             interval <- mon.len * 86400
       } else if (foreTimePars$aggr.d != "none") {
