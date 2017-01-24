@@ -1,6 +1,5 @@
 loadeR
 ======
 
-* Minor changes for supporting monthly datasets in UDG
-* Other minor enhancements and documentation updates
+* Bug fix in URL encoding for checking UDG user credentials
 
