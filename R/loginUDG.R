@@ -20,9 +20,10 @@ loginUDG <- function(username, password, proxy.host = NULL, proxy.port = NULL) {
       if (!is.character(username) | !is.character(password)) {
             stop("\'username\' and \'password\' must be character strings", call. = FALSE)
       }
-      username <- URLencode(username, reserved = TRUE)
-      password <- URLencode(password, reserved = TRUE)
-      url.check <- paste0("https://meteo.unican.es/udg-tap/rest/v1/signin/verify?username=", username, "&password=", password)
+      username.enc <- URLencode(username, reserved = TRUE)
+      password.enc <- URLencode(password, reserved = TRUE)
+      url.check <- paste0("https://meteo.unican.es/udg-tap/rest/v1/signin/verify?username=", username.enc,
+                          "&password=", password.enc)
       message("[",Sys.time(), "] Setting credentials...")
       con <- tryCatch(getURL(url.check, ssl.verifypeer = FALSE), error = function(er) {
             er <- NULL

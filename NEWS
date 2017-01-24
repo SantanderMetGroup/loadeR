@@ -1,5 +1,5 @@
 loadeR
 ======
 
-* Bug fix in URL encoding for checking UDG user credentials
+* Bug fix in credential setting (fixes error in previous patch version)
 
