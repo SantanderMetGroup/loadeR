@@ -68,7 +68,7 @@ check.dictionary <- function(dataset, var, dictionary, time) {
             shortName <- var
       } else {
             dicPath <- if (isTRUE(dictionary)) {
-                  gsub("ncml$", "dic", dataset)
+                  gsub(".nc[ml]*$", ".dic", dataset)
             } else {
                   dictionary
             }
