@@ -22,4 +22,3 @@ The level output of this function is passed to \code{\link{getVerticalLevelPars}
 J Bedia
 }
 \keyword{internal}
-

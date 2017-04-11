@@ -31,4 +31,3 @@ When leadMonth equals 0, there is not a previous day for starting deaccumulation
 J. Bedia
 }
 \keyword{internal}
-

@@ -33,4 +33,3 @@ David LeBauer  \email{dlebauer@illinois.edu},
  with a minor modification by J. Bedia to return as \%.
 }
 \keyword{internal}
-

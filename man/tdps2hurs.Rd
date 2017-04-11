@@ -17,12 +17,11 @@ vector of relative humidity (\%)
 \description{
 Conversion of dew point to relative humidity
 }
-\author{
-J Bedia, S Herrera
-}
 \seealso{
 Other conversion: \code{\link{hurs2huss}},
   \code{\link{mslp2ps}}
 }
+\author{
+J Bedia, S Herrera
+}
 \keyword{internal}
-

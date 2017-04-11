@@ -24,4 +24,3 @@ Sub-routine of \code{loadGridDataset}.
 J. Bedia
 }
 \keyword{internal}
-

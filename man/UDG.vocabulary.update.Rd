@@ -36,13 +36,12 @@ UDG.vocabulary.update(identifier = c("wap",
 UDG.vocabulary() 
 }
 }
-\author{
-J Bedia
-}
 \references{
 Standard name table of the CF convention: http://cfconventions.org/standard-names.html
 }
 \seealso{
 UDG.vocabulary, to access the vocabulary contents
 }
-
+\author{
+J Bedia
+}

@@ -44,4 +44,3 @@ Calculates parameters for forecast time determination along the runtime axis.
 J.Bedia, S. Herrera
 }
 \keyword{internal}
-

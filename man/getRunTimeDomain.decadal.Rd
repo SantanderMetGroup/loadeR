@@ -42,4 +42,3 @@ in the case of year-crossing seasons
 J. Bedia, S. Herrera
 }
 \keyword{internal}
-

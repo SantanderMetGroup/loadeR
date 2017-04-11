@@ -42,4 +42,3 @@ in the \code{dateSliceList} element.
 J. Bedia
 }
 \keyword{internal}
-

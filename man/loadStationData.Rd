@@ -80,9 +80,7 @@ must take care of variable units and eventual conversions when necessary.
  \code{x} and \code{y} elements of the \code{xyCoords} list, while the corresponding geographical coordinates are insode two matrices inside 
  the \code{lon} and \code{lat} elements.
 }
-\author{
-J. Bedia
-}
+
 \references{
 \url{https://github.com/SantanderMetGroup/downscaleR/wiki/Observation-Data-format}
 }
@@ -90,4 +88,6 @@ J. Bedia
 Other loading: \code{\link{loadGridData}},
   \code{\link{makeAggregatedDataset}}
 }
-
+\author{
+J. Bedia
+}

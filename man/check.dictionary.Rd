@@ -22,7 +22,6 @@ a list with actual shortName and dic definition
 Check dictionary argument and transform variable name and generate dic details accordingly
 }
 \author{
-J. Bedia
+J. Bedia, J. Fernandez
 }
 \keyword{internal}
-

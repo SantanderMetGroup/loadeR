@@ -200,7 +200,7 @@ The function has been implemented to access seasonal slices, as determined by th
    results in different initialization times for the same forecast times of different members. In this case, the \code{InitializationDates}
     are included in a list whose elements are named as the corresponding member.
 }
+
 \author{
 J. Bedia
 }
-

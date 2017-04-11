@@ -29,4 +29,3 @@ Prior to data access, users must set their credentials. Registration can be obta
 \author{
 J Bedia, M. Vega, A. Cofino
 }
-

@@ -23,4 +23,3 @@ Get time index positions for loading ascii station data
 J. Bedia
 }
 \keyword{internal}
-

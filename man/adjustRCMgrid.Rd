@@ -25,4 +25,3 @@ Performs operations to adequately handle 2D XY axis (typically from RCMs)
 S. Herrera, M. Iturbide, J. Bedia
 }
 \keyword{internal}
-

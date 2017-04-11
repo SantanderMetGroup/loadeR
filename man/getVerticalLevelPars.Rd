@@ -26,4 +26,3 @@ The function opens the grid and checks all possible level values.
 J. Bedia
 }
 \keyword{internal}
-

@@ -22,11 +22,10 @@ Reverses the order of the latitudinal coordinates when the dataset is read in
 The code is partially based on an example provided at \url{http://stackoverflow.com/a/14502298}
  by Hadley Wickham
 }
-\author{
-J. Bedia
-}
 \references{
 \url{http://adv-r.had.co.nz/Computing-on-the-language.html}
 }
+\author{
+J. Bedia
+}
 \keyword{internal}
-

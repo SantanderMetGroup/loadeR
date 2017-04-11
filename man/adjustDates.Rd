@@ -22,4 +22,3 @@ Sub-daily information is displayed only in case of subdaily data
 J Bedia
 }
 \keyword{internal}
-

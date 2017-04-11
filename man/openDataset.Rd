@@ -19,4 +19,3 @@ Open a local or remote grid dataset
 J. Bedia, A Cofino, M. Vega
 }
 \keyword{internal}
-

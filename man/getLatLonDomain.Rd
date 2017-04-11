@@ -45,11 +45,10 @@ by \code{pointXYindex}, and is passed to the \sQuote{readDataSlice} method in
 The function assumes that datasets have degrees-east and degress-north as units
 of the corresponding X and Y axes.
 }
-\author{
-J. Bedia, A. Cofino, M. Iturbide, S. Herrera
-}
 \references{
 \url{https://www.unidata.ucar.edu/software/thredds/current/netcdf-java/v4.0/javadocAll/ucar/nc2/dt/GridCoordSystem.html#getRangesFromLatLonRect\%28ucar.unidata.geoloc.LatLonRect\%29}
 }
+\author{
+J. Bedia, A. Cofino, M. Iturbide, S. Herrera
+}
 \keyword{internal}
-

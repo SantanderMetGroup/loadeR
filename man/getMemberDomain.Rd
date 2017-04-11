@@ -30,4 +30,3 @@ method should be used instead of getNames() on the ensemble axis.
 J. Bedia
 }
 \keyword{internal}
-

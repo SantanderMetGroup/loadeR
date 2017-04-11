@@ -34,11 +34,10 @@ Dimensions of length one are dropped and the \dQuote{dimnames} attribute is cons
 In the current version the Z dimension is ignored (and dropped),
  as it is not planned to include multi-level variables.
 }
-\author{
-J Bedia, A.Cofino
-}
 \references{
 \url{http://www.unidata.ucar.edu/software/thredds/v4.3/netcdf-java/v4.3/javadocAll/ucar/nc2/dt/grid/GeoGrid.html}
 }
+\author{
+J Bedia, A.Cofino
+}
 \keyword{internal}
-

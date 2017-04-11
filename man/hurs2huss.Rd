@@ -19,9 +19,6 @@ Specific humidity (kg.kg-1)
 \description{
 Derive specific humidity from relative humidity
 }
-\author{
-S. Herrera
-}
 \references{
 Bohren & Albrecht (2000) Atmospheric thermodynamics. Oxford University Press. 402 pp
 }
@@ -29,5 +26,7 @@ Bohren & Albrecht (2000) Atmospheric thermodynamics. Oxford University Press. 40
 Other conversion: \code{\link{mslp2ps}},
   \code{\link{tdps2hurs}}
 }
+\author{
+S. Herrera
+}
 \keyword{internal}
-
