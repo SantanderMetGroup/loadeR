@@ -34,11 +34,10 @@ the GeoGrid dimension ordering. In addition, the particular case of single-coord
 (either in X and/or in Y dimensions) must be adequately handled given that the \sQuote{makeSubset} output 
 has in this case a different shape than the final output after \dQuote{slicing}.
 }
-\author{
-J. Bedia, with contributions of A. Cofin\~no and S. Herrera.
-}
 \references{
 \url{https://www.unidata.ucar.edu/software/thredds/v4.3/netcdf-java/v4.3/javadoc/ucar/nc2/dt/grid/GeoGrid.html}
 }
+\author{
+J. Bedia, with contributions of A. Cofin\~no and S. Herrera.
+}
 \keyword{internal}
-

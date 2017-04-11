@@ -22,4 +22,3 @@ Sub-routine of the \code{load*Forecast} methods.
 J. Bedia
 }
 \keyword{internal}
-

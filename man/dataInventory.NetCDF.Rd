@@ -23,4 +23,3 @@ Sub-routine of \code{dataInventory}
 J. Bedia
 }
 \keyword{internal}
-

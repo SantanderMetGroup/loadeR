@@ -135,6 +135,7 @@ The argument \code{time} controls the temporal filtering/aggregation options tha
  \code{x} and \code{y} elements of the \code{xyCoords} list, while the corresponding geographical coordinates are insode two matrices inside 
  the \code{lon} and \code{lat} elements.
 }
+
 \examples{
 \dontrun{
 #Download dataset
@@ -181,13 +182,12 @@ tasmax <- loadGridData(dataset = ds,
                        aggr.m = "mean")
 }
 }
-\author{
-J. Bedia, S. Herrera, M. Iturbide, J.M. Gutierrez
-}
 \seealso{
 Other loading: \code{\link{loadStationData}},
   \code{\link{makeAggregatedDataset}}
 
 Other loading.grid: \code{\link{loadDecadalForecast}}
 }
-
+\author{
+J. Bedia, S. Herrera, M. Iturbide, J.M. Gutierrez
+}

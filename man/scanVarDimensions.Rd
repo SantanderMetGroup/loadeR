@@ -26,11 +26,10 @@ All possible dimensions of a gridded datasets are searched and included if exist
  only the non-empty level values for each variable. In case of horizontal 2D axes,
  coordinate values are truncated to 1D for conciseness in the inventory.
 }
-\author{
-J. Bedia
-}
 \references{
 \url{http://www.unidata.ucar.edu/software/thredds/v4.3/netcdf-java/v4.3/javadocAll/ucar/nc2/dt/grid/GeoGrid.html}
 }
+\author{
+J. Bedia
+}
 \keyword{internal}
-

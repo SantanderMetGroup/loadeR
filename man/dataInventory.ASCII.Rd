@@ -21,4 +21,3 @@ Make data inventory from a station dataset in standard ASCII format
 J Bedia
 }
 \keyword{internal}
-

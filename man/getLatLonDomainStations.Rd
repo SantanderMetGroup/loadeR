@@ -28,4 +28,3 @@ data within the given bounding box.
 J. Bedia
 }
 \keyword{internal}
-

@@ -60,7 +60,7 @@ dictionaryLookup <- function(dicPath, var, time) {
 #' @param time time
 #' @return a list with actual shortName and dic definition
 #' @keywords internal
-#' @author J. Bedia
+#' @author J. Bedia, J. Fernandez
 
 check.dictionary <- function(dataset, var, dictionary, time) {
       if (dictionary == FALSE) {

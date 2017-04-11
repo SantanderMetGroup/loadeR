@@ -1,5 +1,7 @@
 loadeR
 ======
 
-* Bug fix in credential setting (fixes error in previous patch version)
+* Bug fix in dictionary parsing for single nc file datasets
+* Removed RCurl dependency
+* Other minor enhancements and documentation updates
 

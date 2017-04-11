@@ -8,7 +8,7 @@ loadStationData.ASCII(dataset, var, stationID, lonLim, latLim, season, years,
   tz)
 }
 \arguments{
-\item{dataset}{Directory containing the stations dataset}
+\item{dataset}{Directory (possibly compressed as a .zip file) containing the stations dataset}
 
 \item{var}{Character string. Name of the variable, as defined in the dataset}
 
@@ -31,11 +31,10 @@ A list with several components. See \code{\link{loadStationData}} for details.
 Load station data in standard ASCII format, being the standard defined in the framework
 of the action COST VALUE
 }
-\author{
-J. Bedia
-}
 \references{
 \url{https://github.com/SantanderMetGroup/downscaleR/wiki/Observation-Data-format}
 }
+\author{
+J. Bedia
+}
 \keyword{internal}
-

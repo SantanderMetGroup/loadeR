@@ -70,24 +70,60 @@ dataInventory <- function(dataset, return.stats = FALSE) {
 
 
 dataInventory.ASCII <- function(dataset, rs) {
-      lf <- list.files(dataset, full.names = TRUE)
-      stations <- read.csv(lf[grep("stations", lf, ignore.case = TRUE)], strip.white = TRUE, stringsAsFactors = FALSE)
-      vars <- read.csv(lf[grep("variables", lf, ignore.case = TRUE)], strip.white = TRUE, colClasses = "character")
+      if (grepl("\\.zip$", dataset)) {
+            dirContents <- unzip(dataset, list = TRUE)$Name
+            stations.file <- grep("stations\\.", dirContents, ignore.case = TRUE, value = TRUE)
+            vars.file <- grep("variables\\.", dirContents, ignore.case = TRUE, value = TRUE)
+            if (any(grepl("MACOSX", stations.file))) {
+                  stations.file <- stations.file[-grep("MACOSX", stations.file)]
+            }
+            isZip <- TRUE
+            on.exit(closeAllConnections())
+      } else {
+            isZip <- FALSE
+            dirContents <- list.files(dataset, full.names = TRUE)
+      }
+      # lf <- list.files(dataset, full.names = TRUE)
+      if (isZip) {
+            stations <- read.csv(unz(dataset, stations.file), strip.white = TRUE, stringsAsFactors = FALSE)
+            vars <- read.csv(unz(dataset, vars.file), strip.white = TRUE, stringsAsFactors = FALSE)
+      } else {
+            stations <- read.csv(grep("stations", dirContents, ignore.case = TRUE, value = TRUE), 
+                                 strip.white = TRUE, stringsAsFactors = FALSE)
+            vars <- read.csv(grep("variables", dirContents, ignore.case = TRUE, value = TRUE),
+                             strip.white = TRUE, colClasses = "character")      
+      }
       # Var info 
-      var.info <- list("variable" = vars[ ,grep("variable", names(vars), ignore.case = TRUE)], "longname" = vars[ ,grep("longname", names(vars), ignore.case = TRUE)], "unit" = vars[ ,grep("unit", names(vars), ignore.case = TRUE)], "missing.code" = vars[ ,grep("missing_code", names(vars), ignore.case = TRUE)])
+      var.info <- list("variable" = vars[ ,grep("variable", names(vars), ignore.case = TRUE)],
+                       "longname" = vars[ ,grep("longname", names(vars), ignore.case = TRUE)],
+                       "unit" = vars[ ,grep("unit", names(vars), ignore.case = TRUE)],
+                       "missing.code" = vars[ ,grep("missing_code", names(vars), ignore.case = TRUE)])
       var.info <- do.call("cbind.data.frame", var.info)
       # Station info
-      timeString <- read.csv(lf[grep(paste("^", vars[ ,1][1], "\\.*", sep = ""), list.files(dataset))], colClasses = "character")[ ,1]
-      if (nchar(timeString[1]) == 8) {
-            timeDates <- strptime(timeString, "%Y%m%d")  
+      timeString <- if (isZip) {
+            read.csv(unz(dataset, paste0("^", vars[ ,1][1], "\\.*")), colClasses = "character")[ ,1]
       } else {
-            timeDates <- strptime(timeString, "%Y%m%d%H")
+            read.csv(grep(paste0(vars[ ,1][1], "\\.*"), dirContents, value = TRUE), colClasses = "character")[ ,1]
+      }
+      timeDates <- if (nchar(timeString[1]) == 8) {
+            strptime(timeString, "%Y%m%d")  
+      } else {
+            strptime(timeString, "%Y%m%d%H")
       }
       timeString <- NULL
-      timeAxis <- list("startDate" = min(timeDates), "endDate" = max(timeDates), "timeStep" = difftime(timeDates[2], timeDates[1], units = "h"))    
+      timeAxis <- list("startDate" = min(timeDates),
+                       "endDate" = max(timeDates),
+                       "timeStep" = difftime(timeDates[2], timeDates[1], units = "h"))    
       timeDates <- NULL
       # station_id <- as.character(stations[ ,grep("station_id", names(stations), ignore.case = TRUE)])
-      aux <- read.csv(lf[grep("stations", lf, ignore.case = TRUE)], strip.white = TRUE, stringsAsFactors = FALSE, colClasses = "character")
+      
+      if (isZip) {
+            
+      } else {
+      aux <- read.csv(grep("stations", dirContents, ignore.case = TRUE, value = TRUE),
+                      strip.white = TRUE,
+                      stringsAsFactors = FALSE, colClasses = "character")
+      }
       station_id <- aux[ ,grep("station_id", names(aux), ignore.case = TRUE)]
       aux <- NULL
       lon <- stations[ ,grep("^longitude$", names(stations), ignore.case = TRUE)]
@@ -109,7 +145,7 @@ dataInventory.ASCII <- function(dataset, rs) {
                   stats.list[[2]][ ,i] <- apply(var, 2, min, na.rm = TRUE)
                   stats.list[[3]][ ,i] <- apply(var, 2, max, na.rm = TRUE)
                   stats.list[[4]][ ,i] <- apply(var, 2, mean, na.rm = TRUE)
-                  rm(var)
+                  var <- NULL
             }
             info <- list("Stations" = station.info, "Variables" = var.info, "Summary.stats" = stats.list)
       }
@@ -140,7 +176,7 @@ dataInventory.NetCDF <- function(dataset) {
             varNames <- varNames[-rm.ind]
       }
       if (length(varNames) == 0) {
-            stop("No variables found")
+            stop("No variables found", call. = FALSE)
       } else {
             var.list <- list()
             for (i in 1:length(varNames)) {

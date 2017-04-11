@@ -118,6 +118,7 @@ definitions contained in the vocabulary (see \code{\link{UDG.vocabulary}}). This
  \code{x} and \code{y} elements of the \code{xyCoords} list, while the corresponding geographical coordinates are insode two matrices inside 
  the \code{lon} and \code{lat} elements.
 }
+
 \examples{
 \dontrun{
 latLim <- c(40,50)
@@ -134,10 +135,9 @@ tasDECA <- loadDecadalForecast(
    season = season)
 }
 }
-\author{
-J. Bedia, S. Herrera, M. Iturbide, J.M. Gutierrez
-}
 \seealso{
 Other loading.grid: \code{\link{loadGridData}}
 }
-
+\author{
+J. Bedia, S. Herrera, M. Iturbide, J.M. Gutierrez
+}

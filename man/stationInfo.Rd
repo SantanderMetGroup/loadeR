@@ -35,10 +35,9 @@ print(stationInfo(value))
 }
 
 }
-\author{
-J. Bedia
-}
 \seealso{
 \code{\link{dataInventory}} to obtain a more exhaustive report the dataset.
 }
-
+\author{
+J. Bedia
+}

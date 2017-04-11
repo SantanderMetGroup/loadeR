@@ -16,4 +16,3 @@ Adjust dates in forecast data
 J. Bedia, S. Herrera
 }
 \keyword{internal}
-

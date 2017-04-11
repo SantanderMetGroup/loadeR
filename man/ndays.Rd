@@ -18,4 +18,3 @@ Calculate the number of days of the current month
 \references{
 \url{http://stackoverflow.com/questions/6243088/find-out-the-number-of-days-of-a-month-in-r}
 }
-

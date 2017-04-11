@@ -15,4 +15,3 @@ Loads a user-defined subset from a gridded dataset compliant with the Common
 J. Bedia
 }
 \keyword{internal}
-

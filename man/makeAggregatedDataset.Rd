@@ -61,9 +61,6 @@ one single variable. For other dataset configurations, please refer to the NcML 
 \emph{Wildcards} (or \emph{globbing}) patterns as used by most shells can be mapped to regular expression in R 
 using \code{\link[utils]{glob2rx}}.
 }
-\author{
-J. Bedia
-}
 \references{
 NcML Tutorial \url{http://www.unidata.ucar.edu/software/thredds/current/netcdf-java/ncml/Tutorial.html}. (Last accessed 14 Mar 2016.).
 }
@@ -71,4 +68,6 @@ NcML Tutorial \url{http://www.unidata.ucar.edu/software/thredds/current/netcdf-j
 Other loading: \code{\link{loadGridData}},
   \code{\link{loadStationData}}
 }
-
+\author{
+J. Bedia
+}
