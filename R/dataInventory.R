@@ -133,14 +133,17 @@ dataInventory.ASCII <- function(dataset, rs) {
       rm(list = c("lon", "lat"))
       other.metadata <- as.list(stations[ ,-pmatch(c("station_id", "longitude", "latitude"), names(stations))])
       station.info <- list("station_id" = station_id, "LonLatCoords" = LonLatCoords, "times" = timeAxis, "other.metadata" = other.metadata)
-      rm(station_id, timeAxis, LonLatCoords, other.metadata)
+      station_id  <- timeAxis <- LonLatCoords <- other.metadata <- NULL
       info <- list("Stations" = station.info, "Variables" = var.info, "Summary.stats" = NULL)
       if (isTRUE(rs)) {
             na.perc <- function(x) {round(length(which(is.na(x))) * 100 / length(x), 1)}
             aux.mat <- matrix(ncol = nrow(vars), nrow = length(station.info$station_id), dimnames = list(station.info$station_id, vars[ ,grep("variable", names(vars), ignore.case = TRUE)]))
             stats.list <- list("missing.percent" = aux.mat, "min" = aux.mat, "max" = aux.mat, "mean" = aux.mat)
-            for (i in 1:nrow(vars)) {
-                  var <- read.csv(lf[grep(paste("^", var.info[i,1], "\\.*", sep = ""), list.files(dataset))], na.strings = var.info$missing.code[i])[ ,-1]
+            lf <- list.files(dataset)
+            lff <- list.files(dataset, full.names = TRUE)
+            for (i in 1:nrow(var.info)) {
+                  varfile <- lff[grep(paste0("^", var.info[i,1], "\\."), lf)]
+                  var <- read.csv(varfile, na.strings = var.info$missing.code[i])[ ,-1]
                   stats.list[[1]][ ,i] <- apply(var, 2, na.perc)
                   stats.list[[2]][ ,i] <- apply(var, 2, min, na.rm = TRUE)
                   stats.list[[3]][ ,i] <- apply(var, 2, max, na.rm = TRUE)
