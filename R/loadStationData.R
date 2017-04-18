@@ -150,7 +150,7 @@ loadStationData.ASCII <- function(dataset, var, stationID, lonLim, latLim, seaso
       stids <- stids[stInd]
       dimnames(coords) <- list(stids, c("longitude", "latitude"))
       ## Time dimension
-      fileInd <- grep(paste0("^", var, "\\.txt$"), dirContents)
+      fileInd <- grep(paste0(var, "\\.txt$"), dirContents)
       if (length(fileInd) == 0) {
             stop("[", Sys.time(),"] Variable requested not found", call. = FALSE)
       }

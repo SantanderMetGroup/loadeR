@@ -1,7 +1,7 @@
 loadeR
 ======
 
-* Bug fix in dictionary parsing for single nc file datasets
-* Removed RCurl dependency
+* Bug fix in `loadStationData`
+* Bug fix in stations data inventory
 * Other minor enhancements and documentation updates
 
