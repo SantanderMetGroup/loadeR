@@ -6,7 +6,8 @@ Depends:
 Imports:
     utils,
     abind,
-    RCurl
+    RCurl,
+    lubridate
 Suggests:
     loadeR.ECOMS,
     loadeR.2nc,
@@ -25,7 +26,8 @@ Authors@R: as.person(c(
     "Sixto Herrera <herreras@unican.es> [ctb]",
     "Maialen Iturbide <miturbide@ifca,unican.es> [ctb]",
     "Max Tuni <max@predictia.es> [ctb]",
-    "Manuel Vega <manuel.vega@unican.es> [ctb]"))
+    "Manuel Vega <manuel.vega@unican.es> [ctb]",
+    "Matteo De Felice <matteo.defelice@enea.it> [ctb]"))
 BugReports: https://github.com/SantanderMetGroup/loadeR/issues
 URL: https://github.com/SantanderMetGroup/loadeR/wiki
 Description: Enables homogenized, user-friendly access to climate databases
