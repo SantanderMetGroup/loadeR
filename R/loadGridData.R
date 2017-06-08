@@ -134,7 +134,11 @@ loadGridData <- function(dataset,
       out <- loadGridDataset(var, grid, dic, level, season, years, time, latLon, aggr.d, aggr.m)
       # Definition of projection
       proj <- proj$toString()
+      #################
+      # Data <- arrary3Dto3Darray.rcms(array3D = out$Data, x = as.vector(out$xyCoords$lon), y = as.vector(out$xyCoords$lat))
+      #################
       attr(out$xyCoords, which = "projection") <- proj
+      attributes(out$xyCoords) <- attributes(getGrid(out))
       gds$close()
       # Dimension ordering
       tab <- c("time", "level", "lat", "lon")
@@ -237,3 +241,19 @@ ndays <- function(d) {
       as.difftime(tail((28:31)[which(!is.na(as.Date(paste0(substr(d, 1, 8), 28:31), '%Y-%m-%d')))], 1), units = "days")
 }
 #End
+
+# arrary3Dto3Darray.rcms <- function(array3D, x, y) {
+#       mat1 <- array3Dto2Dmat(array3D)
+#       mat <- matrix(NA, ncol = length(x), nrow = length(y))
+#       aux.list <- lapply(1:nrow(mat1), function(i) {
+#             diag(mat) <- mat1[i, ]
+#             mat
+#       })
+#       arr <- unname(do.call("abind", c(aux.list, along = -1)))
+#       aux.list <- NULL      
+#       arr <- aperm(arr, perm = c(1,3,2))
+#       attr(arr, "dimensions") <- c("time", "lat", "lon")
+#       return(arr)
+# }
+
+

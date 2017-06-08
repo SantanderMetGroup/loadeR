@@ -4,16 +4,14 @@
 \alias{loadStationData}
 \title{Load station data}
 \usage{
-loadStationData(dataset, file.format = "ascii", var, stationID = NULL,
-  lonLim = NULL, latLim = NULL, season = NULL, years = NULL, tz = "")
+loadStationData(dataset, var, stationID = NULL, lonLim = NULL,
+  latLim = NULL, season = NULL, years = NULL, tz = "",
+  projection = "+proj=longlat +init=epsg:4326 +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
 }
 \arguments{
 \item{dataset}{A character string indicating the database to be accessed. This is usually a path to a local file or a URL 
 pointing to a netCDF or NcML file in the case of netCDF and/or gridded datasets. For station data in standard ASCII format,
 this is the path to the directory the dataset lives in.}
-
-\item{file.format}{Wether the stations data are stored in a netCDF or ASCII (default) file. 
-Currently only the standard \dQuote{ASCII} format supported. See references for details.}
 
 \item{var}{Variable code (character string). This is the name of the variable according to the R standard naming
 (see the next argument). For variables with vertical levels, the vertical level is specified next to the variable name followed
@@ -37,6 +35,11 @@ it will be ignored.}
 \item{tz}{A time zone specification to be used for the conversion of dates, if one is required
 (i.e., if the time zone of the dataset does not correspond to the system-specific one; see
 \code{\link[base]{timezones}} for details). Default to unspecified (i.e. \code{tz = ""}).}
+
+\item{projection}{Optional. Coordinate projection that is passed to attribute \code{projection} in the 
+output object, providing geo-referencing information for more advanced spatial operations/conversions, 
+in the form of a character string following the \href{http://trac.osgeo.org/proj/}{PROJ.4 specifications}. 
+Default is set to the most common projection used for station data, this is, WGS84 longitude latitude coordinates.}
 }
 \value{
 a list with the following elements:

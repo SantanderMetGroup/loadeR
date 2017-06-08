@@ -48,7 +48,7 @@
 dataInventory <- function(dataset, return.stats = FALSE) {
       rs <- return.stats
       message(paste("[", Sys.time(), "] Doing inventory ...", sep = ""))
-      if (isTRUE(file.info(dataset)$isdir)) {
+      if (isTRUE(file.info(dataset)$isdir) | grepl("\\.zip$", dataset)) {
             out <- dataInventory.ASCII(dataset, rs)
       } else {
             out <- dataInventory.NetCDF(dataset)
@@ -67,6 +67,7 @@ dataInventory <- function(dataset, return.stats = FALSE) {
 #' @author J Bedia 
 #' @keywords internal
 #' @importFrom utils read.csv
+#' @importFrom utils unzip
 
 
 dataInventory.ASCII <- function(dataset, rs) {
@@ -101,7 +102,7 @@ dataInventory.ASCII <- function(dataset, rs) {
       var.info <- do.call("cbind.data.frame", var.info)
       # Station info
       timeString <- if (isZip) {
-            read.csv(unz(dataset, paste0("^", vars[ ,1][1], "\\.*")), colClasses = "character")[ ,1]
+            read.csv(unz(dataset, grep(paste0(vars[ ,1][1], "\\.*"), dirContents, value = TRUE)), colClasses = "character")[ ,1]
       } else {
             read.csv(grep(paste0(vars[ ,1][1], "\\.*"), dirContents, value = TRUE), colClasses = "character")[ ,1]
       }

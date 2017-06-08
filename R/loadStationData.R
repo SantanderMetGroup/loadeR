@@ -19,12 +19,14 @@
 #' @description Load observations data from station datasets in standard ASCII format.
 #'
 #' @template templateParams 
-#' @param file.format Wether the stations data are stored in a netCDF or ASCII (default) file. 
-#' Currently only the standard \dQuote{ASCII} format supported. See references for details.
 #' @param stationID Optional. A character vector indicating the code names of the stations to be loaded.
 #' @param tz A time zone specification to be used for the conversion of dates, if one is required
 #' (i.e., if the time zone of the dataset does not correspond to the system-specific one; see
 #' \code{\link[base]{timezones}} for details). Default to unspecified (i.e. \code{tz = ""}).
+#' @param projection Optional. Coordinate projection that is passed to attribute \code{projection} in the 
+#' output object, providing geo-referencing information for more advanced spatial operations/conversions, 
+#' in the form of a character string following the \href{http://trac.osgeo.org/proj/}{PROJ.4 specifications}. 
+#' Default is set to the most common projection used for station data, this is, WGS84 longitude latitude coordinates.
 #' 
 #' @return a list with the following elements:
 #' \itemize{
@@ -44,100 +46,51 @@
 #' @note Unlike gridded datasets, station data do not use a dictionary for variable homogenization. Thus, users
 #' must take care of variable units and eventual conversions when necessary.
 #' 
+#' @importFrom utils unzip
+#' 
 #' @references \url{https://github.com/SantanderMetGroup/downscaleR/wiki/Observation-Data-format} 
 #' @export 
 #' @author J. Bedia
 #' 
+#' 
 #' @family loading
 
-loadStationData <- function(dataset, file.format = "ascii", var, 
-            stationID = NULL, lonLim = NULL, latLim = NULL, season = NULL,
-            years = NULL, tz = "") {
-            file.format <- match.arg(file.format, choices = c("ascii", "netcdf"))
+loadStationData <- function(dataset, 
+                            var, 
+                            stationID = NULL, 
+                            lonLim = NULL, 
+                            latLim = NULL, 
+                            season = NULL, 
+                            years = NULL, 
+                            tz = "", 
+                            projection = "+proj=longlat +init=epsg:4326 +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0") {
+      zipFileContents <- unzip(dataset, list = TRUE)$Name
       if ((!is.null(lonLim) | !is.null(latLim)) & !is.null(stationID)) { 
             lonLim <- NULL 
             latLim <- NULL
-            warning("lonLim/latLim arguments ignored as Station Codes have been specified.")
+            warning("lonLim/latLim arguments ignored as Station Codes have been specified.", call. = FALSE)
       }
-      if (file.format == "ascii") {
-            out <- loadStationData.ASCII(dataset, var, stationID, lonLim, latLim, season, years, tz)
-      } else {
-            stop("Unrecognized/not supported station data format")
-      }
-      varTimeStep <- difftime(out$Dates[2], out$Dates[1])
-      dateSliceStart <- as.POSIXct(out$Dates)
-      dateSliceEnd <- as.POSIXct(as.POSIXlt(out$Dates + varTimeStep))
-      usetz <- ifelse(identical(tz, ""), FALSE, TRUE)
-      dateSliceStart <- format.POSIXct(dateSliceStart, "%Y-%m-%d %H:%M:%S", usetz = usetz)
-      dateSliceEnd <- format.POSIXct(dateSliceEnd, "%Y-%m-%d %H:%M:%S", usetz = usetz)
-      out$Dates <- list("start" = dateSliceStart, "end" = dateSliceEnd)
-      attr(out$Data, "dimensions") <- c("time", "station")
-      message(paste("[", Sys.time(), "] Done.", sep = ""))
-      return(out)
-}
-# End      
-
-
-#' Load station data in standard ASCII format
-#' 
-#' Load station data in standard ASCII format, being the standard defined in the framework
-#' of the action COST VALUE
-#' 
-#' @param dataset Directory (possibly compressed as a .zip file) containing the stations dataset
-#' @param var Character string. Name of the variable, as defined in the dataset
-#' @param stationID Character string. Optional, Id code(s) of the station(s) selected
-#' @param lonLim numeric vector of length 1 or two defining X coordinate(s).
-#'  See \code{\link{loadStationData}} for details.
-#' @param latLim numeric vector of length 1 or two defining Y coordinate(s).
-#'  See \code{\link{loadStationData}} for details.
-#' @param season Numeric vector of months defining the season
-#' @param years Numeric vector of years
-#' @return A list with several components. See \code{\link{loadStationData}} for details.
-#' @references \url{https://github.com/SantanderMetGroup/downscaleR/wiki/Observation-Data-format} 
-#' @author J. Bedia 
-#' @keywords internal
-#' @importFrom utils unzip
-
-
-loadStationData.ASCII <- function(dataset, var, stationID, lonLim, latLim, season, years, tz) {
-      if (grepl("\\.zip$", dataset)) {
-            dirContents <- unzip(dataset, list = TRUE)$Name
-            stations.file <- grep("stations\\.", dirContents, ignore.case = TRUE, value = TRUE)
-            if (any(grepl("MACOSX", stations.file))) {
-                  stations.file <- stations.file[-grep("MACOSX", stations.file)]
-            }
-            # stations.file <- unz(dataset, stations.file)
-            isZip <- TRUE
-            on.exit(closeAllConnections())
-      } else {
-            isZip <- FALSE
-            stations.file <- file.path(dataset, "stations.txt")
-            dirContents <- list.files(dataset, full.names = TRUE)
-      }
-      aux <- if (isZip) {
-            read.csv(unz(dataset, stations.file), stringsAsFactors = FALSE, strip.white = TRUE)
-      } else {
-            read.csv(stations.file, stringsAsFactors = FALSE, strip.white = TRUE)      
-      }
+      # Reading stations from zip file
+      stations.file <- grep("stations\\.", zipFileContents, ignore.case = TRUE, value = TRUE)
+      if (any(grepl("MACOSX", stations.file))) {
+            stations.file <- stations.file[-grep("MACOSX", stations.file)]
+      }      
+      aux <- read.csv(unz(dataset, stations.file), stringsAsFactors = FALSE, strip.white = TRUE)
       # Station codes
-      stids <- if (isZip) {
-            read.csv(unz(dataset, stations.file), colClasses = "character")[ ,grep("station_id", names(aux), ignore.case = TRUE)]
-      } else {
-            read.csv(stations.file, colClasses = "character")[ ,grep("station_id", names(aux), ignore.case = TRUE)]      
-      }
+      stids <- read.csv(unz(dataset, stations.file), colClasses = "character")[ ,grep("station_id", names(aux), ignore.case = TRUE)]
       if (!is.null(stationID)) {
             stInd <- match(stationID, stids)
             if (any(is.na(stInd))) {
-                  stop("'stationID' v alues not found.\nCheck data inventory", call. = FALSE)
+                  stop("'stationID' values not found.\nCheck data inventory", call. = FALSE)
             }
       } else {
             stInd <- 1:length(stids)
       }
       ## Longitude and latitude
-      lons <- aux[ ,grep("^longitude$", names(aux), ignore.case = TRUE)]
-      lats <- aux[ ,grep("^latitude$", names(aux), ignore.case = TRUE)]
+      lons <- aux[ , grep("^longitude$", names(aux), ignore.case = TRUE)]
+      lats <- aux[ , grep("^latitude$", names(aux), ignore.case = TRUE)]
       if (!is.null(lonLim)) {
-            latLon <- getLatLonDomainStations(lonLim, latLim, lons, lats)
+            latLon <- loadeR:::getLatLonDomainStations(lonLim, latLim, lons, lats)
             if (length(latLon$stInd) == 0) {
                   stop("No stations were found in the selected spatial domain", call. = FALSE)
             }
@@ -148,34 +101,27 @@ loadStationData.ASCII <- function(dataset, var, stationID, lonLim, latLim, seaso
             coords <- matrix(cbind(lons, lats)[stInd, ], ncol = 2)
       }
       stids <- stids[stInd]
-      dimnames(coords) <- list(stids, c("longitude", "latitude"))
+      ##############################################
+      #dimnames(coords) <- list(stids, c("longitude", "latitude"))
+      attr(coords, "projection") <- projection
+      attr(coords, "resX") <- 0
+      attr(coords, "resY") <- 0
+      ################################################
       ## Time dimension
-      fileInd <- grep(paste0(var, "\\.txt$"), dirContents)
+      # TODO - fix potential MACOSX errors
+      fileInd <- grep(paste(var, "\\.txt", sep = ""), zipFileContents)
       if (length(fileInd) == 0) {
             stop("[", Sys.time(),"] Variable requested not found", call. = FALSE)
       }
-      timeString <- if (isZip) {
-            read.csv(unz(dataset, dirContents[fileInd]), colClasses = "character")[ ,1]
-      } else {
-            read.csv(dirContents[fileInd], colClasses = "character")[ ,1]
-      }      
-      if (nchar(timeString[1]) == 8) {
-            timeDates <- strptime(timeString, "%Y%m%d", tz = tz)  
-      }
-      if (nchar(timeString[1]) == 10) {
-            timeDates <- strptime(timeString, "%Y%m%d%H", tz = tz)
-      }
+      timeString <- read.csv(unz(dataset, zipFileContents[fileInd]), colClasses = "character")[ ,1]
+      timeDates <- string2date(timeString, tz = tz)
       timeString <- NULL
-      timePars <- getTimeDomainStations(timeDates, season, years)
+      timePars <- loadeR:::getTimeDomainStations(timeDates, season, years)
       ## missing data code
-      vars <- if (isZip) {
-            read.csv(unz(dataset, grep("variables\\.txt$", dirContents, ignore.case = TRUE, value = TRUE)))      
-      } else {
-            read.csv(grep("variables\\.txt$", dirContents, ignore.case = TRUE, value = TRUE))      
-      }
+      vars <- read.csv(unz(dataset, zipFileContents[grep("variables", zipFileContents, ignore.case = TRUE)]))
       miss.col <- grep("missing_code", names(vars), ignore.case = TRUE)
       if (length(miss.col) > 0) {
-            na.string <- vars[grep(var, vars[ ,grep("variable", names(vars), ignore.case = TRUE)]), miss.col]
+            na.string <- vars[grep(var, vars[ , grep("variable", names(vars), ignore.case = TRUE)]), miss.col]
             vars <- NULL
             miss.col <- NULL
       } else {
@@ -183,23 +129,89 @@ loadStationData.ASCII <- function(dataset, var, stationID, lonLim, latLim, seaso
       }
       # Data retrieval
       message("[", Sys.time(), "] Loading data ...", sep = "")
-      Data <- if (isZip) {
-            unname(as.matrix(read.csv(unzip(dataset, dirContents[fileInd]), na.strings = na.string)[timePars$timeInd, stInd + 1]))
-      } else {
-            unname(as.matrix(read.csv(dirContents[fileInd], na.strings = na.string)[timePars$timeInd, stInd + 1]))
-      }
-      # Data <- unname(as.matrix(read.csv(list.files(dataset, full.names = TRUE)[fileInd], na.strings = na.string)[timePars$timeInd, stInd + 1]))
-      #       names(Data) <- stids
-      ## Metadata
-      message("[", Sys.time(), "] Retrieving metadata ...")
+      trim <- function(x) gsub("^\\s+|\\s+$", "", x)
+      var.stids <- lapply(strsplit(readLines(unz(dataset, zipFileContents[fileInd]), 1), split = ", "), FUN = trim)
+      var.stids <- tail(unlist(var.stids), -1)
+      closeAllConnections() 
+      stInd.var <- match(stids, var.stids)
+      Data <- unname(as.matrix(read.csv(unz(dataset, zipFileContents[fileInd]), na.strings = na.string)[timePars$timeInd, stInd.var + 1]))
+      # Metadata
+      message("[", Sys.time(), "] Retrieving metadata ...", sep = "")
       # Assumes that at least station ids must exist, and therefore meta.list is never empty
-      ind.meta <- c(1:length(names(aux)))[-pmatch(c("longitude", "latitude"), names(aux))]
-      meta.list <- as.list(aux[stInd,ind.meta])
+      ind.meta <- c(1:length(names(aux)))[-pmatch(c("longitude", "latitude", "station_id"), names(aux))]
+      meta.list <- list()
+      meta.list[[1]] <- stids
+      for (i in 1:length(ind.meta)) {
+            meta.list[[i + 1]] <- aux[stInd, ind.meta[i]]
+      }
+      names(meta.list) <- c("station_id", names(aux)[ind.meta])
       aux <- NULL  
-      return(list("Variable" = list("varName" = var), "Data" = Data, "xyCoords" = coords, "Dates" = timePars$timeDates, "Metadata" = meta.list))
+      out <- list("Variable" = list("varName" = var), "Data" = Data, "xyCoords" = coords, "Dates" = timeBoundsValue(timePars$timeDates, tz), "Metadata" = meta.list)
+      attr(out$Data, "dimensions") <- c("time", "loc")
+      message(paste("[", Sys.time(), "] Done.", sep = ""))
+      return(out)
+}
+# End      
+
+
+
+#' @title POSIXlt conversion from character 
+#' @description Converts the date codes of the Value format to \code{"POSIXlt"}
+#' @param timeString Date vector as stored in VALUE files, previously coerced to character
+#' @param tz Time zone. See \code{\link{loadStationData}}
+#' @return A POSIXlt vector of the same length of the input
+#' @details Currently the VALUE format is intended for daily data of the form YYYMMDD. However,
+#'  the function also considers the possibility of subdaily data if hourly data are introduced in
+#'  the form YYYYMMDDHH, eading to a string of 10 characters.
+#'  @keywords internal
+#'  @author juaco
+
+string2date <- function(timeString, tz = tz) {
+      timeString = gsub("^\\s+|\\s+$", "", timeString)
+      if (nchar(timeString[1]) == 8) {
+            timeDates <- strptime(timeString, "%Y%m%d", tz = tz)  
+      }
+      if (nchar(timeString[1]) == 10) {
+            timeDates <- strptime(timeString, "%Y%m%d%H", tz = tz)
+      }
+      return(timeDates)
 }
 # End
 
 
+#' @title Compute time bounds
+#' @description Compute start/end verification time bounds from a vector of dates.
+#' @param timeDates A POSIXlt vector of dates
+#' @param tz Time zone
+#' @keywords internal
+#' @return A list with components start and end, of POSIXct dates
+
+timeBoundsValue <- function(timeDates, tz) {
+      varTimeStep <- difftime(timeDates[2], timeDates[1])
+      dateSliceStart <- as.POSIXct(timeDates)
+      dateSliceEnd <- as.POSIXct(as.POSIXlt(timeDates + varTimeStep))
+      usetz <- ifelse(identical(tz, ""), FALSE, TRUE)
+      dateSliceStart <- format.POSIXct(dateSliceStart, "%Y-%m-%d %H:%M:%S", usetz = usetz, tz = tz)
+      dateSliceEnd <- format.POSIXct(dateSliceEnd, "%Y-%m-%d %H:%M:%S", usetz = usetz, tz = tz)
+      return(list("start" = dateSliceStart, "end" = dateSliceEnd))
+}
+# End
+
+
+
+
+# mat2Dto3Darray.stations <- function(mat2D, x, y) {
+#       mat <- matrix(NA, ncol = length(x), nrow = length(y))
+#       aux.list <- lapply(1:nrow(mat2D), function(i) {
+#             diag(mat) <- mat2D[i, ]
+#             mat
+#       })
+#       arr <- unname(do.call("abind", c(aux.list, along = -1)))
+#       aux.list <- NULL      
+#       arr <- aperm(arr, perm = c(1,3,2))
+#       attr(arr, "dimensions") <- c("time", "lat", "lon")
+#       return(arr)
+# }
+# #End
 
 
