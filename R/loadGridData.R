@@ -138,7 +138,12 @@ loadGridData <- function(dataset,
       # Data <- arrary3Dto3Darray.rcms(array3D = out$Data, x = as.vector(out$xyCoords$lon), y = as.vector(out$xyCoords$lat))
       #################
       attr(out$xyCoords, which = "projection") <- proj
-      attributes(out$xyCoords) <- attributes(getGrid(out))
+      attr(out, "resX") <- (tail(out$xyCoords$x, 1) - out$xyCoords$x[1]) / (length(out$xyCoords$x) - 1)
+      attr(out, "resY") <- (tail(out$xyCoords$y, 1) - out$xyCoords$y[1]) / (length(out$xyCoords$y) - 1)
+      if("lon" %in% names(out$xyCoords)){
+            attr(out, "resLON") <- NA 
+            attr(out, "resLAT") <- NA
+      } 
       gds$close()
       # Dimension ordering
       tab <- c("time", "level", "lat", "lon")

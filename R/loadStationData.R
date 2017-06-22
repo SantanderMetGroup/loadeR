@@ -200,18 +200,6 @@ timeBoundsValue <- function(timeDates, tz) {
 
 
 
-# mat2Dto3Darray.stations <- function(mat2D, x, y) {
-#       mat <- matrix(NA, ncol = length(x), nrow = length(y))
-#       aux.list <- lapply(1:nrow(mat2D), function(i) {
-#             diag(mat) <- mat2D[i, ]
-#             mat
-#       })
-#       arr <- unname(do.call("abind", c(aux.list, along = -1)))
-#       aux.list <- NULL      
-#       arr <- aperm(arr, perm = c(1,3,2))
-#       attr(arr, "dimensions") <- c("time", "lat", "lon")
-#       return(arr)
-# }
-# #End
+
 
 
