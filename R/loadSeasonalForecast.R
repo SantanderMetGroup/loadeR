@@ -33,7 +33,6 @@
 #' @template templateTimeSeasonal
 #' 
 #' @importFrom stats na.exclude
-#' 
 #' @export
 #' @author J. Bedia
 #' @import rJava
@@ -156,6 +155,12 @@ loadSeasonalForecast <- function(dataset,
       gds$close()
       # Other attributes -----------------
       attr(out$xyCoords, "projection") <- proj$toString()
+      attr(out, "resX") <- (tail(out$xyCoords$x, 1) - out$xyCoords$x[1]) / (length(out$xyCoords$x) - 1)
+      attr(out, "resY") <- (tail(out$xyCoords$y, 1) - out$xyCoords$y[1]) / (length(out$xyCoords$y) - 1)
+      if("lon" %in% names(out$xyCoords)){
+            attr(out, "resLON") <- NA 
+            attr(out, "resLAT") <- NA
+      } 
       x <- attr(out$Data, "dimensions")
       if (length(x) > 1) {
             tab <- c("member", "time", "level", "lat", "lon")
