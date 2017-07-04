@@ -2,7 +2,7 @@ identifier,short_name,time_step,lower_time_bound,upper_time_bound,cell_method,of
 tas,tas,6h,0,6,mean,-273.15,1,0,0,
 rlds,nlwrs,6h,0,6,mean,0,1,0,0,
 rsds,nswrs,6h,0,6,mean,0,1,0,0,
-tp,prate,6h,0,6,mean,1,21600,0,0,
+pr,prate,6h,0,6,mean,1,21600,0,0,
 tasmax,tmax,6h,0,6,max,-273.15,1,0,0,
 tasmin,tmin,6h,0,6,min,-273.15,1,0,0,
 uas,uas,6h,0,0,point,0,1,0,0,
