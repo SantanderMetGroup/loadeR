@@ -69,7 +69,7 @@
 #'                          years = 1981:2010, aggr.m = "mean")
 #' str(grid.mm)
 #' 
-#' # Same but using the original variable (not homogenized via dictionary):
+#' # Same but using the original variable (not harmonized via dictionary):
 #' di <- dataInventory(ncep)
 #' names(di)
 #' UDG.vocabulary()
@@ -216,6 +216,7 @@ loadGridDataset <- function(var, grid, dic, level, season, years, time, latLon, 
 #' @details Sub-daily information is displayed only in case of subdaily data
 #' @author J Bedia 
 #' @keywords internal
+#' @export
 
 # timePars <- cube$timePars
 adjustDates <- function(timePars) {

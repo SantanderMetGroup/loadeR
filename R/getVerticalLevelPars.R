@@ -11,6 +11,8 @@
 #' 
 #' @details The function opens the grid and checks all possible level values.
 #' 
+#' @export
+#' 
 #' @author J. Bedia 
 #' @keywords internal
 #' @import rJava
