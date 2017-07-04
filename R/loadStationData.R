@@ -90,7 +90,7 @@ loadStationData <- function(dataset,
       lons <- aux[ , grep("^longitude$", names(aux), ignore.case = TRUE)]
       lats <- aux[ , grep("^latitude$", names(aux), ignore.case = TRUE)]
       if (!is.null(lonLim)) {
-            latLon <- loadeR:::getLatLonDomainStations(lonLim, latLim, lons, lats)
+            latLon <- getLatLonDomainStations(lonLim, latLim, lons, lats)
             if (length(latLon$stInd) == 0) {
                   stop("No stations were found in the selected spatial domain", call. = FALSE)
             }
@@ -116,7 +116,7 @@ loadStationData <- function(dataset,
       timeString <- read.csv(unz(dataset, zipFileContents[fileInd]), colClasses = "character")[ ,1]
       timeDates <- string2date(timeString, tz = tz)
       timeString <- NULL
-      timePars <- loadeR:::getTimeDomainStations(timeDates, season, years)
+      timePars <- getTimeDomainStations(timeDates, season, years)
       ## missing data code
       vars <- read.csv(unz(dataset, zipFileContents[grep("variables", zipFileContents, ignore.case = TRUE)]))
       miss.col <- grep("missing_code", names(vars), ignore.case = TRUE)
