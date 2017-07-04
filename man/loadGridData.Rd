@@ -157,7 +157,7 @@ grid.mm <- loadGridData(ncep, var = "ta@850", dictionary = TRUE, lonLim = c(-10,
                          years = 1981:2010, aggr.m = "mean")
 str(grid.mm)
 
-# Same but using the original variable (not homogenized via dictionary):
+# Same but using the original variable (not harmonized via dictionary):
 di <- dataInventory(ncep)
 names(di)
 UDG.vocabulary()

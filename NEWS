@@ -1,7 +1,8 @@
 loadeR
 ======
 
-* Bug fix in `loadStationData`
-* Bug fix in stations data inventory
+* Several changes in the way stations are loaded for a seamless integration loadeR-R.VALUE
+* Update cell_methods in dictionaries according to [CF convention](http://cfconventions.org/cf-conventions/cf-conventions.html#appendix-cell-methods)
+* Internal changes for integration with newer versions of `loadeR.ECOMS` (exports `getVerticalLevelPars`, `adjustDates`)
 * Other minor enhancements and documentation updates
 
