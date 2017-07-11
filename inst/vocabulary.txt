@@ -26,6 +26,8 @@ va,northward wind,m.s-1
 vas,northward near-surface wind,m.s-1
 wss,near-surface wind speed,m.s-1
 wssmax,maximum near-surface wind speed,m.s-1
+wsg,wind speed of gust,m.s-1
+wsgmax,maximum wind speed of gust,m.s-1
 z,geopotential,m2.s-2
 zg,geopotential height,m
 zs,surface geopotential,m2.s-2
