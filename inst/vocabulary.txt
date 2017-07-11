@@ -17,7 +17,9 @@ tas,2-meter air temperature,degrees Celsius
 tasmax,maximum 2-m air temperature,degrees Celsius
 tasmin,minimum 2-m air temperature,degrees Celsius
 tdps,2-meter dewpoint temperature,degrees Celsius
-tp,total precipitation amount,mm
+pr,total precipitation amount,mm
+prr,total rainfall amount,mm
+prsn,total snowfall amount,mm
 ua,eastward wind,m.s-1
 uas,eastward near-surface wind,m.s-1
 va,northward wind,m.s-1
