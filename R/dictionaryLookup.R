@@ -17,7 +17,7 @@
 #' @keywords internal
 
 dictionaryLookup <- function(dicPath, var, time) {
-      message("[", Sys.time(), "] Defining homogeneization parameters for variable \"", var, "\"")
+      message("[", Sys.time(), "] Defining harmonization parameters for variable \"", var, "\"")
       dictionary <- tryCatch({read.csv(dicPath, stringsAsFactors = FALSE)}, error = function(e) stop("Dictionary not found"))
       dicRow <- grep(paste("^", var, "$", sep = ""), dictionary$identifier) 
       if (length(dicRow) == 0) {
