@@ -15,7 +15,7 @@ Find out more about this package (including [installation information](https://g
 
 ## Other packages of the `climate4R` bundle
 
- * [`loadeR.ECOMS`](https://github.com/SantanderMetGroup/loadeR.ECOMS/) extends `loadeR` by providing harmonized access to ***seasonal and decadal forecast datasets*** from the [ECOMS](http://www.eu-ecoms.eu) initiative. More information in the [ECOMS-UDG web](https://meteo.unican.es/trac/wiki/udg/ecoms) and in the dedicated [*Climate Services* paper](http://www.meteo.unican.es/en/node/73360)
+ * [`loadeR.ECOMS`](https://github.com/SantanderMetGroup/loadeR.ECOMS/) extends `loadeR` by providing harmonized access to ***seasonal and decadal forecast datasets*** from the [ECOMS](http://www.eu-ecoms.eu) initiative. More information in the [ECOMS-UDG web](https://meteo.unican.es/trac/wiki/udg/ecoms) and in the dedicated [*Climate Services* paper](http://www.meteo.unican.es/en/node/73360) and its [companion vignette](http://meteo.unican.es/work/UDG/climate-services-manuscript.html) with worked examples.
 
  * [`transformeR`](https://github.com/SantanderMetGroup/transformeR) is an R package for **climate data transformation** integrated with the `loadeR's` data structures. It includes tools for subsetting, aggregation, principal component/EOF analysis, regridding and more...
 
