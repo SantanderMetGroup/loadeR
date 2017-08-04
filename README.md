@@ -13,18 +13,9 @@ Find out more about this package (including [installation information](https://g
 
 `loadeR` is a central building-block of the **climate4R bundle**, a set of user-oriented R packages fully integrated through a Common Data Model based on the data structure returned by `loadeR`. [See our paper](http://www.meteo.unican.es/en/node/73360) in a special issue of Climate Services for an overview of the **climate4R Bundle** description.
 
-||
-|--|
-|![alt text](http://www.meteo.unican.es/work/UDG/linked_figs/f01_ECOMS-UDG.png)|
-|_Schematic illustration of the ECOMS-UDG components, including the
-THREDDS Data Server (TDS), the THREDDS Access Portal (TAP) and the climate4R
-interface for data access and postprocessing, formed by several packages for data
-access, transformation, bias adjustment and visualization and validation. Compat-
-ibility with some external packages has been achieved by appropriate two-way
-bridging functions (for the corresponding data structures). Arrows indicate data
-flow and blue shading indicates in–house developments. All componentes are
-distributed under GNU General Public License. Some of the images are courtesy of
-UCAR/Unidata. The R logo is &copy; 2016 The R Foundation._|
+![alt text](http://www.meteo.unican.es/work/UDG/linked_figs/f01_ECOMS-UDG.png)
+
+_Schematic illustration of the ECOMS-UDG components, including the THREDDS Data Server (TDS), the THREDDS Access Portal (TAP) and the climate4R interface for data access and postprocessing, formed by several packages for data access, transformation, bias adjustment and visualization and validation. Compatibility with some external packages has been achieved by appropriate two-way bridging functions (for the corresponding data structures). Arrows indicate data flow and blue shading indicates in–house developments. All componentes are distributed under GNU General Public License. Some of the images are courtesy of UCAR/Unidata. The R logo is &copy; 2016 The R Foundation._
 
 
 ## Other packages of the `climate4R` bundle
