@@ -47,6 +47,7 @@
 #' must take care of variable units and eventual conversions when necessary.
 #' 
 #' @importFrom utils unzip
+#' @importFrom stats setNames
 #' 
 #' @references \url{https://github.com/SantanderMetGroup/downscaleR/wiki/Observation-Data-format} 
 #' @export 
