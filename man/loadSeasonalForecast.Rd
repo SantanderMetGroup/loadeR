@@ -25,10 +25,9 @@ and we have a locally stored dictionary for that particular dataset. If FALSE no
 and the raw variable, as originally stored in the dataset, will be returned. See details for dictionary specification.}
 
 \item{members}{A vector of integers indicating the members to be loaded.
-Default to \code{NULL}, which loads all available members 
-. For instance, \code{members=1:5} will retrieve the first five members of dataset.
- Discontinuous member selection (e.g. \code{members=c(1,5,7)}) is allowed. If the requested dataset is not a forecast
-  or the requested variable is static (e.g. orography) it will be ignored.}
+Default to \code{NULL}, which loads all available members . For instance, \code{members=1:5} will retrieve the first five members of dataset.
+ Discontinuous member selections (e.g. \code{members=c(1,5,7)}) are allowed. If the requested dataset has no Ensemble Axis 
+  or the requested variable is static (e.g. orography), the argument will be ignored.}
 
 \item{lonLim}{Vector of length = 2, with minimum and maximum longitude coordinates, in decimal degrees, of the bounding box selected.
 For single-point queries, a numeric value with the longitude coordinate. If \code{NULL} (default), the whole longitudinal range

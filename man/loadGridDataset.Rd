@@ -4,8 +4,8 @@
 \alias{loadGridDataset}
 \title{Loads a user-defined subset of a gridded CDM dataset}
 \usage{
-loadGridDataset(var, grid, dic, level, season, years, time, latLon, aggr.d,
-  aggr.m)
+loadGridDataset(var, grid, dic, level, season, years, members, time, latLon,
+  aggr.d, aggr.m)
 }
 \description{
 Loads a user-defined subset from a gridded dataset compliant with the Common

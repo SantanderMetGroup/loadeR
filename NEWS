@@ -1,8 +1,8 @@
 loadeR
 ======
 
-* Several changes in the way stations are loaded for a seamless integration loadeR-R.VALUE
-* Update cell_methods in dictionaries according to [CF convention](http://cfconventions.org/cf-conventions/cf-conventions.html#appendix-cell-methods)
-* Internal changes for integration with newer versions of `loadeR.ECOMS` (exports `getVerticalLevelPars`, `adjustDates`)
+* Enable the 'member' option in `loadGridData`, for grids with the Ensemble dimension (but not RunTime)
+* The `$xyCoords` element of station datasets is now a `data.fame` instead of a `matrix`
+* Added new metadata to the ouputs of `loadGridData` and `loadSeasonalForecast` (package version, URL etc.)
 * Other minor enhancements and documentation updates
 

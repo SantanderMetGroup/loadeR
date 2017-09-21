@@ -5,8 +5,8 @@
 \title{Load a grid from a gridded dataset}
 \usage{
 loadGridData(dataset, var, dictionary = FALSE, lonLim = NULL,
-  latLim = NULL, season = NULL, years = NULL, time = "none",
-  aggr.d = "none", aggr.m = "none")
+  latLim = NULL, season = NULL, years = NULL, members = NULL,
+  time = "none", aggr.d = "none", aggr.m = "none")
 }
 \arguments{
 \item{dataset}{A character string indicating the database to be accessed. This is usually a path to a local file or a URL 
@@ -35,6 +35,12 @@ Options include one to several (contiguous) months. Default to \code{NULL}, indi
 
 \item{years}{Optional vector of years to select. Default (\code{NULL}) to all available years. If the requested variable is static (e.g. orography)
 it will be ignored.}
+
+\item{members}{A vector of integers indicating the members to be loaded.
+Default to \code{NULL}, which loads all available members if the dataset contains members (i.e. in case a Ensemble Axis is defined).
+For instance, \code{members=1:5} will retrieve the first five members of dataset.
+ Note that unlike \code{\link{loadSeasonalForecast}}, discontinuous member selections (e.g. \code{members=c(1,5,7)}) are NOT allowed. 
+ If the requested dataset has no Ensemble Axis (or it is a static field, e.g. orography) it will be ignored.}
 
 \item{time}{A character vector indicating the temporal filtering/aggregation 
 of the output data. Default to \code{"none"}, which returns the original time 

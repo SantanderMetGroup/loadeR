@@ -5,12 +5,10 @@
 \title{Define indices for member selection
 Define indices for member selection}
 \usage{
-getMemberDomain(grid, dataset, members)
+getMemberDomain(grid, members, continuous = FALSE)
 }
 \arguments{
 \item{grid}{A java \sQuote{GeoGrid}}
-
-\item{dataset}{Character string indicating teh dataset to be accessed.}
 
 \item{members}{Numeric vector of the members to be selected}
 }

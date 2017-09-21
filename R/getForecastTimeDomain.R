@@ -23,6 +23,7 @@
 #' to \code{makeSubset} family functions to undertake the pertinent aggregation if TRUE.}
 #' @keywords internal
 #' @author J.Bedia, S. Herrera
+#' @importFrom utils tail
 
 getForecastTimeDomain <- function(grid, dataset, dic, runTimePars, time, aggr.d, aggr.m) {
       gcs <- grid$getCoordinateSystem()

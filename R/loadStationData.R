@@ -90,8 +90,8 @@ loadStationData <- function(dataset,
       ## Longitude and latitude
       lons <- aux[ , grep("^longitude$", names(aux), ignore.case = TRUE)]
       lats <- aux[ , grep("^latitude$", names(aux), ignore.case = TRUE)]
-      if(is.null(lonLim)) lonLim <- range(lons)
-      if(is.null(latLim)) latLim <- range(lats)
+      if (is.null(lonLim)) lonLim <- range(lons)
+      if (is.null(latLim)) latLim <- range(lats)
       # if (!is.null(lonLim)) {
             latLon <- getLatLonDomainStations(lonLim, latLim, lons, lats)
             if (length(latLon$stInd) == 0) {
