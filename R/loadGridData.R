@@ -1,6 +1,6 @@
-# loadGridData.R Load a user-defined spatio-temporal slice from a gridded dataset
+#     loadGridData.R Load a user-defined spatio-temporal slice from a gridded dataset
 #
-#     Copyright (C) 2016 Santander Meteorology Group (http://www.meteo.unican.es)
+#     Copyright (C) 2017 Santander Meteorology Group (http://www.meteo.unican.es)
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -20,6 +20,11 @@
 #' @description Load a user-defined spatio-temporal slice from a gridded dataset
 #' @import rJava
 #' @template templateParams
+#' @param members A vector of integers indicating the members to be loaded.
+#'  Default to \code{NULL}, which loads all available members if the dataset contains members (i.e. in case a Ensemble Axis is defined).
+#'  For instance, \code{members=1:5} will retrieve the first five members of dataset.
+#'   Note that unlike \code{\link{loadSeasonalForecast}}, discontinuous member selections (e.g. \code{members=c(1,5,7)}) are NOT allowed. 
+#'   If the requested dataset has no Ensemble Axis (or it is a static field, e.g. orography) it will be ignored.
 #' @param dictionary Default to FALSE, if TRUE a dictionary is used and the .dic file is stored in the same path than the
 #' dataset. If the .dic file is stored elsewhere, then the argument is the full path to the .dic file (including the extension,
 #' e.g.: \code{"/path/to/the/dictionary_file.dic"}). This is the case for instance when the dataset is stored in a remote URL,
@@ -48,6 +53,7 @@
 #' @family loading.grid
 #' 
 #' @importFrom stats na.exclude
+#' @importFrom utils packageVersion tail
 #' 
 #' @examples \dontrun{
 #' #Download dataset
@@ -103,6 +109,7 @@ loadGridData <- function(dataset,
                          latLim = NULL,
                          season = NULL,
                          years = NULL,
+                         members = NULL,
                          time = "none",
                          aggr.d = "none",
                          aggr.m = "none") {
@@ -116,27 +123,27 @@ loadGridData <- function(dataset,
       aux.level <- findVerticalLevel(var)
       var <- aux.level$var
       level <- aux.level$level
-      # Dictionary lookup
+      # Dictionary lookup -------------
       cd <- check.dictionary(dataset, var, dictionary, time)
       shortName <- cd$shortName
       dic <- cd$dic
       if (!is.null(season) && (min(season) < 1 | max(season) > 12)) {
             stop("Invalid season definition", call. = FALSE)
       }
+      # Discover dataset -------------
       gds <- openDataset(dataset)
       grid <- gds$findGridByShortName(shortName)
       if (is.null(grid)) {
             stop("Variable requested not found\nCheck 'dataInventory' output and/or dictionary 'identifier'.", call. = FALSE)
       }
+      # Spatial collocation -------------
       latLon <- getLatLonDomain(grid, lonLim, latLim)
       proj <- grid$getCoordinateSystem()$getProjection()
       if (!proj$isLatLon()) latLon <- adjustRCMgrid(gds, latLon, lonLim, latLim)
-      out <- loadGridDataset(var, grid, dic, level, season, years, time, latLon, aggr.d, aggr.m)
-      # Definition of projection
+      # Read data -------------------
+      out <- loadGridDataset(var, grid, dic, level, season, years, members, time, latLon, aggr.d, aggr.m)
+      # Metadata: projection and spatial resolution -------------
       proj <- proj$toString()
-      #################
-      # Data <- arrary3Dto3Darray.rcms(array3D = out$Data, x = as.vector(out$xyCoords$lon), y = as.vector(out$xyCoords$lat))
-      #################
       attr(out$xyCoords, which = "projection") <- proj
       attr(out$xyCoords, "resX") <- (tail(out$xyCoords$x, 1) - out$xyCoords$x[1]) / (length(out$xyCoords$x) - 1)
       attr(out$xyCoords, "resY") <- (tail(out$xyCoords$y, 1) - out$xyCoords$y[1]) / (length(out$xyCoords$y) - 1)
@@ -145,17 +152,20 @@ loadGridData <- function(dataset,
             attr(out$xyCoords, "resLAT") <- NA
       } 
       gds$close()
-      # Dimension ordering
-      tab <- c("time", "level", "lat", "lon")
+      # Dimension ordering -------------
+      tab <- c("member", "time", "level", "lat", "lon")
       x <- attr(out$Data, "dimensions")
       if (length(x) > 1) {
             b <- na.exclude(match(tab, x))
-            dimNames <- attr(out$Data, "dimensions")[b]
+            dimNames <- x[b]
             out$Data <- aperm(out$Data, perm = b)    
             attr(out$Data, "dimensions")  <- dimNames
       }
-      # Source Dataset and other metadata 
+      # Source Dataset and other metadata -------------
       attr(out, "dataset") <- dataset
+      attr(out, "R_package_desc") <- paste0("loadeR-v", packageVersion("loadeR"))
+      attr(out, "R_package_URL") <- "https://github.com/SantanderMetGroup/loadeR"
+      attr(out, "R_package_ref") <- "http://dx.doi.org/10.1016/j.cliser.2017.07.001"
       if (grepl("http://meteo\\.unican\\.es", dataset)) {
             attr(out, "source") <- "User Data Gateway"
             attr(out, "URL") <- "<http://meteo.unican.es/trac/wiki/udg>"
@@ -176,10 +186,20 @@ loadGridData <- function(dataset,
 #' @export
 #' @keywords internal
 
-loadGridDataset <- function(var, grid, dic, level, season, years, time, latLon, aggr.d, aggr.m) {
+loadGridDataset <- function(var, grid, dic, level, season, years, members, time, latLon, aggr.d, aggr.m) {
+      ## Check for members 
+      ens.axis <- grid$getCoordinateSystem()$getEnsembleAxis()
+      if (is.null(ens.axis)) {
+            if (!is.null(members)) warning("NOTE: The grid does not contain an Ensemble Axis: 'member' argument was ignored")
+            memberPars <- .jnull()
+      } else {
+            all.members <- ens.axis$getCoordValues()
+            if (!all((members - 1) %in% all.members)) stop("Invalid member selection. See 'dataInventory' for details on available members.", call. = FALSE)
+            memberPars <- getMemberDomain(grid, members, continuous = TRUE)
+      }
       timePars <- getTimeDomain(grid, dic, season, years, time, aggr.d, aggr.m)
       levelPars <- getVerticalLevelPars(grid, level)
-      cube <- makeSubset(grid, timePars, levelPars, latLon)
+      cube <- makeSubset(grid, timePars, levelPars, latLon, memberPars)
       timePars <- NULL
       if (!is.null(dic)) {
             isStandard <- TRUE
@@ -247,19 +267,3 @@ ndays <- function(d) {
       as.difftime(tail((28:31)[which(!is.na(as.Date(paste0(substr(d, 1, 8), 28:31), '%Y-%m-%d')))], 1), units = "days")
 }
 #End
-
-# arrary3Dto3Darray.rcms <- function(array3D, x, y) {
-#       mat1 <- array3Dto2Dmat(array3D)
-#       mat <- matrix(NA, ncol = length(x), nrow = length(y))
-#       aux.list <- lapply(1:nrow(mat1), function(i) {
-#             diag(mat) <- mat1[i, ]
-#             mat
-#       })
-#       arr <- unname(do.call("abind", c(aux.list, along = -1)))
-#       aux.list <- NULL      
-#       arr <- aperm(arr, perm = c(1,3,2))
-#       attr(arr, "dimensions") <- c("time", "lat", "lon")
-#       return(arr)
-# }
-
-

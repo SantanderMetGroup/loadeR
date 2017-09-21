@@ -33,6 +33,7 @@
 #' @template templateTimeSeasonal
 #' 
 #' @importFrom stats na.exclude
+#' @importFrom utils tail
 #' @export
 #' @author J. Bedia
 #' @import rJava
@@ -94,7 +95,7 @@ loadSeasonalForecast <- function(dataset,
       runTimePars <- getRunTimeDomain.seasonal(dataset, grid, members,season, years, leadMonth)
       #if (grepl("^System4", dataset)) {
       # Member definition ----------
-      memberRangeList <- getMemberDomain(grid, dataset, members)
+      memberRangeList <- getMemberDomain(grid, members)
       # Forecast time collocation ---------
       foreTimePars <- getForecastTimeDomain(grid, dataset, dic, runTimePars, time, aggr.d, aggr.m)
       # Vertical level collocation ----------
@@ -170,6 +171,9 @@ loadSeasonalForecast <- function(dataset,
             attr(out$Data, "dimensions") <- dimNames
       }
       attr(out, "dataset") <- dataset
+      attr(out, "R_package_desc") <- paste0("loadeR-v", packageVersion("loadeR"))
+      attr(out, "R_package_URL") <- "https://github.com/SantanderMetGroup/loadeR"
+      attr(out, "R_package_ref") <- "http://dx.doi.org/10.1016/j.cliser.2017.07.001"
       if (grepl("http://meteo\\.unican\\.es", dataset)) {
             attr(out, "source") <- "User Data Gateway"
             attr(out, "URL") <- "<http://meteo.unican.es/udg-wiki>"
