@@ -50,7 +50,7 @@ makeSubset <- function(grid, timePars, levelPars, latLon, memberPars) {
                         shapeArray <- shapeArray[-rm.dim]
                         dimNamesRef <- dimNamesRef[-rm.dim]
                   }        
-                  aux.list2[[j]] <- array(subSet$readDataSlice(-1L, -1L, latLon$pointXYindex[2], latLon$pointXYindex[1])$copyTo1DJavaArray(), dim = shapeArray)
+                  aux.list2[[j]] <- array(subSet$readDataSlice(-1L, -1L, -1L, -1L, latLon$pointXYindex[2], latLon$pointXYindex[1])$copyTo1DJavaArray(), dim = shapeArray)
             }
             aux.list[[i]] <- do.call("abind", c(aux.list2, along = 1))
             aux.list2 <- NULL
