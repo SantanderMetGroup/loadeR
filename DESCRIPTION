@@ -13,8 +13,8 @@ Suggests:
     downscaleR
 Type: Package
 Title: The generic data loading package of the climate4R Bundle
-Version: 1.2.0
-Date: 2017-09-21
+Version: 1.2-0
+Date: 2017-09-27
 Authors@R: as.person(c(
     "Santander Meteorology Group <http://meteo.unican.es> [aut]",
     "Joaquín Bedia <bediaj@unican.es> [ctb,cre]",

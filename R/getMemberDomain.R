@@ -2,6 +2,9 @@
 #' Define indices for member selection
 #' @param grid A java \sQuote{GeoGrid} 
 #' @param members Numeric vector of the members to be selected
+#' @param continuous Is the selection of non-continuous members allowed? Default to FALSE (i.e., non-contiguos
+#' selections are allowed, for instance \code{members = c(1,3,5)}), that is used in seasonal forecast applications.
+#'  Otherwise (e.g. in \code{loadGridData}), non-continuous selections are forbidden.
 #' @return A list of length \emph{n} members, containing a \sQuote{ucar.ma2.Range} object 
 #' @note The function assumes that the ensemble members are internally designated by character strings,
 #' rather than integers than in the former version. Otherwise, the getCoordValues()
