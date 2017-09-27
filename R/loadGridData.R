@@ -161,6 +161,13 @@ loadGridData <- function(dataset,
             out$Data <- aperm(out$Data, perm = b)    
             attr(out$Data, "dimensions")  <- dimNames
       }
+      # Member attributes -----------------------------
+      if (!is.null(members)) {
+            out$Members <- paste0("Member_", members)
+            inits <- vector("list", length(members))
+            names(inits) <- out$Members
+            out$InitializationDates <- inits
+      }
       # Source Dataset and other metadata -------------
       attr(out, "dataset") <- dataset
       attr(out, "R_package_desc") <- paste0("loadeR-v", packageVersion("loadeR"))
