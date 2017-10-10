@@ -119,9 +119,11 @@ dataInventory.ASCII <- function(dataset, rs) {
       # station_id <- as.character(stations[ ,grep("station_id", names(stations), ignore.case = TRUE)])
       
       if (isZip) {
-            
+            aux <- read.csv(unz(dataset, grep("stations", dirContents, ignore.case = TRUE, value = TRUE)),
+                            strip.white = TRUE,
+                            stringsAsFactors = FALSE, colClasses = "character")
       } else {
-      aux <- read.csv(grep("stations", dirContents, ignore.case = TRUE, value = TRUE),
+            aux <- read.csv(grep("stations", dirContents, ignore.case = TRUE, value = TRUE),
                       strip.white = TRUE,
                       stringsAsFactors = FALSE, colClasses = "character")
       }
