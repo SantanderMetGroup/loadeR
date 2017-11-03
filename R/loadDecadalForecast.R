@@ -44,6 +44,7 @@
 #' @export
 #' @author J. Bedia, S. Herrera, M. Iturbide, J.M. Gutierrez 
 #' @family loading.grid
+#' @importFrom utils tail
 #'
 #' @examples \dontrun{
 #' latLim <- c(40,50)

@@ -4,7 +4,7 @@
 \alias{makeSubset}
 \title{Reads an arbitrary data slice}
 \usage{
-makeSubset(grid, timePars, levelPars, latLon)
+makeSubset(grid, timePars, levelPars, latLon, memberPars)
 }
 \arguments{
 \item{timePars}{A list of time parameters as returnde by \code{getTimeDomain}.}

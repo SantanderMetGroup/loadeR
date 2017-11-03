@@ -5,14 +5,16 @@
 \title{Define indices for member selection
 Define indices for member selection}
 \usage{
-getMemberDomain(grid, dataset, members)
+getMemberDomain(grid, members, continuous = FALSE)
 }
 \arguments{
 \item{grid}{A java \sQuote{GeoGrid}}
 
-\item{dataset}{Character string indicating teh dataset to be accessed.}
-
 \item{members}{Numeric vector of the members to be selected}
+
+\item{continuous}{Is the selection of non-continuous members allowed? Default to FALSE (i.e., non-contiguos
+selections are allowed, for instance \code{members = c(1,3,5)}), that is used in seasonal forecast applications.
+ Otherwise (e.g. in \code{loadGridData}), non-continuous selections are forbidden.}
 }
 \value{
 A list of length \emph{n} members, containing a \sQuote{ucar.ma2.Range} object

@@ -26,7 +26,7 @@
 #' @keywords internal
 #' @export
 
-makeSubset <- function(grid, timePars, levelPars, latLon) {
+makeSubset <- function(grid, timePars, levelPars, latLon, memberPars) {
       message("[", Sys.time(), "] Retrieving data subset ..." )
       gcs <- grid$getCoordinateSystem()
       dimNames <- rev(names(scanVarDimensions(grid)))
@@ -37,7 +37,7 @@ makeSubset <- function(grid, timePars, levelPars, latLon) {
             dimNamesRef <- dimNames
             aux.list2 <- rep(list(bquote()), length(latLon$llRanges))
             for (j in 1:length(aux.list2)) {
-                  subSet <- grid$makeSubset(levelPars$zRange, levelPars$zRange, timePars$tRanges[[i]], levelPars$zRange, latLon$llRanges[[j]]$get(0L), latLon$llRanges[[j]]$get(1L))
+                  subSet <- grid$makeSubset(levelPars$zRange, memberPars, timePars$tRanges[[i]], levelPars$zRange, latLon$llRanges[[j]]$get(0L), latLon$llRanges[[j]]$get(1L))
                   shapeArray <- rev(subSet$getShape()) # Reversed!!
                   # shape of the output depending on spatial selection
                   if (latLon$pointXYindex[1] >= 0) {
@@ -50,7 +50,7 @@ makeSubset <- function(grid, timePars, levelPars, latLon) {
                         shapeArray <- shapeArray[-rm.dim]
                         dimNamesRef <- dimNamesRef[-rm.dim]
                   }        
-                  aux.list2[[j]] <- array(subSet$readDataSlice(-1L, -1L, latLon$pointXYindex[2], latLon$pointXYindex[1])$copyTo1DJavaArray(), dim = shapeArray)
+                  aux.list2[[j]] <- array(subSet$readDataSlice(-1L, -1L, -1L, -1L, latLon$pointXYindex[2], latLon$pointXYindex[1])$copyTo1DJavaArray(), dim = shapeArray)
             }
             aux.list[[i]] <- do.call("abind", c(aux.list2, along = 1))
             aux.list2 <- NULL

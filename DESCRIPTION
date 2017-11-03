@@ -1,6 +1,6 @@
 Package: loadeR
 Depends:
-    R(>= 3.0.0),
+    R(>= 3.1.0),
     rJava,
     loadeR.java
 Imports:
@@ -9,27 +9,26 @@ Imports:
     RCurl
 Suggests:
     loadeR.ECOMS,
-    loadeR.2nc,
+    transformeR,
     downscaleR
 Type: Package
-Title: R Package for Climate Data Loading and Manipulation
-Version: 1.1.0
-Date: 2017-07-04
+Title: The generic data loading package of the climate4R Bundle
+Version: 1.2.0
+Date: 2017-11-03
 Authors@R: as.person(c(
     "Santander Meteorology Group <http://meteo.unican.es> [aut]",
-    "Joaquin Bedia <bediaj@unican.es> [ctb,cre]",
-    "Antonio Cofino <antonio.cofino@unican.es> [ctb]",
+    "Joaquín Bedia <bediaj@unican.es> [ctb,cre]",
+    "Antonio Cofiño <antonio.cofino@unican.es> [ctb]",
     "Matteo de Felice <matteo.defelice@enea.it> [ctb]",
-    "Jesus Fernandez <fernandej@unican.es> [ctb]",
-    "Jose Manuel Gutierrez <gutierjm@unican.es> [ctb]",
+    "Jesus Fernández <fernandej@unican.es> [ctb]",
+    "José Manuel Gutiérrez <gutierjm@unican.es> [ctb]",
     "Sixto Herrera <herreras@unican.es> [ctb]",
     "Maialen Iturbide <miturbide@ifca,unican.es> [ctb]",
     "Max Tuni <max@predictia.es> [ctb]",
     "Manuel Vega <manuel.vega@unican.es> [ctb]"))
 BugReports: https://github.com/SantanderMetGroup/loadeR/issues
 URL: https://github.com/SantanderMetGroup/loadeR/wiki
-Description: Enables homogenized, user-friendly access to climate databases
-    remotely stored via OPeNDAP or to locally stored data, allowing the
-    retrieval of user-defined dimensional slices from large climate datasets.
+Encoding: UTF-8
+Description: Enables harmonized access to either remote climate databases via OPeNDAP or to locally stored data, allowing the retrieval of user-defined dimensional slices from large climate datasets. For more details see e.g. Cofiño et al 2017 <http://dx.doi.org/10.1016/j.cliser.2017.07.001>.
 License: file LICENSE
 RoxygenNote: 6.0.1
