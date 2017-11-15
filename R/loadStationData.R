@@ -90,9 +90,9 @@ loadStationData <- function(dataset,
       ## Longitude and latitude
       lons <- aux[ , grep("^longitude$", names(aux), ignore.case = TRUE)]
       lats <- aux[ , grep("^latitude$", names(aux), ignore.case = TRUE)]
-      if (is.null(lonLim)) lonLim <- range(lons)
-      if (is.null(latLim)) latLim <- range(lats)
-      # if (!is.null(lonLim)) {
+      if (!is.null(lonLim) | !is.null(latLim)) {
+            if (is.null(lonLim)) lonLim <- range(lons)
+            if (is.null(latLim)) latLim <- range(lats)
             latLon <- getLatLonDomainStations(lonLim, latLim, lons, lats)
             if (length(latLon$stInd) == 0) {
                   stop("No stations were found in the selected spatial domain", call. = FALSE)
@@ -100,9 +100,9 @@ loadStationData <- function(dataset,
             stInd <- latLon$stInd
             coords <- setNames(data.frame(latLon$stCoords), nm = c("x", "y"))
             latLon <- NULL
-      # } else {
-      #       coords <- setNames(data.frame(matrix(cbind(lons, lats)[stInd, ], ncol = 2)), nm = c("x", "y"))
-      # }
+      } else {
+             coords <- setNames(data.frame(matrix(cbind(lons, lats)[stInd, ], ncol = 2)), nm = c("x", "y"))
+      }
       stids <- stids[stInd]
       ##############################################
       #dimnames(coords) <- list(stids, c("longitude", "latitude"))
