@@ -1,6 +1,6 @@
 # What is loadeR?
 
-loadeR is an R package for climate data access building on NetCDF Java. It allows loading  local or remote data (from OPeNDAP servers) and is fully integrated with the User Data Gateway ([UDG](http://www.meteo.unican.es/udg-wiki)). This package has been conceived to work in the framework of both seasonal forecasting and climate change studies. Thus, it considers ensemble members as a basic dimension of the two main data structures (grid and `station). Find out more about this package at the [loadeR wiki](https://github.com/SantanderMetGroup/loadeR/wiki). 
+loadeR is an R package for climate data access building on NetCDF Java. It allows loading  local or remote data (from OPeNDAP servers) and is fully integrated with the User Data Gateway ([UDG](http://www.meteo.unican.es/udg-wiki)). This package has been conceived to work in the framework of both seasonal forecasting and climate change studies. Thus, it considers ensemble members as a basic dimension of the two main data structures (grid and station). Find out more about this package at the [loadeR wiki](https://github.com/SantanderMetGroup/loadeR/wiki). 
 
 This package is part of the [climate4R bundle](http://www.meteo.unican.es/climate4r), formed by `loadeR`, `transformeR`, `downscaleR` and `visualizeR`.
 
