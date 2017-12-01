@@ -65,7 +65,14 @@ loadStationData <- function(dataset,
                             years = NULL, 
                             tz = "", 
                             projection = "+proj=longlat +init=epsg:4326 +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0") {
-      zipFileContents <- unzip(dataset, list = TRUE)$Name
+      if (grepl("\\.zip$", dataset)) {
+            unzcond <- unz
+            zipFileContents <- unzip(dataset, list = TRUE)$Name
+      } else {
+            # unzcond <- function(...){params <- list(...); return(params$filename)}
+            unzcond <- function(description, filename){paste0(description, "/", filename)}
+            zipFileContents <- list.files(dataset)
+      }
       if ((!is.null(lonLim) | !is.null(latLim)) & !is.null(stationID)) { 
             lonLim <- NULL 
             latLim <- NULL
@@ -76,9 +83,9 @@ loadStationData <- function(dataset,
       if (any(grepl("MACOSX", stations.file))) {
             stations.file <- stations.file[-grep("MACOSX", stations.file)]
       }      
-      aux <- read.csv(unz(dataset, stations.file), stringsAsFactors = FALSE, strip.white = TRUE)
+      aux <- read.csv(unzcond(description = dataset, filename = stations.file), stringsAsFactors = FALSE, strip.white = TRUE)
       # Station codes
-      stids <- read.csv(unz(dataset, stations.file), colClasses = "character")[ ,grep("station_id", names(aux), ignore.case = TRUE)]
+      stids <- read.csv(unzcond(dataset, stations.file), colClasses = "character")[ ,grep("station_id", names(aux), ignore.case = TRUE)]
       if (!is.null(stationID)) {
             stInd <- match(stationID, stids)
             if (any(is.na(stInd))) {
@@ -116,12 +123,12 @@ loadStationData <- function(dataset,
       if (length(fileInd) == 0) {
             stop("[", Sys.time(),"] Variable requested not found", call. = FALSE)
       }
-      timeString <- read.csv(unz(dataset, zipFileContents[fileInd]), colClasses = "character")[ ,1]
+      timeString <- read.csv(unzcond(dataset, zipFileContents[fileInd]), colClasses = "character")[ ,1]
       timeDates <- string2date(timeString, tz = tz)
       timeString <- NULL
       timePars <- getTimeDomainStations(timeDates, season, years)
       ## missing data code
-      vars <- read.csv(unz(dataset, zipFileContents[grep("variables", zipFileContents, ignore.case = TRUE)]))
+      vars <- read.csv(unzcond(dataset, zipFileContents[grep("variables", zipFileContents, ignore.case = TRUE)]))
       miss.col <- grep("missing_code", names(vars), ignore.case = TRUE)
       if (length(miss.col) > 0) {
             na.string <- vars[grep(var, vars[ , grep("variable", names(vars), ignore.case = TRUE)]), miss.col]
@@ -133,11 +140,11 @@ loadStationData <- function(dataset,
       # Data retrieval
       message("[", Sys.time(), "] Loading data ...", sep = "")
       trim <- function(x) gsub("^\\s+|\\s+$", "", x)
-      var.stids <- lapply(strsplit(readLines(unz(dataset, zipFileContents[fileInd]), 1), split = ", "), FUN = trim)
+      var.stids <- lapply(strsplit(readLines(unzcond(dataset, zipFileContents[fileInd]), 1), split = ", "), FUN = trim)
       var.stids <- tail(unlist(var.stids), -1)
       closeAllConnections() 
       stInd.var <- match(stids, var.stids)
-      Data <- unname(as.matrix(read.csv(unz(dataset, zipFileContents[fileInd]), na.strings = na.string)[timePars$timeInd, stInd.var + 1]))
+      Data <- unname(as.matrix(read.csv(unzcond(dataset, zipFileContents[fileInd]), na.strings = na.string)[timePars$timeInd, stInd.var + 1]))
       # Metadata
       message("[", Sys.time(), "] Retrieving metadata ...", sep = "")
       # Assumes that at least station ids must exist, and therefore meta.list is never empty
