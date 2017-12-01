@@ -1,37 +1,21 @@
-What is loadeR?
-===============
+# What is loadeR?
 
-`loadeR` is an R package for climate data data access and manipulation powered by NetCDF-Java (trough the `rJava` package). It allows:
- * Reading local and remote (OPeNDAP) climate datasets (NetCDF, Grib, HDF, etc.)
- * Creation of catalogs
- * Integration with the User Data Gateway ([UDG](http://www.meteo.unican.es/udg-wiki))
- * Basic data maniputation, homogeneization and spatiotemporal collocation.
+loadeR is an R package for climate data access building on NetCDF Java. It allows loading  local or remote data (from OPeNDAP servers) and is fully integrated with the User Data Gateway ([UDG](http://www.meteo.unican.es/udg-wiki)). This package has been conceived to work in the framework of both seasonal forecasting and climate change studies. Thus, it considers ensemble members as a basic dimension of the two main data structures (grid and station). Find out more about this package at the [loadeR wiki](https://github.com/SantanderMetGroup/loadeR/wiki). 
 
-Find out more about this package (including [installation information](https://github.com/SantanderMetGroup/loadeR/wiki/Installation)) in the [loadeR's WIKI](https://github.com/SantanderMetGroup/loadeR/wiki).
+This package is part of the [climate4R bundle](http://www.meteo.unican.es/climate4r), formed by `loadeR`, `transformeR`, `downscaleR` and `visualizeR`.
 
-# `loadeR` within the **climate4R** Bundle
+The recommended installation procedure (for loader and the companion loadeR.java packages) is to use the `install_github` command from the devtools R package (see the installation info in the wiki):
 
-`loadeR` is a central building-block of the **climate4R bundle**, a set of user-oriented R packages fully integrated through a Common Data Model based on the data structure returned by `loadeR`. [See our paper](http://www.meteo.unican.es/en/node/73360) in a special issue of Climate Services for an overview of the **climate4R Bundle** description.
-
-![alt text](http://www.meteo.unican.es/work/UDG/linked_figs/f01_ECOMS-UDG.png)
-
-_Schematic illustration of the ECOMS-UDG components, including the THREDDS Data Server (TDS), the THREDDS Access Portal (TAP) and the climate4R interface for data access and postprocessing, formed by several packages for data access, transformation, bias adjustment and visualization and validation. Compatibility with some external packages has been achieved by appropriate two-way bridging functions (for the corresponding data structures). Arrows indicate data flow and blue shading indicates in–house developments. All componentes are distributed under GNU General Public License. Some of the images are courtesy of UCAR/Unidata. The R logo is &copy; 2016 The R Foundation._
-
-
-## Other packages of the `climate4R` bundle
-
- * [`loadeR.ECOMS`](https://github.com/SantanderMetGroup/loadeR.ECOMS/) extends `loadeR` by providing harmonized access to ***seasonal and decadal forecast datasets*** from the [ECOMS](http://www.eu-ecoms.eu) initiative. More information in the [ECOMS-UDG web](https://meteo.unican.es/trac/wiki/udg/ecoms) and in the dedicated [*Climate Services* paper](http://www.meteo.unican.es/en/node/73360) and its [companion vignette](http://meteo.unican.es/work/UDG/climate-services-manuscript.html) with worked examples.
-
- * [`transformeR`](https://github.com/SantanderMetGroup/transformeR) is an R package for **climate data transformation** integrated with the `loadeR's` data structures. It includes tools for subsetting, aggregation, principal component/EOF analysis, regridding and more...
-
- * [`downscaleR`](https://github.com/SantanderMetGroup/downscaleR/wiki) is an R package for **empirical-statistical downscaling** of daily data, including bias correction techniques.  
+```r
+devtools::install_github(c("SantanderMetGroup/loadeR.java", "SantanderMetGroup/loadeR"))
+```
+**IMPORTANT:** The package requires Java version 1.7 or higher. Several _recommendations for known problems with R and Java_ are given in the [wiki installation info](https://github.com/SantanderMetGroup/loadeR/wiki/Installation)). 
  
- * [`visualizeR`](https://github.com/SantanderMetGroup/visualizeR/wiki) is an R package implementing a set of advanced **visualization tools for forecast verification**.
+**NOTE:** The utilities in `transformeR` were formerly part of `downscaleR` (up to v1.3-4). Since `downscaleR` v2.0-0, these are in `transformeR` and `downscaleR` is strictly aimed to statistical downscaling and bias correction. 
 
- * [`loadeR.2nc`](https://github.com/SantanderMetGroup/loadeR.2nc/) provides support for **exporting to NetCDF**.
- 
- * [`fireDanger`](https://github.com/SantanderMetGroup/fireDanger), which implements the Canadian Fire Weather Index System for its direct application to `climate4R` grids, also in seasonal forecast applications. See this [*Climate Services* paper](http://www.meteo.unican.es/en/node/73359), and a [vignette with worked examples](http://meteo.unican.es/work/fireDanger/ClimateServices2017.html).
+**NOTE:** loadeR is enhanced by [loadeR.ECOMS](http://meteo.unican.es/udg-wiki/ecoms/RPackage) package which allows to remotely access harmonized data from several state-of-the-art seasonal forecasting databases stored at the ECOMS-UDG. 
 
- * [`drought4R`](https://github.com/SantanderMetGroup/drought4R). A package for drought and potential evapotranspiration calculation seamlessly integrated in the climate4R bundle.
+---
+Reference and further information: 
 
-
+Cofiño et al. (2018) The ECOMS User Data Gateway: Towards seasonal forecast data provision and research reproducibility in the era of Climate Services. **Climate Services**, http://dx.doi.org/10.1016/j.cliser.2017.07.001.
