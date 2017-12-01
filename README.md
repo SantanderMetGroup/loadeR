@@ -11,8 +11,6 @@ devtools::install_github(c("SantanderMetGroup/loadeR.java", "SantanderMetGroup/l
 ```
 **IMPORTANT:** The package requires Java version 1.7 or higher. Several _recommendations for known problems with R and Java_ are given in the [wiki installation info](https://github.com/SantanderMetGroup/loadeR/wiki/Installation)). 
  
-**NOTE:** The utilities in transformeR were formerly part of downscaleR (up to v1.3-4). Since downscaleR v2.0-0, these are in transformeR and downscaleR is strictly aimed to statistical downscaling and bias correction. 
-
 **NOTE:** loadeR is enhanced by [loadeR.ECOMS](http://meteo.unican.es/udg-wiki/ecoms/RPackage) package which allows to remotely access harmonized data from several state-of-the-art seasonal forecasting databases stored at the ECOMS-UDG. 
 
 ---
