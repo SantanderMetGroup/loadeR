@@ -13,7 +13,7 @@ devtools::install_github(c("SantanderMetGroup/loadeR.java", "SantanderMetGroup/l
  
 **NOTE:** The utilities in `transformeR` were formerly part of `downscaleR` (up to v1.3-4). Since `downscaleR` v2.0-0, these are in `transformeR` and `downscaleR` is strictly aimed to statistical downscaling and bias correction. 
 
-**NOTE:** loadeR is enhanced by [loadeR.ECOMS](https://github.com/SantanderMetGroup/loadeR.ECOMS) package which allows to remotely access harmonized data from several state-of-the-art seasonal forecasting databases stored at the [ECOMS-UDG](http://meteo.unican.es/ecoms-udg). 
+**NOTE:** loadeR is enhanced by [loadeR.ECOMS](http://meteo.unican.es/udg-wiki/ecoms/RPackage) package which allows to remotely access harmonized data from several state-of-the-art seasonal forecasting databases stored at the ECOMS-UDG. 
 
 ---
 Reference and further information: 
