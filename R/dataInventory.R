@@ -78,6 +78,9 @@ dataInventory.ASCII <- function(dataset, rs) {
             if (any(grepl("MACOSX", stations.file))) {
                   stations.file <- stations.file[-grep("MACOSX", stations.file)]
             }
+            if (any(grepl("MACOSX", vars.file))) {
+                  vars.file <- vars.file[-grep("MACOSX", vars.file)]
+            }
             isZip <- TRUE
             on.exit(closeAllConnections())
       } else {
@@ -102,7 +105,9 @@ dataInventory.ASCII <- function(dataset, rs) {
       var.info <- do.call("cbind.data.frame", var.info)
       # Station info
       timeString <- if (isZip) {
-            read.csv(unz(dataset, grep(paste0(vars[ ,1][1], "\\.*"), dirContents, value = TRUE)), colClasses = "character")[ ,1]
+            dirind <- grep(paste0(vars[ ,1][1], "\\.*"), dirContents, value = TRUE)
+            if (any(grepl("MACOSX", dirind))) dirind <- dirind[-grep("MACOSX", dirind)]
+            read.csv(unz(dataset, dirind), colClasses = "character")[ ,1]
       } else {
             read.csv(grep(paste0(vars[ ,1][1], "\\.*"), dirContents, value = TRUE), colClasses = "character")[ ,1]
       }
@@ -119,7 +124,9 @@ dataInventory.ASCII <- function(dataset, rs) {
       # station_id <- as.character(stations[ ,grep("station_id", names(stations), ignore.case = TRUE)])
       
       if (isZip) {
-            aux <- read.csv(unz(dataset, grep("stations", dirContents, ignore.case = TRUE, value = TRUE)),
+            dirind <- grep("stations", dirContents, ignore.case = TRUE, value = TRUE)
+            if (any(grepl("MACOSX", dirind))) dirind <- dirind[-grep("MACOSX", dirind)]
+            aux <- read.csv(unz(dataset, dirind),
                             strip.white = TRUE,
                             stringsAsFactors = FALSE, colClasses = "character")
       } else {
