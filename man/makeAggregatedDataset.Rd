@@ -6,7 +6,7 @@
 \usage{
 makeAggregatedDataset(source.dir, ncml.file, file.ext = "nc",
   aggr.dim = "time", pattern = NULL, recursive = FALSE, verbose = TRUE,
-  timeUnitsChange = FALSE)
+  timeUnitsChange = TRUE)
 }
 \arguments{
 \item{source.dir}{Parent directory containing the files to be aggregated}
@@ -35,7 +35,7 @@ steps be printed on screen?. Default to \code{TRUE}.}
 
 \item{timeUnitsChange}{Logical. Set the timeUnitsChange option,
 useful when aggregating many files across the time dimension which have relative time axis.
-Default to \code{FALSE}.}
+Default to \code{TRUE}.}
 }
 \value{
 Creates a NcML file at the specified location.

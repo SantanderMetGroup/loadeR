@@ -1,6 +1,5 @@
 loadeR
 ======
 
-* Vocabulary update: addition of standard variables hussmin and hussmax
-* Add `timeUnitsChange` option in `makeAggregatedDataset`
+* Change `timeUnitsChange` default value to `TRUE` in `makeAggregatedDataset` (see <https://github.com/SantanderMetGroup/loadeR/pull/30#issuecomment-358615320>)
 
