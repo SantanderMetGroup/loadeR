@@ -17,7 +17,7 @@
 
 #' @description Creates virtual datasets by modifying and combining other datasets via NcML.
 #' @title Create a dataset from a collection of (netCDF) files
-#' @import rJava
+#' @importFrom rJava J
 #' @details The NetCDF Markup Language (NcML) is an XML dialect that allows creating
 #' CDM datasets (i.e.: any collection of scientific data which can be accessed
 #' through the NetCDF-Java / CDM library). The NcML document refers to
@@ -61,7 +61,7 @@
 #' using \code{\link[utils]{glob2rx}}.
 #' 
 #' @references NcML Tutorial \url{http://www.unidata.ucar.edu/software/thredds/current/netcdf-java/ncml/Tutorial.html}. (Last accessed 14 Mar 2016.).
-#' @author J. Bedia
+#' @author J. Bedia, with contributions of E. Tourigny and A. Cofiño
 #' @family loading
 
 makeAggregatedDataset <- function(source.dir, ncml.file, file.ext = "nc", aggr.dim = "time",

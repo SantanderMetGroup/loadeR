@@ -18,7 +18,6 @@
 
 #' @title Load a grid from a gridded dataset
 #' @description Load a user-defined spatio-temporal slice from a gridded dataset
-#' @import rJava
 #' @template templateParams
 #' @param members A vector of integers indicating the members to be loaded.
 #'  Default to \code{NULL}, which loads all available members if the dataset contains members (i.e. in case a Ensemble Axis is defined).
@@ -215,7 +214,7 @@ loadGridDataset <- function(var, grid, dic, level, season, years, members, time,
             isStandard <- FALSE
       }
       if (isTRUE(latLon$revLat)) {
-            cube$mdArray <- revArrayLatDim(cube$mdArray, grid)
+            cube$mdArray <- revArrayLatDim(cube$mdArray)
       }
       Variable <- list("varName" = var, "level" = levelPars$level)
       attr(Variable, "use_dictionary") <- isStandard
