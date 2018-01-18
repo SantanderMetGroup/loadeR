@@ -23,7 +23,8 @@ Authors@R: as.person(c(
     "Jesus Fernández <fernandej@unican.es> [ctb]",
     "José Manuel Gutiérrez <gutierjm@unican.es> [ctb]",
     "Sixto Herrera <herreras@unican.es> [ctb]",
-    "Maialen Iturbide <miturbide@ifca,unican.es> [ctb]",
+    "Maialen Iturbide <miturbide@ifca.unican.es> [ctb]",
+    "Etienne Tourigny <etienne.tourigny@bsc.es> [ctb]",
     "Max Tuni <max@predictia.es> [ctb]",
     "Manuel Vega <manuel.vega@unican.es> [ctb]"))
 BugReports: https://github.com/SantanderMetGroup/loadeR/issues
