@@ -1,9 +1,6 @@
 loadeR
 ======
 
-* Enable the 'member' option in `loadGridData`, for grids with the Ensemble dimension (but not RunTime)
-* The `$xyCoords` element of station datasets is now a `data.fame` instead of a `matrix`
-* Added new metadata to the ouputs of `loadGridData` and `loadSeasonalForecast` (package version, URL etc.)
-* Update in UDG vocabulary ("tp" --> "pr")
-* Other minor enhancements and documentation updates
+* Vocabulary update: addition of standard variables hussmin and hussmax
+* Add `timeUnitsChange` option in `makeAggregatedDataset`
 
