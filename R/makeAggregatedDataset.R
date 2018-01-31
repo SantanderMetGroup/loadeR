@@ -63,7 +63,7 @@
 
 makeAggregatedDataset <- function(source.dir, ncml.file, file.ext = "nc", aggr.dim = "time",
                         pattern = NULL, recursive = FALSE, verbose = TRUE) {
-      file.ext <- match.arg(file.ext, c("nc", "hdf", "grib","gini"))
+      file.ext <- match.arg(file.ext, c("nc", "nc4", "hdf", "grib","gini"))
       suffix <- paste("\\.", file.ext, "$", sep = "")
       if (is.null(pattern)) {
             pattern <- suffix

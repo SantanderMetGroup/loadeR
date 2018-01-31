@@ -113,6 +113,10 @@ loadGridData <- function(dataset,
                          time = "none",
                          aggr.d = "none",
                          aggr.m = "none") {
+      if (dataset %in% UDG.datasets()$name) {
+            datasetind <- which(UDG.datasets()$name == dataset)
+            dataset <- as.character(UDG.datasets()$url[datasetind])
+      }
       time <- match.arg(time, choices = c("none","00","03","06","09","12","15","18","21","DD"))
       aggr.d <- match.arg(aggr.d, choices = c("none", "mean", "min", "max", "sum"))
       if (time != "DD" & aggr.d != "none") {

@@ -85,7 +85,7 @@ loadStationData <- function(dataset,
       }      
       aux <- read.csv(unzcond(description = dataset, filename = stations.file), stringsAsFactors = FALSE, strip.white = TRUE)
       # Station codes
-      stids <- read.csv(unzcond(dataset, stations.file), colClasses = "character")[ ,grep("station_id", names(aux), ignore.case = TRUE)]
+      stids <- trim(read.csv(unzcond(dataset, stations.file), colClasses = "character")[ ,grep("station_id", names(aux), ignore.case = TRUE)])
       if (!is.null(stationID)) {
             stInd <- match(stationID, stids)
             if (any(is.na(stInd))) {
