@@ -85,6 +85,7 @@ loadStationData <- function(dataset,
       }      
       aux <- read.csv(unzcond(description = dataset, filename = stations.file), stringsAsFactors = FALSE, strip.white = TRUE)
       # Station codes
+      trim <- function(x) gsub("^\\s+|\\s+$", "", x)
       stids <- trim(read.csv(unzcond(dataset, stations.file), colClasses = "character")[ ,grep("station_id", names(aux), ignore.case = TRUE)])
       if (!is.null(stationID)) {
             stInd <- match(stationID, stids)
@@ -146,7 +147,6 @@ loadStationData <- function(dataset,
       }
       # Data retrieval
       message("[", Sys.time(), "] Loading data ...", sep = "")
-      trim <- function(x) gsub("^\\s+|\\s+$", "", x)
       var.stids <- lapply(strsplit(readLines(unzcond(dataset, zipFileContents[fileInd]), 1), split = ", "), FUN = trim)
       var.stids <- tail(unlist(var.stids), -1)
       closeAllConnections() 
