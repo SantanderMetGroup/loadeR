@@ -15,37 +15,37 @@
 #' 
 #' @author J. Bedia 
 #' @keywords internal
-#' @import rJava
+#' @importFrom rJava .jnew .jnull
 
 
 getVerticalLevelPars <- function(grid, level) {
-      gcs <- grid$getCoordinateSystem()
-      if (gcs$hasVerticalAxis()) {
-            levels <- scanVarDimensions(grid)$level$Values
-            if (is.null(level)) {
-                  if (length(levels) == 1) {
-                        level <- levels
-                        if (gcs$getVerticalAxis()$findCoordElement(level) < 0) {
-                              levelInd <- gcs$getVerticalAxis()$findCoordElement(0)
-                        }
-                  } else {
-                        stop("Variable with vertical levels: '@level' following the variable name is required\nPossible values: ", paste(levels, collapse = ", "))
-                  }
-            } else {
-                  if (level %in% levels) {
-                        levelInd <- gcs$getVerticalAxis()$findCoordElement(level)
-                  } else {
-                        stop("Vertical level not found\nPossible values: ", paste(levels, collapse = ", "), call. = FALSE)
-                  }
-            }
-            zRange <- .jnew("ucar/ma2/Range", levelInd, levelInd)
+  gcs <- grid$getCoordinateSystem()
+  if (gcs$hasVerticalAxis()) {
+    levels <- scanVarDimensions(grid)$level$Values
+    if (is.null(level)) {
+      if (length(levels) == 1) {
+        level <- levels
+        if (gcs$getVerticalAxis()$findCoordElement(level) < 0) {
+          levelInd <- gcs$getVerticalAxis()$findCoordElement(0)
+        }
       } else {
-            if (!is.null(level)) {
-                  # warning("The variable selected is 2D: the '@level' specification was ignored")
-                  level <- level
-            }
-            zRange <- .jnull()
+        stop("Variable with vertical levels: '@level' following the variable name is required\nPossible values: ", paste(levels, collapse = ", "))
       }
-      return(list("level" = level, "zRange" = zRange))
+    } else {
+      if (level %in% levels) {
+        levelInd <- gcs$getVerticalAxis()$findCoordElement(level)
+      } else {
+        stop("Vertical level not found\nPossible values: ", paste(levels, collapse = ", "), call. = FALSE)
+      }
+    }
+    zRange <- .jnew("ucar/ma2/Range", levelInd, levelInd)
+  } else {
+    if (!is.null(level)) {
+      # warning("The variable selected is 2D: the '@level' specification was ignored")
+      level <- level
+    }
+    zRange <- .jnull()
+  }
+  return(list("level" = level, "zRange" = zRange))
 }
 # End

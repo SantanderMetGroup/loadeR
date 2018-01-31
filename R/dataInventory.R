@@ -181,7 +181,7 @@ dataInventory.ASCII <- function(dataset, rs) {
 #' characteristics of its dimensions is provided.
 #' @author J. Bedia 
 #' @keywords internal
-#' @import rJava
+#' @importFrom rJava J
 
 
 

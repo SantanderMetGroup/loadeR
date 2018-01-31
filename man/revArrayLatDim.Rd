@@ -4,7 +4,7 @@
 \alias{revArrayLatDim}
 \title{Reverse latitude coordinates ordering}
 \usage{
-revArrayLatDim(mdArray, grid)
+revArrayLatDim(mdArray)
 }
 \arguments{
 \item{mdArray}{A n-dimensional array of data as returned by \code{makeSubset}}

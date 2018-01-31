@@ -4,6 +4,8 @@ hursmax,maximum 2-meter relative humidity,%
 hursmin,minimum 2-meter relative humidity,%
 hus,specific humidity,kg.kg-1
 huss,2-meter specific humidity,kg.kg-1
+hussmax,maximum 2-meter specific humidity,kg.kg-1
+hussmin,minimum 2-meter specific humidity,kg.kg-1
 lm,land binary mask,1
 orog,surface altitude,m
 ps,air pressure at surface level,Pa
