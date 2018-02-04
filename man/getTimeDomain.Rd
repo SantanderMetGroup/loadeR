@@ -4,7 +4,8 @@
 \alias{getTimeDomain}
 \title{Selection of time slices of gridded datasets}
 \usage{
-getTimeDomain(grid, dic, season, years, time, aggr.d, aggr.m)
+getTimeDomain(grid, dic, season, years, time, aggr.d, aggr.m, threshold,
+  condition)
 }
 \arguments{
 \item{grid}{A java \sQuote{GeoGrid}}

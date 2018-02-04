@@ -6,7 +6,8 @@
 \usage{
 loadGridData(dataset, var, dictionary = FALSE, lonLim = NULL,
   latLim = NULL, season = NULL, years = NULL, members = NULL,
-  time = "none", aggr.d = "none", aggr.m = "none")
+  time = "none", aggr.d = "none", aggr.m = "none", condition = NULL,
+  threshold = NULL)
 }
 \arguments{
 \item{dataset}{A character string indicating the database to be accessed. This is usually a path to a local file or a URL 
@@ -56,6 +57,13 @@ Currently accepted values are \code{"none"}, \code{"mean"}, \code{"min"}, \code{
 
 \item{aggr.m}{Same as \code{aggr.d}, bun indicating the aggregation function to compute monthly from daily data.
 If \code{aggr.m = "none"} (the default), no monthly aggregation is undertaken.}
+
+\item{condition}{Optional, only needed if absolute/relative frequencies are required. Inequality operator to be applied considering the given threshold.
+\code{"GT"} = greater than the value of \code{threshold}, \code{"GE"} = greater or equal,
+ \code{"LT"} = lower than, \code{"LE"} = lower or equal than}
+
+\item{threshold}{Optional, only needed if absolute/relative frequencies are required. A float number defining the threshold
+used by  \code{condition} (the next argument).}
 }
 \value{
 A list with the following elements providing the necessary information 

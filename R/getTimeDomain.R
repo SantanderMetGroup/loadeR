@@ -25,7 +25,7 @@
 #' @importFrom rJava .jnew
 #' @importFrom loadeR.java javaCalendarDate2rPOSIXlt
 
-getTimeDomain <- function(grid, dic, season, years, time, aggr.d, aggr.m) {
+getTimeDomain <- function(grid, dic, season, years, time, aggr.d, aggr.m, threshold, condition) {
   message("[", Sys.time(), "] Defining time selection parameters")
   gcs <- grid$getCoordinateSystem()
   timeDates <- javaCalendarDate2rPOSIXlt(gcs$getTimeAxis()$getCalendarDates())
@@ -48,8 +48,17 @@ getTimeDomain <- function(grid, dic, season, years, time, aggr.d, aggr.m) {
     aggr.m <- "none"
     message("NOTE: The original data is monthly: argument 'aggr.m' ignored")
   }
-  if (aggr.d != "none") message("NOTE: Daily aggregation will be computed from ", round(timeResInSeconds/3600), "-hourly data")
+  if (aggr.d != "none") message("NOTE: Daily aggregation will be computed from ",
+                                round(timeResInSeconds/3600), "-hourly data")
   if (aggr.m != "none") message("NOTE: Daily data will be monthly aggregated")
+  # Count cell method for monthly aggregations 
+  if (!is.null(condition))  {
+    condition <- switch(condition,
+                        "GT" = ">",
+                        "GE" = ">=",
+                        "LT" = "<",
+                        "LE" = "<=")
+  }
   startDay <- timeDates[1]
   endDay <- timeDates[length(timeDates)]
   startYear <- startDay$year + 1900
@@ -76,7 +85,8 @@ getTimeDomain <- function(grid, dic, season, years, time, aggr.d, aggr.m) {
   }
   if (!identical(season, sort(season))) {
     if (years[1] == startYear) {
-      warning(paste("First date in dataset: ", startDay, ". Seasonal data for the first year requested not available", sep = ""))
+      warning(paste0("First date in dataset: ", startDay,
+                     ". Seasonal data for the first year requested not available"))
     } else {
       years <- append(years[1] - 1, years)
     }
@@ -153,7 +163,8 @@ getTimeDomain <- function(grid, dic, season, years, time, aggr.d, aggr.m) {
   timeIndList <- NULL
   return(list("dateSliceList" = dateSliceList, "timeResInSeconds" = timeResInSeconds,
               "tRanges" = tRanges, "deaccumFromFirst" = deaccumFromFirst,
-              "aggr.d" = aggr.d, "aggr.m" = aggr.m))
+              "aggr.d" = aggr.d, "aggr.m" = aggr.m,
+              "threshold" = threshold, "condition" = condition))
 }
 # End
 

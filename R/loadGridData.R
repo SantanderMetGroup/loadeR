@@ -1,6 +1,6 @@
 #     loadGridData.R Load a user-defined spatio-temporal slice from a gridded dataset
 #
-#     Copyright (C) 2017 Santander Meteorology Group (http://www.meteo.unican.es)
+#     Copyright (C) 2018 Santander Meteorology Group (http://www.meteo.unican.es)
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -13,7 +13,7 @@
 #     GNU General Public License for more details.
 # 
 #     You should have received a copy of the GNU General Public License
-#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#     along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 
 #' @title Load a grid from a gridded dataset
@@ -41,7 +41,11 @@
 #' Currently accepted values are \code{"none"}, \code{"mean"}, \code{"min"}, \code{"max"} and \code{"sum"}.
 #' @param aggr.m Same as \code{aggr.d}, bun indicating the aggregation function to compute monthly from daily data.
 #' If \code{aggr.m = "none"} (the default), no monthly aggregation is undertaken.
-#' 
+#' @param threshold Optional, only needed if absolute/relative frequencies are required. A float number defining the threshold
+#'  used by  \code{condition} (the next argument).
+#' @param condition Optional, only needed if absolute/relative frequencies are required. Inequality operator to be applied considering the given threshold.
+#'  \code{"GT"} = greater than the value of \code{threshold}, \code{"GE"} = greater or equal,
+#'   \code{"LT"} = lower than, \code{"LE"} = lower or equal than
 #' @template templateReturnGridData
 #' @template templateDicDetails  
 #' @template templateTimeAggr
@@ -111,7 +115,9 @@ loadGridData <- function(dataset,
                          members = NULL,
                          time = "none",
                          aggr.d = "none",
-                         aggr.m = "none") {
+                         aggr.m = "none",
+                         condition = NULL,
+                         threshold = NULL) {
       if (dataset %in% UDG.datasets()$name) {
             datasetind <- which(UDG.datasets()$name == dataset)
             dataset <- as.character(UDG.datasets()$url[datasetind])
@@ -123,6 +129,15 @@ loadGridData <- function(dataset,
             message("NOTE: Argument 'aggr.d' ignored as 'time' was set to ", time)
       }
       aggr.m <- match.arg(aggr.m, choices = c("none", "mean", "min", "max", "sum"))
+      # Count aggregations
+      if (!is.null(condition)) {
+        condition <- match.arg(condition, choices = c("GT", "GE", "LT", "LE"))
+        if (is.null(threshold)) {
+          stop("A 'threshold' argument value is required given 'condition', with no default", call. = FALSE)
+        }
+        if (!is.numeric(threshold)) stop("Invalid non-numeric 'threshold' argument value", call. = FALSE)
+        if (aggr.m == "none") stop("Invalid 'aggr.m' argument value given 'threshold' and 'condition'", call. = FALSE)
+      }
       aux.level <- findVerticalLevel(var)
       var <- aux.level$var
       level <- aux.level$level
@@ -144,13 +159,14 @@ loadGridData <- function(dataset,
       proj <- grid$getCoordinateSystem()$getProjection()
       if (!proj$isLatLon()) latLon <- adjustRCMgrid(gds, latLon, lonLim, latLim)
       # Read data -------------------
-      out <- loadGridDataset(var, grid, dic, level, season, years, members, time, latLon, aggr.d, aggr.m)
+      out <- loadGridDataset(var, grid, dic, level, season, years, members,
+                             time, latLon, aggr.d, aggr.m, threshold, condition)
       # Metadata: projection and spatial resolution -------------
       proj <- proj$toString()
       attr(out$xyCoords, which = "projection") <- proj
       attr(out$xyCoords, "resX") <- (tail(out$xyCoords$x, 1) - out$xyCoords$x[1]) / (length(out$xyCoords$x) - 1)
       attr(out$xyCoords, "resY") <- (tail(out$xyCoords$y, 1) - out$xyCoords$y[1]) / (length(out$xyCoords$y) - 1)
-      if("lon" %in% names(out$xyCoords)){
+      if ("lon" %in% names(out$xyCoords)) {
             attr(out$xyCoords, "resLON") <- NA 
             attr(out$xyCoords, "resLAT") <- NA
       } 
@@ -195,8 +211,9 @@ loadGridData <- function(dataset,
 #' @author J. Bedia 
 #' @export
 #' @keywords internal
+#' @importFrom rJava .jnull
 
-loadGridDataset <- function(var, grid, dic, level, season, years, members, time, latLon, aggr.d, aggr.m) {
+loadGridDataset <- function(var, grid, dic, level, season, years, members, time, latLon, aggr.d, aggr.m, threshold, condition) {
       ## Check for members 
       ens.axis <- grid$getCoordinateSystem()$getEnsembleAxis()
       if (is.null(ens.axis)) {
@@ -207,7 +224,7 @@ loadGridDataset <- function(var, grid, dic, level, season, years, members, time,
             if (!all((members - 1) %in% all.members)) stop("Invalid member selection. See 'dataInventory' for details on available members.", call. = FALSE)
             memberPars <- getMemberDomain(grid, members, continuous = TRUE)
       }
-      timePars <- getTimeDomain(grid, dic, season, years, time, aggr.d, aggr.m)
+      timePars <- getTimeDomain(grid, dic, season, years, time, aggr.d, aggr.m, threshold, condition)
       levelPars <- getVerticalLevelPars(grid, level)
       cube <- makeSubset(grid, timePars, levelPars, latLon, memberPars)
       timePars <- NULL
