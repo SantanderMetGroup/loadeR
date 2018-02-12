@@ -1,6 +1,6 @@
 loadeR
 ======
 
-* New functionality in loadGridData to compute monthly frequencies on-the-fly based on user defined thresholds and inequality operators.
+* New functionality in `loadGridData` to compute monthly frequencies on-the-fly based on user-defined thresholds exceedances.
 * Change `timeUnitsChange` default value to `TRUE` in `makeAggregatedDataset` (see <https://github.com/SantanderMetGroup/loadeR/pull/30#issuecomment-358615320>)
 

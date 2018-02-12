@@ -83,10 +83,6 @@ makeSubset <- function(grid, timePars, levelPars, latLon, memberPars) {
       day <- as.POSIXlt(timePars$dateSliceList[[i]])$mday
       if (!is.null(timePars$condition)) {
         aux.list[[i]] <- apply(aux.list[[i]], MARGIN = mar, FUN = function(x) {
-          # tapply(x, INDEX = mes, FUN = function(y) {
-            # timePars$aggr.m
-            # eval(parse(text = paste0(timePars$aggr.m,"(y ", timePars$condition,
-            #                         " timePars$threshold, na.rm = TRUE)")))
           if (all(is.na(x))) {
             rep(NA, length(unique(mes)))
           } else {

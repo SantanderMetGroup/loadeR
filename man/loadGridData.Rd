@@ -194,6 +194,39 @@ tasmax <- loadGridData(dataset = ds,
                        years = 2021,
                        time = "12",
                        aggr.m = "mean")
+
+
+## Example loading frequency data based on threshold exceedances:
+# This example will use remote data from the EOBS dataset loaded from the KNMI's OPenDAP server
+# Note that the URL of the dataset is not persistent, and changes with updated versions,
+# so this example is not guaranteed to work in the future. You can check the latest dataset
+# version and its corresponding URL at the following link:
+# <http://www.ecad.eu/download/ensembles/download.php>
+require(transformeR)
+require(visualizeR)
+ds <- "http://opendap.knmi.nl/knmi/thredds/dodsC/e-obs_0.50regular/tx_0.50deg_reg_v16.0.nc"
+# The following call will load the annual number of days above 25 degrees C
+# (Number of summer days, 'SU' according to ETCCDI/CRD climate change indices
+# <http://etccdi.pacificclimate.org/list_27_indices.shtml>)
+tx25 <- loadGridData(dataset = ds,
+                    var = "tx",
+                    lonLim = c(-10,5),
+                    latLim = c(35,44),
+                    season = 1:12,
+                    years = 1981:1990,
+                    aggr.m = "sum", 
+                    threshold = 25,
+                    condition = "GT")
+
+# Note the use of threshold = 25, and condition = "GT" (i.e. strictly Greater Than)
+# In the next lines the data are annualy aggregated and the correposnding climatological
+# map is displayed:
+
+tx25.annual <- aggregateGrid(tx25, aggr.y = list(FUN = "sum"))
+spatialPlot(climatology(tx25.annual), main = "Number of Summer Days 1981-1990")
+
+# Note that the relative frequency (i.e., proportion of days instead of absolute frequency),
+# can be obtained by just indicating the argument 'aggr.m = "mean"'
 }
 }
 \seealso{
