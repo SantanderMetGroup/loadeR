@@ -161,6 +161,12 @@ getTimeDomain <- function(grid, dic, season, years, time, aggr.d, aggr.m, thresh
                                                              as.integer(tail(timeIndList[[j]], 1L)),
                                                              timeStride))# $shiftOrigin(timeShift))
   timeIndList <- NULL
+  # Conversion of threshold units
+  if (!is.null(threshold)) {
+    if (!is.null(dic)) {
+      threshold <- threshold * dic$scale + dic$offset  
+    }
+  }
   return(list("dateSliceList" = dateSliceList, "timeResInSeconds" = timeResInSeconds,
               "tRanges" = tRanges, "deaccumFromFirst" = deaccumFromFirst,
               "aggr.d" = aggr.d, "aggr.m" = aggr.m,
