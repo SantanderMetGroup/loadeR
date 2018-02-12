@@ -46,6 +46,10 @@
 #' @author J Bedia 
 
 dataInventory <- function(dataset, return.stats = FALSE) {
+      if (dataset %in% UDG.datasets()$name) {
+            datasetind <- which(UDG.datasets()$name == dataset)
+            dataset <- as.character(UDG.datasets()$url[datasetind])
+      }
       rs <- return.stats
       message(paste("[", Sys.time(), "] Doing inventory ...", sep = ""))
       if (isTRUE(file.info(dataset)$isdir) | grepl("\\.zip$", dataset)) {

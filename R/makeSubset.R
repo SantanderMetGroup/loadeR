@@ -36,16 +36,20 @@ makeSubset <- function(grid, timePars, levelPars, latLon, memberPars) {
     dimNamesRef <- dimNames
     aux.list2 <- rep(list(bquote()), length(latLon$llRanges))
     for (j in 1:length(aux.list2)) {
-      subSet <- grid$makeSubset(levelPars$zRange, memberPars, timePars$tRanges[[i]], levelPars$zRange, latLon$llRanges[[j]]$get(0L), latLon$llRanges[[j]]$get(1L))
+      subSet <- grid$makeSubset(levelPars$zRange, memberPars, timePars$tRanges[[i]],
+                                levelPars$zRange, latLon$llRanges[[j]]$get(0L),
+                                latLon$llRanges[[j]]$get(1L))
       shapeArray <- rev(subSet$getShape()) # Reversed!!
       # shape of the output depending on spatial selection
       if (latLon$pointXYindex[1] >= 0) {
-        rm.dim <- grep(gcs$getXHorizAxis()$getDimensionsString(), dimNamesRef, fixed = TRUE)
+        rm.dim <- grep(gcs$getXHorizAxis()$getDimensionsString(),
+                       dimNamesRef, fixed = TRUE)
         shapeArray <- shapeArray[-rm.dim]
         dimNamesRef <- dimNamesRef[-rm.dim]
       }
       if (latLon$pointXYindex[2] >= 0) {
-        rm.dim <- grep(gcs$getYHorizAxis()$getDimensionsString(), dimNamesRef, fixed = TRUE)
+        rm.dim <- grep(gcs$getYHorizAxis()$getDimensionsString(),
+                       dimNamesRef, fixed = TRUE)
         shapeArray <- shapeArray[-rm.dim]
         dimNamesRef <- dimNamesRef[-rm.dim]
       }        
@@ -60,7 +64,6 @@ makeSubset <- function(grid, timePars, levelPars, latLon, memberPars) {
     if (timePars$aggr.d != "none") {
       aux.string <- paste(substr(timePars$dateSliceList[[i]],6,7), 
                           substr(timePars$dateSliceList[[i]],9,10), sep = "-")
-      ## aux.string <- paste(as.POSIXlt(timePars$dateSliceList[[i]])$mon, as.POSIXlt(timePars$dateSliceList[[i]])$mday, sep = "-")
       aux.factor <- factor(aux.string, levels = unique(aux.string), ordered = TRUE)
       mar <- grep("^time", dimNamesRef, invert = TRUE)
       aux.list[[i]] <- apply(aux.list[[i]], MARGIN = mar, FUN = function(x) {
@@ -69,18 +72,31 @@ makeSubset <- function(grid, timePars, levelPars, latLon, memberPars) {
       dimNamesRef <- c("time", dimNamesRef[mar])
       # Convert dates to daily:
       nhours <- length(aux.factor) / nlevels(aux.factor)
-      timePars$dateSliceList[[i]] <- timePars$dateSliceList[[i]][seq(1, by = nhours, length.out = nlevels(aux.factor))]
+      timePars$dateSliceList[[i]] <- timePars$dateSliceList[[i]][seq(1, by = nhours,
+                                                                     length.out = nlevels(aux.factor))]
     }
     # Monthly aggregator
     if (timePars$aggr.m != "none") {
-      mes <- as.numeric(substr(timePars$dateSliceList[[i]],6,7))
-      ## mes <- as.POSIXlt(timePars$dateSliceList[[i]])$mon
+      mar <- grep("^time", dimNamesRef, invert = TRUE)
+      mes <- as.numeric(substr(timePars$dateSliceList[[i]],6,7)) 
       mes <- factor(mes, levels = unique(mes), ordered = TRUE)
       day <- as.POSIXlt(timePars$dateSliceList[[i]])$mday
-      mar <- grep("^time", dimNamesRef, invert = TRUE)
-      aux.list[[i]] <- apply(aux.list[[i]], MARGIN = mar, FUN = function(x) {
-        tapply(x, INDEX = mes, FUN = timePars$aggr.m)
-      })
+      if (!is.null(timePars$condition)) {
+        aux.list[[i]] <- apply(aux.list[[i]], MARGIN = mar, FUN = function(x) {
+          if (all(is.na(x))) {
+            rep(NA, length(unique(mes)))
+          } else {
+            ind <- eval(parse(text = paste0("which(x", timePars$condition, timePars$threshold,")")))
+            x[ind] <- 1
+            x[setdiff(1:length(x), ind)] <- 0
+            tapply(x, INDEX = mes, FUN = timePars$aggr.m)
+          }
+        })
+      } else {
+        aux.list[[i]] <- apply(aux.list[[i]], MARGIN = mar, FUN = function(x) {
+          tapply(x, INDEX = mes, FUN = timePars$aggr.m)
+        })  
+      }
       dimNamesRef <- if (length(unique(mes)) > 1) {
         c("time", dimNamesRef[mar])
       } else {

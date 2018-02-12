@@ -51,7 +51,7 @@
 #' steps be printed on screen?. Default to \code{TRUE}.
 #' @param timeUnitsChange Logical. Set the timeUnitsChange option,
 #' useful when aggregating many files across the time dimension which have relative time axis.
-#' Default to \code{FALSE}.
+#' Default to \code{TRUE}.
 #' @return Creates a NcML file at the specified location.
 #' @export
 #' @note The current implementation of the function only considers datasets in which each file stores
@@ -65,8 +65,8 @@
 #' @family loading
 
 makeAggregatedDataset <- function(source.dir, ncml.file, file.ext = "nc", aggr.dim = "time",
-                        pattern = NULL, recursive = FALSE, verbose = TRUE, timeUnitsChange = FALSE) {
-      file.ext <- match.arg(file.ext, c("nc", "hdf", "grib","gini"))
+                        pattern = NULL, recursive = FALSE, verbose = TRUE, timeUnitsChange = TRUE) {
+      file.ext <- match.arg(file.ext, c("nc", "nc4", "hdf", "grib","gini"))
       suffix <- paste("\\.", file.ext, "$", sep = "")
       if (is.null(pattern)) {
             pattern <- suffix
