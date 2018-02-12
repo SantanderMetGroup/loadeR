@@ -164,7 +164,7 @@ getTimeDomain <- function(grid, dic, season, years, time, aggr.d, aggr.m, thresh
   # Conversion of threshold units
   if (!is.null(threshold)) {
     if (!is.null(dic)) {
-      threshold <- threshold * dic$scale + dic$offset  
+      threshold <- threshold / dic$scale - dic$offset  
     }
   }
   return(list("dateSliceList" = dateSliceList, "timeResInSeconds" = timeResInSeconds,

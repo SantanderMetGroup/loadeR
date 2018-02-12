@@ -264,9 +264,9 @@ loadGridDataset <- function(var, grid, dic, level, season, years, members, time,
       levelPars <- getVerticalLevelPars(grid, level)
       cube <- makeSubset(grid, timePars, levelPars, latLon, memberPars)
       timePars <- NULL
-      if (!is.null(dic)) {
-            isStandard <- TRUE
-            cube$mdArray <- dictionaryTransformGrid(dic, cube$timePars, cube$mdArray)
+      isStandard <- TRUE
+      if (!is.null(dic) & is.null(threshold)) {
+            cube$mdArray <- dictionaryTransformGrid(dic, timePars = cube$timePars, mdArray = cube$mdArray)
       } else {
             isStandard <- FALSE
       }
