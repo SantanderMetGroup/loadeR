@@ -7,6 +7,7 @@
 #' @importFrom utils read.csv
 #' @examples
 #' # Default built-in datasets
+#' str(UDG.datasets())
 #' (sets <- UDG.datasets())
 #' sets[grep("^ta", sets$name), ]
 
