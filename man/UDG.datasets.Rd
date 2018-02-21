@@ -17,6 +17,7 @@ The function assumes that the user has read permission to the package installati
 }
 \examples{
 # Default built-in datasets
+str(UDG.datasets())
 (sets <- UDG.datasets())
 sets[grep("^ta", sets$name), ]
 }
