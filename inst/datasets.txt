@@ -95,9 +95,9 @@ EUROCORDEX44_MOHC-HadGEM2-ES_r1i1p1_RCA4_v1_rcp85,projection,http://meteo.unican
 EUROCORDEX44_MPI-ESM-LR_r1i1p1_CCLM4-8-17_v1_historical,projection,http://meteo.unican.es/tds5/dodsC/cordex/EUR-44/CLMcom/MPI-M-MPI-ESM-LR_historical_r1i1p1_CCLM4-8-17_v1_day.ncml
 EUROCORDEX44_MPI-ESM-LR_r1i1p1_CCLM4-8-17_v1_rcp45,projection,http://meteo.unican.es/tds5/dodsC/cordex/EUR-44/CLMcom/MPI-M-MPI-ESM-LR_rcp45_r1i1p1_CCLM4-8-17_v1_day.ncml
 EUROCORDEX44_MPI-ESM-LR_r1i1p1_CCLM4-8-17_v1_rcp85,projection,http://meteo.unican.es/tds5/dodsC/cordex/EUR-44/CLMcom/MPI-M-MPI-ESM-LR_rcp85_r1i1p1_CCLM4-8-17_v1_day.ncml
-EUROCORDEX44_MPI-ESM-LR_r1i1p1_RCA4_v1_historical,projection,http://meteo.unican.es/tds5/dodsC/cordex/EUR-44/SMHI/MPI-M-MPI-ESM-LR_historical_r1i1p1_RCA4_v1a_day.ncml
-EUROCORDEX44_MPI-ESM-LR_r1i1p1_RCA4_v1_rcp45,projection,http://meteo.unican.es/tds5/dodsC/cordex/EUR-44/SMHI/MPI-M-MPI-ESM-LR_rcp45_r1i1p1_RCA4_v1a_day.ncml
-EUROCORDEX44_MPI-ESM-LR_r1i1p1_RCA4_v1_rcp85,projection,http://meteo.unican.es/tds5/dodsC/cordex/EUR-44/SMHI/MPI-M-MPI-ESM-LR_rcp85_r1i1p1_RCA4_v1a_day.ncml
+EUROCORDEX44_MPI-ESM-LR_r1i1p1_RCA4_v1_historical,projection,http://meteo.unican.es/tds5/dodsC/cordex/EUR-44/SMHI/MPI-M-MPI-ESM-LR_historical_r1i1p1_RCA4_v1_day.ncml
+EUROCORDEX44_MPI-ESM-LR_r1i1p1_RCA4_v1_rcp45,projection,http://meteo.unican.es/tds5/dodsC/cordex/EUR-44/SMHI/MPI-M-MPI-ESM-LR_rcp45_r1i1p1_RCA4_v1_day.ncml
+EUROCORDEX44_MPI-ESM-LR_r1i1p1_RCA4_v1_rcp85,projection,http://meteo.unican.es/tds5/dodsC/cordex/EUR-44/SMHI/MPI-M-MPI-ESM-LR_rcp85_r1i1p1_RCA4_v1_day.ncml
 EUROCORDEX44_IPSL-CM5A-MR_r1i1p1_WRF331F_v1_historical,projection,http://meteo.unican.es/tds5/dodsC/cordex/EUR-44/IPSL-INERIS/IPSL-IPSL-CM5A-MR_historical_r1i1p1_WRF331F_v1_day.ncml
 EUROCORDEX44_IPSL-CM5A-MR_r1i1p1_WRF331F_v1_rcp45,projection,http://meteo.unican.es/tds5/dodsC/cordex/EUR-44/IPSL-INERIS/IPSL-IPSL-CM5A-MR_rcp45_r1i1p1_WRF331F_v1_day.ncml
 EUROCORDEX44_IPSL-CM5A-MR_r1i1p1_WRF331F_v1_rcp85,projection,http://meteo.unican.es/tds5/dodsC/cordex/EUR-44/IPSL-INERIS/IPSL-IPSL-CM5A-MR_rcp85_r1i1p1_WRF331F_v1_day.ncml
