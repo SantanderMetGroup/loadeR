@@ -105,7 +105,7 @@ climate datasets. The particular variables of each dataset are translated -and t
 to the standard variables by means of a dictionary, provided by the argument \code{dictionary}.
 In essence, the \file{dictionary} is a csv file particular for each individual dataset, 
 containing the necessary information for performing the unit conversions to match the standard variable 
-definitions contained in the vocabulary (see \code{\link{UDG.vocabulary}}). This feature is described in more detail
+definitions contained in the vocabulary (see \code{\link{C4R.vocabulary}}). This feature is described in more detail
  in the \href{https://github.com/SantanderMetGroup/loadeR/wiki/Homogeneization}{loadeR wiki}..
 }
 
@@ -174,7 +174,7 @@ str(grid.mm)
 # Same but using the original variable (not harmonized via dictionary):
 di <- dataInventory(ncep)
 names(di)
-UDG.vocabulary()
+C4R.vocabulary()
 # Variable is named 'T', instead of the standard name 'ta' in the vocabulary
 # Vertical level is indicated using the '@' symbol:
 non.standard.grid <- loadGridData(ncep, var = "T@850", dictionary = FALSE, lonLim = c(-10,5),

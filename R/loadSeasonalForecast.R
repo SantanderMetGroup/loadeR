@@ -126,7 +126,7 @@ loadSeasonalForecast <- function(dataset,
   attr(Variable, "use_dictionary") <- isStandard
   attr(Variable, "description") <- grid$getDescription()
   if (isStandard) {
-    vocabulary <- UDG.vocabulary()
+    vocabulary <- C4R.vocabulary()
     attr(Variable, "units") <- as.character(vocabulary[grep(paste0("^", var, "$"),
                                                             vocabulary$identifier), 3])
     attr(Variable, "longname") <- as.character(vocabulary[grep(paste0("^", var, "$"),

@@ -151,7 +151,7 @@ loadDecadalForecast <- function(dataset,
   Variable <- list("varName" = var, "level" = level)
   attr(Variable, "is_standard") <- isStandard
   if (isStandard) {
-    vocabulary <- UDG.vocabulary()
+    vocabulary <- C4R.vocabulary()
     attr(Variable, "units") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier), 3])
     attr(Variable, "longname") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier), 2])
   } else {

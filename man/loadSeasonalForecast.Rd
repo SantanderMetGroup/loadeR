@@ -105,7 +105,7 @@ climate datasets. The particular variables of each dataset are translated -and t
 to the standard variables by means of a dictionary, provided by the argument \code{dictionary}.
 In essence, the \file{dictionary} is a csv file particular for each individual dataset, 
 containing the necessary information for performing the unit conversions to match the standard variable 
-definitions contained in the vocabulary (see \code{\link{UDG.vocabulary}}). This feature is described in more detail
+definitions contained in the vocabulary (see \code{\link{C4R.vocabulary}}). This feature is described in more detail
  in the \href{https://github.com/SantanderMetGroup/loadeR/wiki/Homogeneization}{loadeR wiki}..
 }
 

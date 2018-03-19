@@ -81,7 +81,7 @@
 #' # Same but using the original variable (not harmonized via dictionary):
 #' di <- dataInventory(ncep)
 #' names(di)
-#' UDG.vocabulary()
+#' C4R.vocabulary()
 #' # Variable is named 'T', instead of the standard name 'ta' in the vocabulary
 #' # Vertical level is indicated using the '@@' symbol:
 #' non.standard.grid <- loadGridData(ncep, var = "T@@850", dictionary = FALSE, lonLim = c(-10,5),
@@ -276,7 +276,7 @@ loadGridDataset <- function(var, grid, dic, level, season, years, members, time,
       attr(Variable, "use_dictionary") <- isStandard
       attr(Variable, "description") <- grid$getDescription()
       if (isStandard) {
-            vocabulary <- UDG.vocabulary()
+            vocabulary <- C4R.vocabulary()
             attr(Variable, "units") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier), 3])
             attr(Variable, "longname") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier), 2])
       } else {

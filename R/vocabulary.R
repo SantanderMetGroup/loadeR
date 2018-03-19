@@ -1,7 +1,7 @@
 #' @title Show UDG vocabulary
 #' @description Access the installed user's vocabulary
 #' @return The vocabulary table, in the form of a data.frame
-#' @seealso UDG.vocabulary.update, for the inclusion of new standard variables defined by the user
+#' @seealso C4R.vocabulary.update, for the inclusion of new standard variables defined by the user
 #' @note The function assumes that the user has read permission to the package installation directory
 #' @author J Bedia
 #' @references Standard name table of the CF convention: http://cfconventions.org/standard-names.html
@@ -9,10 +9,10 @@
 #' @importFrom utils read.csv
 #' @examples
 #' # Default built-in vocabulary
-#' (voc <- UDG.vocabulary())
+#' (voc <- C4R.vocabulary())
 #' voc[grep("^ta", voc$identifier), ]
 
-UDG.vocabulary <- function() {
+C4R.vocabulary <- function() {
       read.csv(file.path(find.package("loadeR"), "vocabulary.txt"))
 }
 
@@ -22,29 +22,29 @@ UDG.vocabulary <- function() {
 #' @param identifier A vector containing the identifier(s) of the new variable(s) to be appended to the dictionary. 
 #' @param standard_name A vector containing the standard name(s) of the new variable(s) to be appended to the dictionary. 
 #' @param units A vector containing the units of the new variable(s) to be appended to the dictionary. 
-#' @seealso UDG.vocabulary, to access the vocabulary contents
+#' @seealso C4R.vocabulary, to access the vocabulary contents
 #' @export
 #' @importFrom utils write.table
 #' @author J Bedia
 #' @references Standard name table of the CF convention: http://cfconventions.org/standard-names.html
 #' @examples \dontrun{
 #' # Inclusion of a new variable ("Total snowfall amount")
-#' UDG.vocabulary.update(identifier = "prsn",
+#' C4R.vocabulary.update(identifier = "prsn",
 #'                  standard_name = "total snowfall amount",
 #'                  units = "mm")
-#' UDG.vocabulary()                 
+#' C4R.vocabulary()                 
 #' # Inclusion of 2 new variables: 
-#' UDG.vocabulary.update(identifier = c("wap",
+#' C4R.vocabulary.update(identifier = c("wap",
 #'                                 "plev"),
 #'                  standard_name = c("lagrangian tendency of air pressure",
 #'                                    "air pressure"),
 #'                  units = c("Pa.s-1",
 #'                            "Pa"))
-#' UDG.vocabulary() 
+#' C4R.vocabulary() 
 #' }
 
-UDG.vocabulary.update <- function(identifier, standard_name, units) {
-      ref <- UDG.vocabulary()
+C4R.vocabulary.update <- function(identifier, standard_name, units) {
+      ref <- C4R.vocabulary()
       if (any(identifier %in% ref$identifier)) {
             stop("One or more identifiers already exist in the vocabulary", call. = FALSE)      
       }
