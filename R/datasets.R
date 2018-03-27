@@ -12,5 +12,5 @@
 #' sets[grep("^ta", sets$name), ]
 
 UDG.datasets <- function() {
-      read.csv(file.path(find.package("loadeR"), "datasets.txt"))
+      read.csv(file.path(find.package("loadeR"), "datasets.txt"))[ ,1:3]
 }
