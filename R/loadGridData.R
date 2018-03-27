@@ -154,12 +154,6 @@ loadGridData <- function(dataset,
                          aggr.m = "none",
                          condition = NULL,
                          threshold = NULL) {
-      if (dataset %in% UDG.datasets()$name) {
-            datasetind <- which(UDG.datasets()$name == dataset)
-            dataset <- UDG.datasets()$url[datasetind]
-            dictionary <- UDG.datasets()$dicname[datasetind]
-            message("NOTE: Accessing harmonized data from a public UDG dataset")
-      }
       time <- match.arg(time, choices = c("none","00","03","06","09","12","15","18","21","DD"))
       aggr.d <- match.arg(aggr.d, choices = c("none", "mean", "min", "max", "sum"))
       if (time != "DD" & aggr.d != "none") {
@@ -179,6 +173,14 @@ loadGridData <- function(dataset,
       aux.level <- findVerticalLevel(var)
       var <- aux.level$var
       level <- aux.level$level
+      # UDG public data parameters -----------------
+      if (dataset %in% UDG.datasets()$name) {
+        datasetind <- which(UDG.datasets()$name == dataset)
+        dataset <- UDG.datasets()$url[datasetind]
+        dic.filename <- read.csv(file.path(find.package("loadeR"), "datasets.txt"), stringsAsFactors = FALSE)[datasetind,4]
+        dictionary <- file.path(find.package("loadeR"), "dictionaries", dic.filename)
+        message("NOTE: Accessing harmonized data from a public UDG dataset")
+      }
       # Dictionary lookup -------------
       cd <- check.dictionary(dataset, var, dictionary, time)
       shortName <- cd$shortName
