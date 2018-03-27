@@ -156,7 +156,9 @@ loadGridData <- function(dataset,
                          threshold = NULL) {
       if (dataset %in% UDG.datasets()$name) {
             datasetind <- which(UDG.datasets()$name == dataset)
-            dataset <- as.character(UDG.datasets()$url[datasetind])
+            dataset <- UDG.datasets()$url[datasetind]
+            dictionary <- UDG.datasets()$dicname[datasetind]
+            message("NOTE: Accessing harmonized data from a public UDG dataset")
       }
       time <- match.arg(time, choices = c("none","00","03","06","09","12","15","18","21","DD"))
       aggr.d <- match.arg(aggr.d, choices = c("none", "mean", "min", "max", "sum"))
