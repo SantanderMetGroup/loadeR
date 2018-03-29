@@ -14,7 +14,7 @@ Suggests:
 Type: Package
 Title: The generic data loading package of the climate4R Bundle
 Version: 1.4.0
-Date: 2018-03-27
+Date: 2018-03-28
 Authors@R: as.person(c(
     "Santander Meteorology Group <http://meteo.unican.es> [cph]",
     "Joaquín Bedia <bediaj@unican.es> [aut,cre]",

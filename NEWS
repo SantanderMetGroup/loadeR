@@ -5,3 +5,4 @@ loadeR
  * For an overview of these datasets, use the new helper `UDG.datasets()`
 * Internal change to alter `treshold` value when transforming non-standard variables via dictionary
 * Other minor documentation updates and internal changes
+* NOTE: version used in the submitted paper to EMS on 29 Mar 2018
