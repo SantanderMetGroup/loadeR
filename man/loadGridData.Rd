@@ -6,7 +6,8 @@
 \usage{
 loadGridData(dataset, var, dictionary = FALSE, lonLim = NULL,
   latLim = NULL, season = NULL, years = NULL, members = NULL,
-  time = "none", aggr.d = "none", aggr.m = "none")
+  time = "none", aggr.d = "none", aggr.m = "none", condition = NULL,
+  threshold = NULL)
 }
 \arguments{
 \item{dataset}{A character string indicating the database to be accessed. This is usually a path to a local file or a URL 
@@ -56,6 +57,13 @@ Currently accepted values are \code{"none"}, \code{"mean"}, \code{"min"}, \code{
 
 \item{aggr.m}{Same as \code{aggr.d}, bun indicating the aggregation function to compute monthly from daily data.
 If \code{aggr.m = "none"} (the default), no monthly aggregation is undertaken.}
+
+\item{condition}{Optional, only needed if absolute/relative frequencies are required. Inequality operator to be applied considering the given threshold.
+\code{"GT"} = greater than the value of \code{threshold}, \code{"GE"} = greater or equal,
+ \code{"LT"} = lower than, \code{"LE"} = lower or equal than}
+
+\item{threshold}{Optional, only needed if absolute/relative frequencies are required. A float number defining the threshold
+used by  \code{condition} (the next argument).}
 }
 \value{
 A list with the following elements providing the necessary information 
@@ -97,7 +105,7 @@ climate datasets. The particular variables of each dataset are translated -and t
 to the standard variables by means of a dictionary, provided by the argument \code{dictionary}.
 In essence, the \file{dictionary} is a csv file particular for each individual dataset, 
 containing the necessary information for performing the unit conversions to match the standard variable 
-definitions contained in the vocabulary (see \code{\link{UDG.vocabulary}}). This feature is described in more detail
+definitions contained in the vocabulary (see \code{\link{C4R.vocabulary}}). This feature is described in more detail
  in the \href{https://github.com/SantanderMetGroup/loadeR/wiki/Homogeneization}{loadeR wiki}..
 }
 
@@ -166,7 +174,7 @@ str(grid.mm)
 # Same but using the original variable (not harmonized via dictionary):
 di <- dataInventory(ncep)
 names(di)
-UDG.vocabulary()
+C4R.vocabulary()
 # Variable is named 'T', instead of the standard name 'ta' in the vocabulary
 # Vertical level is indicated using the '@' symbol:
 non.standard.grid <- loadGridData(ncep, var = "T@850", dictionary = FALSE, lonLim = c(-10,5),
@@ -186,6 +194,39 @@ tasmax <- loadGridData(dataset = ds,
                        years = 2021,
                        time = "12",
                        aggr.m = "mean")
+
+
+## Example loading frequency data based on threshold exceedances:
+# This example will use remote data from the EOBS dataset loaded from the KNMI's OPenDAP server
+# Note that the URL of the dataset is not persistent, and changes with updated versions,
+# so this example is not guaranteed to work in the future. You can check the latest dataset
+# version and its corresponding URL at the following link:
+# <http://www.ecad.eu/download/ensembles/download.php>
+require(transformeR)
+require(visualizeR)
+ds <- "http://opendap.knmi.nl/knmi/thredds/dodsC/e-obs_0.50regular/tx_0.50deg_reg_v16.0.nc"
+# The following call will load the annual number of days above 25 degrees C
+# (Number of summer days, 'SU' according to ETCCDI/CRD climate change indices
+# <http://etccdi.pacificclimate.org/list_27_indices.shtml>)
+tx25 <- loadGridData(dataset = ds,
+                    var = "tx",
+                    lonLim = c(-10,5),
+                    latLim = c(35,44),
+                    season = 1:12,
+                    years = 1981:1990,
+                    aggr.m = "sum", 
+                    threshold = 25,
+                    condition = "GT")
+
+# Note the use of threshold = 25, and condition = "GT" (i.e. strictly Greater Than)
+# In the next lines the data are annualy aggregated and the correposnding climatological
+# map is displayed:
+
+tx25.annual <- aggregateGrid(tx25, aggr.y = list(FUN = "sum"))
+spatialPlot(climatology(tx25.annual), main = "Number of Summer Days 1981-1990")
+
+# Note that the relative frequency (i.e., proportion of days instead of absolute frequency),
+# can be obtained by just indicating the argument 'aggr.m = "mean"'
 }
 }
 \seealso{

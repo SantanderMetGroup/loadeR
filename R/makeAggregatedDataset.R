@@ -17,7 +17,7 @@
 
 #' @description Creates virtual datasets by modifying and combining other datasets via NcML.
 #' @title Create a dataset from a collection of (netCDF) files
-#' @import rJava
+#' @importFrom rJava J
 #' @details The NetCDF Markup Language (NcML) is an XML dialect that allows creating
 #' CDM datasets (i.e.: any collection of scientific data which can be accessed
 #' through the NetCDF-Java / CDM library). The NcML document refers to
@@ -49,6 +49,9 @@
 #' each variable is stored in a sepparate subdirectory.
 #' @param verbose Logical. Should additional information of the NcML file creation
 #' steps be printed on screen?. Default to \code{TRUE}.
+#' @param timeUnitsChange Logical. Set the timeUnitsChange option,
+#' useful when aggregating many files across the time dimension which have relative time axis.
+#' Default to \code{TRUE}.
 #' @return Creates a NcML file at the specified location.
 #' @export
 #' @note The current implementation of the function only considers datasets in which each file stores
@@ -58,12 +61,12 @@
 #' using \code{\link[utils]{glob2rx}}.
 #' 
 #' @references NcML Tutorial \url{http://www.unidata.ucar.edu/software/thredds/current/netcdf-java/ncml/Tutorial.html}. (Last accessed 14 Mar 2016.).
-#' @author J. Bedia
+#' @author J. Bedia, with contributions of E. Tourigny and A. Cofiño
 #' @family loading
 
 makeAggregatedDataset <- function(source.dir, ncml.file, file.ext = "nc", aggr.dim = "time",
-                        pattern = NULL, recursive = FALSE, verbose = TRUE) {
-      file.ext <- match.arg(file.ext, c("nc", "hdf", "grib","gini"))
+                        pattern = NULL, recursive = FALSE, verbose = TRUE, timeUnitsChange = TRUE) {
+      file.ext <- match.arg(file.ext, c("nc", "nc4", "hdf", "grib","gini"))
       suffix <- paste("\\.", file.ext, "$", sep = "")
       if (is.null(pattern)) {
             pattern <- suffix
@@ -129,7 +132,7 @@ makeAggregatedDataset <- function(source.dir, ncml.file, file.ext = "nc", aggr.d
             }
       } else {
       #
-      # Many files per varible are concatenated by "joinExisting" at the next
+      # Many files per variable are concatenated by "joinExisting" at the next
       # aggregation level
       #
             ind <- which(hasAggrDim)
@@ -139,10 +142,11 @@ makeAggregatedDataset <- function(source.dir, ncml.file, file.ext = "nc", aggr.d
             if (verbose) {
                   message("[",Sys.time(),"] Defining aggregating dimension length\nThis process may be slow but will significantly speed-up data retrieval...")
             }
+            if ( timeUnitsChange ) { strTimeUnitsChange="timeUnitsChange=\"true\"" } else { strTimeUnitsChange="" }
             for (i in 1:length(ind)) {
                   varfile <- grep(vars[ind[i]], lf, value = TRUE)
                   cat(c("\n","\t","\t","<netcdf>"), sep = "", file = z)
-                  cat(c("\n","\t","\t","<aggregation dimName=\"", aggr.dim, "\" ", "type=\"joinExisting\">"), sep = "", file = z)
+                  cat(c("\n","\t","\t","<aggregation dimName=\"", aggr.dim, "\" ", "type=\"joinExisting\" ",strTimeUnitsChange,">"), sep = "", file = z)
                   cat(c("\n","\t","\t","<variableAgg name=\"", vars[ind[i]], "\"/>"), sep = "", file = z)
                   for (j in 1:length(varfile)) {
                         gds <- J("ucar.nc2.dt.grid.GridDataset")$open(varfile[j])

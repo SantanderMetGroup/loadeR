@@ -16,40 +16,40 @@
 #' @references \url{http://www.unidata.ucar.edu/software/thredds/v4.3/netcdf-java/v4.3/javadocAll/ucar/nc2/dt/grid/GridCoordSys.html#findXYindexFromLatLon\%28double,\%20double,\%20int[]\%29}
 #' @keywords internal
 #' @export
-#' @import rJava
+#' @importFrom rJava .jnull
 
 
 findPointXYindex <- function(lonLim, latLim, gcs)  {
-      pointXYindex <- c(-1L, -1L)
-      bboxDataset <- gcs$getLatLonBoundingBox()
-      if (any(lonLim < 0) & bboxDataset$getLonMin() >= 0) {
-            lon.aux <- sort(lonLim[which(lonLim < 0)] + 360)
-      } else {
-            if (!is.null(lonLim)) {
-                  lon.aux <- lonLim
-            } else {
-                  lon.aux <- bboxDataset$getCenterLon()
-            }
-      }
-      if (length(lonLim) == 1) {
-            if (is.null(latLim)) {
-                  lat.aux <- bboxDataset$getLatMin()
-            } else {
-                  lat.aux <- latLim[1]
-            }
-            pointXYindex[1] <- gcs$findXYindexFromCoord(lon.aux, lat.aux, .jnull())[1]
-            if (pointXYindex[1] < 0) {
-                  stop("Selected X point coordinate is out of range")
-            }
-            lonLim <- NULL   
-      }
-      if (length(latLim) == 1) {
-            pointXYindex[2] <- gcs$findXYindexFromCoord(lon.aux[1], latLim, .jnull())[2]
-            if (pointXYindex[2] < 0) {
-                  stop("Selected Y point coordinate is out of range")
-            }
-            latLim <- NULL
-      }
-      return(list("lonLim" = lonLim, "latLim" = latLim, "pointXYindex" = pointXYindex))
+  pointXYindex <- c(-1L, -1L)
+  bboxDataset <- gcs$getLatLonBoundingBox()
+  if (any(lonLim < 0) & bboxDataset$getLonMin() >= 0) {
+    lon.aux <- sort(lonLim[which(lonLim < 0)] + 360)
+  } else {
+    if (!is.null(lonLim)) {
+      lon.aux <- lonLim
+    } else {
+      lon.aux <- bboxDataset$getCenterLon()
+    }
+  }
+  if (length(lonLim) == 1) {
+    if (is.null(latLim)) {
+      lat.aux <- bboxDataset$getLatMin()
+    } else {
+      lat.aux <- latLim[1]
+    }
+    pointXYindex[1] <- gcs$findXYindexFromCoord(lon.aux, lat.aux, .jnull())[1]
+    if (pointXYindex[1] < 0) {
+      stop("Selected X point coordinate is out of range")
+    }
+    lonLim <- NULL   
+  }
+  if (length(latLim) == 1) {
+    pointXYindex[2] <- gcs$findXYindexFromCoord(lon.aux[1], latLim, .jnull())[2]
+    if (pointXYindex[2] < 0) {
+      stop("Selected Y point coordinate is out of range")
+    }
+    latLim <- NULL
+  }
+  return(list("lonLim" = lonLim, "latLim" = latLim, "pointXYindex" = pointXYindex))
 }
 # End

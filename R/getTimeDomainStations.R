@@ -8,7 +8,7 @@
 #' @return A list with a vector of time index positions and the corresponding POSIXlt dates
 #' @author J. Bedia 
 #' @keywords internal
-#' @importFrom utils tail
+#' @importFrom utils tail head
 
 getTimeDomainStations <- function(timeDates, season, years) {
     if (is.null(season)) {

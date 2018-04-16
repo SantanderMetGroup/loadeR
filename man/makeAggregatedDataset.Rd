@@ -5,7 +5,8 @@
 \title{Create a dataset from a collection of (netCDF) files}
 \usage{
 makeAggregatedDataset(source.dir, ncml.file, file.ext = "nc",
-  aggr.dim = "time", pattern = NULL, recursive = FALSE, verbose = TRUE)
+  aggr.dim = "time", pattern = NULL, recursive = FALSE, verbose = TRUE,
+  timeUnitsChange = TRUE)
 }
 \arguments{
 \item{source.dir}{Parent directory containing the files to be aggregated}
@@ -31,6 +32,10 @@ each variable is stored in a sepparate subdirectory.}
 
 \item{verbose}{Logical. Should additional information of the NcML file creation
 steps be printed on screen?. Default to \code{TRUE}.}
+
+\item{timeUnitsChange}{Logical. Set the timeUnitsChange option,
+useful when aggregating many files across the time dimension which have relative time axis.
+Default to \code{TRUE}.}
 }
 \value{
 Creates a NcML file at the specified location.
@@ -69,5 +74,5 @@ Other loading: \code{\link{loadGridData}},
   \code{\link{loadStationData}}
 }
 \author{
-J. Bedia
+J. Bedia, with contributions of E. Tourigny and A. Cofiño
 }

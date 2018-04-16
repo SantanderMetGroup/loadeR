@@ -1,9 +1,8 @@
 loadeR
 ======
 
-* Enable the 'member' option in `loadGridData`, for grids with the Ensemble dimension (but not RunTime)
-* The `$xyCoords` element of station datasets is now a `data.fame` instead of a `matrix`
-* Added new metadata to the ouputs of `loadGridData` and `loadSeasonalForecast` (package version, URL etc.)
-* Update in UDG vocabulary ("tp" --> "pr")
-* Other minor enhancements and documentation updates
-
+* New PUBLIC UDG datasets now available trough `loadGridData` using abbreviated dataset labels (instead of full URLs). Data harmonization is performed on-the-fly. 
+ * For an overview of these datasets, use the new helper `UDG.datasets()`
+* Internal change to alter `treshold` value when transforming non-standard variables via dictionary
+* Other minor documentation updates and internal changes
+* NOTE: version used in the submitted paper to EMS on 29 Mar 2018

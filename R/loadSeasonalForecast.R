@@ -36,8 +36,6 @@
 #' @importFrom utils tail
 #' @export
 #' @author J. Bedia
-#' @import rJava
-#' 
 
 loadSeasonalForecast <- function(dataset,
                                  var,
@@ -51,133 +49,135 @@ loadSeasonalForecast <- function(dataset,
                                  time = "none",
                                  aggr.d = "none",
                                  aggr.m = "none") {
-      time <- match.arg(time, choices = c("none","00","03","06","09","12","15","18","21","DD"))
-      aggr.d <- match.arg(aggr.d, choices = c("none", "mean", "min", "max", "sum"))
-      if (time != "DD" & aggr.d != "none") {
-            aggr.d <- "none"
-            message("NOTE: Argument 'aggr.d' ignored as 'time' was set to ", time)
-      }
-      aggr.m <- match.arg(aggr.m, choices = c("none", "mean", "min", "max", "sum"))
-      aux.level <- findVerticalLevel(var)
-      var <- aux.level$var
-      level <- aux.level$level
-      leadMonth <- as.integer(leadMonth)
-      # Dictionary lookup
-      cd <- check.dictionary(dataset, var, dictionary, time)
-      shortName <- cd$shortName
-      dic <- cd$dic
-      if (!is.null(season) && (min(season) < 1 | max(season) > 12)) {
-            stop("Invalid season definition", call. = FALSE)
-      }
-      if (!is.null(dic)) {
-            if (dic$time_step == "MM" && aggr.d != "none") {
-                  aggr.m <- "none"
-                  message("NOTE: The dataset is already monthly. Argument 'aggr.m' ignored")
-            }
-      }
-      if (is.null(season)) {
-            stop("Argument 'season' must be provided")
-      }
-      if (min(season) < 1 | max(season) > 12) {
-            stop("Invalid season definition")
-      }
-      # Discover dataset ---------------
-      gds <- openDataset(dataset)
-      grid <- gds$findGridByShortName(shortName)
-      if (is.null(grid)) {
-            stop("Variable requested not found\nCheck 'dataInventory' output and/or dictionary 'identifier'.", call. = FALSE)
-      }
-      # Geolocation ---------------
-      latLon <- getLatLonDomain(grid, lonLim, latLim)
-      proj <- grid$getCoordinateSystem()$getProjection()
-      if (!proj$isLatLon()) latLon <- adjustRCMgrid(gds, latLon, lonLim, latLim)
-      # Runtime collocation -------
-      runTimePars <- getRunTimeDomain.seasonal(dataset, grid, members,season, years, leadMonth)
-      #if (grepl("^System4", dataset)) {
-      # Member definition ----------
-      memberRangeList <- getMemberDomain(grid, members)
-      # Forecast time collocation ---------
-      foreTimePars <- getForecastTimeDomain(grid, dataset, dic, runTimePars, time, aggr.d, aggr.m)
-      # Vertical level collocation ----------
-      verticalPars <- getVerticalLevelPars(grid, level)
-      # Subsetting -------------
-      cube <- makeSubset.seasonal(grid, latLon, runTimePars, memberRangeList, foreTimePars, verticalPars)
-      # Attribute definition ------
-      foreTimePars <- NULL
-      if (!is.null(dic)) {
-            isStandard <- TRUE
-            cube$mdArray <- dictionaryTransformForecast(dic, cube$mdArray)
-      } else {
-            isStandard <- FALSE
-      }
-      if (isTRUE(latLon$revLat)) {
-            cube$mdArray <- revArrayLatDim(cube$mdArray, grid)
-      }
-      # formatting initialization dates
-      runTimePars$runDates <- format(as.POSIXct(runTimePars$runDates, tz = "GMT"),
-                                     format = "%Y-%m-%d %H:%M:%S", usetz = TRUE)
-      # Static fields
-      if (!is.null(dic)){
-            if(dic$time_step == "static") {
-                  runTimePars$runDates <- NA
-                  names(memberRangeList) <- NA
-            }
-      }
-      # Variable attributes -------
-      Variable <- list("varName" = var, "level" = level)
-      attr(Variable, "use_dictionary") <- isStandard
-      attr(Variable, "description") <- grid$getDescription()
-      if (isStandard) {
-            vocabulary <- UDG.vocabulary()
-            attr(Variable, "units") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier), 3])
-            attr(Variable, "longname") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier), 2])
-      } else {
-            attr(Variable, "units") <- tryCatch(grid$getUnitsString(),
-                                                error = function(err) {
-                                                      err <- "undefined"
-                                                      return(err)
-                                                })
-            attr(Variable, "longname") <- tryCatch(grid$getFullName(),
-                                                   error = function(err) {
-                                                         err <- "undefined"
-                                                         return(err)
-                                                })
-      }
-      attr(Variable, "daily_agg_cellfun") <- cube$foreTimePars$aggr.d
-      attr(Variable, "monthly_agg_cellfun") <- cube$foreTimePars$aggr.m
-      attr(Variable, "verification_time") <- time
-      # Output list -------------------
-      out <- list("Variable" = Variable,
-                  "Data" = cube$mdArray,
-                  "xyCoords" = latLon$xyCoords,
-                  "Dates" = cube$foreTimePars$forecastDates,
-                  "InitializationDates" = runTimePars$runDates,
-                  "Members" = names(memberRangeList))
-      gds$close()
-      # Other attributes -----------------
-      attr(out$xyCoords, "projection") <- proj$toString()
-      attr(out, "resX") <- (tail(out$xyCoords$x, 1) - out$xyCoords$x[1]) / (length(out$xyCoords$x) - 1)
-      attr(out, "resY") <- (tail(out$xyCoords$y, 1) - out$xyCoords$y[1]) / (length(out$xyCoords$y) - 1)
-      if("lon" %in% names(out$xyCoords)){
-            attr(out, "resLON") <- NA 
-            attr(out, "resLAT") <- NA
-      } 
-      x <- attr(out$Data, "dimensions")
-      if (length(x) > 1) {
-            tab <- c("member", "time", "level", "lat", "lon")
-            b <- na.exclude(match(tab, x))
-            dimNames <- attr(out$Data, "dimensions")[b]
-            out$Data <- aperm(out$Data, perm = b)
-            attr(out$Data, "dimensions") <- dimNames
-      }
-      attr(out, "dataset") <- dataset
-      attr(out, "R_package_desc") <- paste0("loadeR-v", packageVersion("loadeR"))
-      attr(out, "R_package_URL") <- "https://github.com/SantanderMetGroup/loadeR"
-      attr(out, "R_package_ref") <- "http://dx.doi.org/10.1016/j.cliser.2017.07.001"
-      if (grepl("http://meteo\\.unican\\.es", dataset)) {
-            attr(out, "source") <- "User Data Gateway"
-            attr(out, "URL") <- "<http://meteo.unican.es/udg-wiki>"
-      }
-      message("[", Sys.time(), "]", " Done")
-      return(out)
+  time <- match.arg(time, choices = c("none","00","03","06","09","12","15","18","21","DD"))
+  aggr.d <- match.arg(aggr.d, choices = c("none", "mean", "min", "max", "sum"))
+  if (time != "DD" & aggr.d != "none") {
+    aggr.d <- "none"
+    message("NOTE: Argument 'aggr.d' ignored as 'time' was set to ", time)
+  }
+  aggr.m <- match.arg(aggr.m, choices = c("none", "mean", "min", "max", "sum"))
+  aux.level <- findVerticalLevel(var)
+  var <- aux.level$var
+  level <- aux.level$level
+  leadMonth <- as.integer(leadMonth)
+  # Dictionary lookup
+  cd <- check.dictionary(dataset, var, dictionary, time)
+  shortName <- cd$shortName
+  dic <- cd$dic
+  if (!is.null(season) && (min(season) < 1 | max(season) > 12)) {
+    stop("Invalid season definition", call. = FALSE)
+  }
+  if (!is.null(dic)) {
+    if (dic$time_step == "MM" && aggr.d != "none") {
+      aggr.m <- "none"
+      message("NOTE: The dataset is already monthly. Argument 'aggr.m' ignored")
+    }
+  }
+  if (is.null(season)) {
+    stop("Argument 'season' must be provided")
+  }
+  if (min(season) < 1 | max(season) > 12) {
+    stop("Invalid season definition")
+  }
+  # Discover dataset ---------------
+  gds <- openDataset(dataset)
+  grid <- gds$findGridByShortName(shortName)
+  if (is.null(grid)) {
+    stop("Variable requested not found\nCheck 'dataInventory' output and/or dictionary 'identifier'.", call. = FALSE)
+  }
+  # Geolocation ---------------
+  latLon <- getLatLonDomain(grid, lonLim, latLim)
+  proj <- grid$getCoordinateSystem()$getProjection()
+  if (!proj$isLatLon()) latLon <- adjustRCMgrid(gds, latLon, lonLim, latLim)
+  # Runtime collocation -------
+  runTimePars <- getRunTimeDomain.seasonal(dataset, grid, members,season, years, leadMonth)
+  #if (grepl("^System4", dataset)) {
+  # Member definition ----------
+  memberRangeList <- getMemberDomain(grid, members)
+  # Forecast time collocation ---------
+  foreTimePars <- getForecastTimeDomain(grid, dataset, dic, runTimePars, time, aggr.d, aggr.m)
+  # Vertical level collocation ----------
+  verticalPars <- getVerticalLevelPars(grid, level)
+  # Subsetting -------------
+  cube <- makeSubset.seasonal(grid, latLon, runTimePars, memberRangeList, foreTimePars, verticalPars)
+  # Attribute definition ------
+  foreTimePars <- NULL
+  if (!is.null(dic)) {
+    isStandard <- TRUE
+    cube$mdArray <- dictionaryTransformForecast(dic, cube$mdArray)
+  } else {
+    isStandard <- FALSE
+  }
+  if (isTRUE(latLon$revLat)) {
+    cube$mdArray <- revArrayLatDim(cube$mdArray)
+  }
+  # formatting initialization dates
+  runTimePars$runDates <- format(as.POSIXct(runTimePars$runDates, tz = "GMT"),
+                                 format = "%Y-%m-%d %H:%M:%S", usetz = TRUE)
+  # Static fields
+  if (!is.null(dic)) {
+    if (dic$time_step == "static") {
+      runTimePars$runDates <- NA
+      names(memberRangeList) <- NA
+    }
+  }
+  # Variable attributes -------
+  Variable <- list("varName" = var, "level" = level)
+  attr(Variable, "use_dictionary") <- isStandard
+  attr(Variable, "description") <- grid$getDescription()
+  if (isStandard) {
+    vocabulary <- C4R.vocabulary()
+    attr(Variable, "units") <- as.character(vocabulary[grep(paste0("^", var, "$"),
+                                                            vocabulary$identifier), 3])
+    attr(Variable, "longname") <- as.character(vocabulary[grep(paste0("^", var, "$"),
+                                                               vocabulary$identifier), 2])
+  } else {
+    attr(Variable, "units") <- tryCatch(grid$getUnitsString(),
+                                        error = function(err) {
+                                          err <- "undefined"
+                                          return(err)
+                                        })
+    attr(Variable, "longname") <- tryCatch(grid$getFullName(),
+                                           error = function(err) {
+                                             err <- "undefined"
+                                             return(err)
+                                           })
+  }
+  attr(Variable, "daily_agg_cellfun") <- cube$foreTimePars$aggr.d
+  attr(Variable, "monthly_agg_cellfun") <- cube$foreTimePars$aggr.m
+  attr(Variable, "verification_time") <- time
+  # Output list -------------------
+  out <- list("Variable" = Variable,
+              "Data" = cube$mdArray,
+              "xyCoords" = latLon$xyCoords,
+              "Dates" = cube$foreTimePars$forecastDates,
+              "InitializationDates" = runTimePars$runDates,
+              "Members" = names(memberRangeList))
+  gds$close()
+  # Other attributes -----------------
+  attr(out$xyCoords, "projection") <- proj$toString()
+  attr(out, "resX") <- (tail(out$xyCoords$x, 1) - out$xyCoords$x[1]) / (length(out$xyCoords$x) - 1)
+  attr(out, "resY") <- (tail(out$xyCoords$y, 1) - out$xyCoords$y[1]) / (length(out$xyCoords$y) - 1)
+  if ("lon" %in% names(out$xyCoords)) {
+    attr(out, "resLON") <- NA 
+    attr(out, "resLAT") <- NA
+  } 
+  x <- attr(out$Data, "dimensions")
+  if (length(x) > 1) {
+    tab <- c("member", "time", "level", "lat", "lon")
+    b <- na.exclude(match(tab, x))
+    dimNames <- attr(out$Data, "dimensions")[b]
+    out$Data <- aperm(out$Data, perm = b)
+    attr(out$Data, "dimensions") <- dimNames
+  }
+  attr(out, "dataset") <- dataset
+  attr(out, "R_package_desc") <- paste0("loadeR-v", packageVersion("loadeR"))
+  attr(out, "R_package_URL") <- "https://github.com/SantanderMetGroup/loadeR"
+  attr(out, "R_package_ref") <- "http://dx.doi.org/10.1016/j.cliser.2017.07.001"
+  if (grepl("http://meteo\\.unican\\.es", dataset)) {
+    attr(out, "source") <- "User Data Gateway"
+    attr(out, "URL") <- "<http://meteo.unican.es/udg-wiki>"
+  }
+  message("[", Sys.time(), "]", " Done")
+  return(out)
 }
