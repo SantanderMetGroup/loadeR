@@ -1,4 +1,4 @@
-#     writeStations.R Load a user-defined spatio-temporal slice from a gridded dataset
+#     writeStationData.R Write a station object to Value format
 #
 #     Copyright (C) 2017 Santander Meteorology Group (http://www.meteo.unican.es)
 #
@@ -14,16 +14,14 @@
 # 
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#' @title Load a grid from a gridded dataset
-#' @description Convert to Value format or to netcdf a station dataset.
+#' @title Write to Value format
+#' @description Write to Value format
 #' @param obj Object as returned from \code{\link[loadeR]{loadStationData}}.
-#' @param path A string. Specify the path where to save the .netcdf or the .txt.
+#' @param path A string. Specify the path where to save the .txt.
 #' @param na.code Possible values are NA or NaN. Default is NA. Indicates how missing values should be specified.
-#' @param type A string c("Value","netcdf"). To what format would you like to convert your data?
 #' @export
-#' @author J. Bano, M. Iturbide
-writeStations <- function(obj, path, na.code = NA, type = c("Value","netcdf")) {
-  if (type == "Value") {
+#' @author J. Bano
+writeStations <- function(obj, path, na.code = NA) {
     df <- matrix(data = NA, nrow = length(obj$Dates$start), ncol = length(obj$Metadata$station_id)+1)
     colnames(df) <- c("YYYYMMDD",obj$Metadata$station_id)
     df[,1] <- sapply(1:length(obj$Dates$start), FUN = function(z) {
@@ -34,6 +32,5 @@ writeStations <- function(obj, path, na.code = NA, type = c("Value","netcdf")) {
     if (anyNA(df)) {
       df[which(is.na(df))] <- na.code
     }
-  }
   write.csv(df,file = path,sep = ",", quote = FALSE, row.names = FALSE)
 }
