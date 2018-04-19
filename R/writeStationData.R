@@ -21,7 +21,7 @@
 #' @param na.code Possible values are NA or NaN. Default is NA. Indicates how missing values should be specified.
 #' @export
 #' @author J. Bano
-writeStations <- function(obj, path, na.code = NA) {
+writeStationData <- function(obj, path, na.code = NA) {
     df <- matrix(data = NA, nrow = length(obj$Dates$start), ncol = length(obj$Metadata$station_id)+1)
     colnames(df) <- c("YYYYMMDD",obj$Metadata$station_id)
     df[,1] <- sapply(1:length(obj$Dates$start), FUN = function(z) {
