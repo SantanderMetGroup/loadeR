@@ -19,8 +19,11 @@
 #' @param obj Object as returned from \code{\link[loadeR]{loadStationData}}.
 #' @param path A string. Specify the path where to save the .txt.
 #' @param na.code Possible values are NA or NaN. Default is NA. Indicates how missing values should be specified.
+#' @importFrom utils write.csv
 #' @export
 #' @author J. Bano
+#' 
+#' 
 writeStationData <- function(obj, path, na.code = NA) {
     df <- matrix(data = NA, nrow = length(obj$Dates$start), ncol = length(obj$Metadata$station_id)+1)
     colnames(df) <- c("YYYYMMDD",obj$Metadata$station_id)
