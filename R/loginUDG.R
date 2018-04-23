@@ -40,9 +40,12 @@ loginUDG <- function(username, password, proxy.host = NULL, proxy.port = NULL) {
             }
       }
       if (!is.null(proxy.host)) {
-            J("ucar.nc2.util.net.HTTPSession")$setGlobalProxy(proxy.host, proxy.port)
+            J("ucar.httpservices.HTTPSession")$setGlobalProxy(proxy.host, proxy.port)
       }
-      J("ucar.httpservices.MyHTTPFactory")$setCredentials(username, password)
+      upc=new(J("org.apache.http.auth.UsernamePasswordCredentials"),username,password)
+      hs=J("ucar.httpservices.HTTPSession")
+      hs$setGlobalCredentials(upc)
+      hs$setGlobalUserAgent("loadeR/netcdf-java")
 }
 # End
 
