@@ -38,9 +38,9 @@ it will be ignored.}
 \code{\link[base]{timezones}} for details). Default to unspecified (i.e. \code{tz = ""}).}
 
 \item{projection}{Optional. Coordinate projection that is passed to attribute \code{projection} in the 
-output object, providing geo-referencing information for more advanced spatial operations/conversions, 
-in the form of a character string following the \href{http://trac.osgeo.org/proj/}{PROJ.4 specifications}. 
-Default is set to the most common projection used for station data, this is, WGS84 longitude latitude coordinates.}
+output object, providing geo-referencing information for more advanced spatial operations/conversions.
+Preferable, this should be indicated in the form of CRS character string following the
+ \href{http://trac.osgeo.org/proj/}{PROJ.4 specifications}. Default is set to WGS84 lon-lat coordinates.}
 
 \item{units}{Optional (but strongly advised when possible). This is a character string indicating the units
 of the variable. This should be whenever possible compatible with the udunits valid (\dQuote{parseable})
