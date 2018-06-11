@@ -267,6 +267,7 @@ loadGridDataset <- function(var, grid, dic, level, season, years, members, time,
       timePars <- getTimeDomain(grid, dic, season, years, time, aggr.d, aggr.m, threshold, condition)
       levelPars <- getVerticalLevelPars(grid, level)
       cube <- makeSubset(grid, timePars, levelPars, latLon, memberPars)
+      orig.hh.timeres <- timePars$timeResInSeconds / 3600
       timePars <- NULL
       isStandard <- FALSE
       if (!is.null(dic)) isStandard <- TRUE
@@ -276,21 +277,37 @@ loadGridDataset <- function(var, grid, dic, level, season, years, members, time,
       if (isTRUE(latLon$revLat)) {
             cube$mdArray <- revArrayLatDim(cube$mdArray)
       }
+      Dates <- adjustDates(cube$timePars)
       Variable <- list("varName" = var, "level" = levelPars$level)
       attr(Variable, "use_dictionary") <- isStandard
       attr(Variable, "description") <- grid$getDescription()
       if (isStandard) {
-            vocabulary <- C4R.vocabulary()
-            attr(Variable, "units") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier), 3])
-            attr(Variable, "longname") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier), 2])
+          vocabulary <- C4R.vocabulary()
+          uds <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier), 3])
+          attr(Variable, "units") <- uds
+          attr(Variable, "longname") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier), 2])
       } else {
-            attr(Variable, "units") <- grid$getUnitsString()
-            attr(Variable, "longname") <- grid$getFullName()
+          uds <- grid$getUnitsString()
+          attr(Variable, "units") <- uds
+          attr(Variable, "longname") <- grid$getFullName()
+      }
+      if (!is.null(threshold)) { # Update variable metadata for threshold exceedance counts
+          tu <- timeUnits(orig.hh.timeres)
+          attr(Variable, "units") <- tu
+          ineq <- switch(condition,
+                         "GT" = ">",
+                         "GE" = ">=",
+                         "LT" = "<",
+                         "LE" = "<=")
+          attr(Variable, "longname") <- paste("Number of", tu, "when", var, ineq, threshold, uds)
+          Variable$varName <- "Frequency Index"
+          attr(Variable, "description") <- paste0(var, "-based threshold exceedance count index")
       }
       attr(Variable, "daily_agg_cellfun") <- cube$timePars$aggr.d
       attr(Variable, "monthly_agg_cellfun") <- cube$timePars$aggr.m
       attr(Variable, "verification_time") <- time
-      out <- list("Variable" = Variable, "Data" = cube$mdArray, "xyCoords" = latLon$xyCoords, "Dates" = adjustDates(cube$timePars))
+      
+      out <- list("Variable" = Variable, "Data" = cube$mdArray, "xyCoords" = latLon$xyCoords, "Dates" = Dates)
       return(out)
 }
 # End
@@ -333,3 +350,39 @@ ndays <- function(d) {
       as.difftime(tail((28:31)[which(!is.na(as.Date(paste0(substr(d, 1, 8), 28:31), '%Y-%m-%d')))], 1), units = "days")
 }
 #End
+
+#' @title time units
+#' @description Internal helper to check time resolution
+#' @details When calculating threshold exceedance counts, the units attribute need to be updated via this internal.
+#' @note This functionality is similar to \code{getTimeResolution} in \pkg{transformeR}.
+#'  It is introduced here for internal use only in loadGridData to avoid the transformeR dependency, 
+#'  but shouldn't be used elsewhere.
+#' @param dft A time step (numeric), in hours
+#' @return The time units
+#' @keywords internal
+#' @author J Bedia
+
+
+timeUnits <- function(dft) {
+    out <- if (dft == 1) {
+        "1h"
+    } else if (dft == 3) {
+        "3h"    
+    } else if (dft == 6) {
+        "6h"
+    } else if (dft == 12) {
+        "12h"
+    } else if (dft == 24) {
+        "days"
+    } else if (dft >= 672 & dft <= 744) {
+        "months"
+    } else if (dft >= 8640 & dft <= 8784) {
+        "years"
+    } else {
+        "undefined"
+    }
+    return(out)
+}
+
+
+
