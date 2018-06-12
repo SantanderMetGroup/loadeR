@@ -10,11 +10,12 @@ Imports:
 Suggests:
     loadeR.ECOMS,
     transformeR,
+    visualizeR,
     downscaleR
 Type: Package
-Title: The generic data loading package of the climate4R Bundle
-Version: 1.4.0
-Date: 2018-03-28
+Title: The generic data loading package of the climate4R suite <http://meteo.unican.es/climate4r>
+Version: 1.4.1
+Date: 2018-06-11
 Authors@R: as.person(c(
     "Santander Meteorology Group <http://meteo.unican.es> [cph]",
     "Joaquín Bedia <bediaj@unican.es> [aut,cre]",

@@ -1,6 +1,6 @@
-# loadStationData.R Load station data in standard ASCII format
+#     loadStationData.R Load station data in standard ASCII format
 #
-#     Copyright (C) 2015 Santander Meteorology Group (http://www.meteo.unican.es)
+#     Copyright (C) 2018 Santander Meteorology Group (http://www.meteo.unican.es)
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -24,9 +24,12 @@
 #' (i.e., if the time zone of the dataset does not correspond to the system-specific one; see
 #' \code{\link[base]{timezones}} for details). Default to unspecified (i.e. \code{tz = ""}).
 #' @param projection Optional. Coordinate projection that is passed to attribute \code{projection} in the 
-#' output object, providing geo-referencing information for more advanced spatial operations/conversions, 
-#' in the form of a character string following the \href{http://trac.osgeo.org/proj/}{PROJ.4 specifications}. 
-#' Default is set to the most common projection used for station data, this is, WGS84 longitude latitude coordinates.
+#' output object, providing geo-referencing information for more advanced spatial operations/conversions.
+#' Preferable, this should be indicated in the form of CRS character string following the
+#'  \href{http://trac.osgeo.org/proj/}{PROJ.4 specifications}. Default is set to WGS84 lon-lat coordinates.
+#' @param units Optional (but strongly advised when possible). This is a character string indicating the units
+#' of the variable. This should be whenever possible compatible with the udunits valid (\dQuote{parseable})
+#'  definitions. See \code{C4R.vocabulary()} for examples of standard unit string definitions.
 #' 
 #' @return a list with the following elements:
 #' \itemize{
@@ -49,7 +52,9 @@
 #' @importFrom utils unzip
 #' @importFrom stats setNames
 #' 
-#' @references \url{https://github.com/SantanderMetGroup/downscaleR/wiki/Observation-Data-format} 
+#' @references 
+#' \url{https://github.com/SantanderMetGroup/loadeR/wiki/Standard-(ASCII)-format-for-station-data} 
+#' 
 #' @export 
 #' @author J. Bedia
 #' 
@@ -64,109 +69,112 @@ loadStationData <- function(dataset,
                             season = NULL, 
                             years = NULL, 
                             tz = "", 
-                            projection = "+proj=longlat +init=epsg:4326 +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0") {
-      if (grepl("\\.zip$", dataset)) {
-            unzcond <- unz
-            zipFileContents <- unzip(dataset, list = TRUE)$Name
-      } else {
-            # unzcond <- function(...){params <- list(...); return(params$filename)}
-            unzcond <- function(description, filename){paste0(description, "/", filename)}
-            zipFileContents <- list.files(dataset)
-      }
-      if ((!is.null(lonLim) | !is.null(latLim)) & !is.null(stationID)) { 
-            lonLim <- NULL 
-            latLim <- NULL
-            warning("lonLim/latLim arguments ignored as Station Codes have been specified.", call. = FALSE)
-      }
-      # Reading stations from zip file
-      stations.file <- grep("stations\\.", zipFileContents, ignore.case = TRUE, value = TRUE)
-      if (any(grepl("MACOSX", stations.file))) {
-            stations.file <- stations.file[-grep("MACOSX", stations.file)]
-      }      
-      aux <- read.csv(unzcond(description = dataset, filename = stations.file), stringsAsFactors = FALSE, strip.white = TRUE)
-      # Station codes
-      trim <- function(x) gsub("^\\s+|\\s+$", "", x)
-      stids <- trim(read.csv(unzcond(dataset, stations.file), colClasses = "character")[ ,grep("station_id", names(aux), ignore.case = TRUE)])
-      if (!is.null(stationID)) {
-            stInd <- match(stationID, stids)
-            if (any(is.na(stInd))) {
-                  stop("'stationID' values not found.\nCheck data inventory", call. = FALSE)
-            }
-      } else {
-            stInd <- 1:length(stids)
-      }
-      ## Longitude and latitude
-      lons <- aux[ , grep("^longitude$", names(aux), ignore.case = TRUE)]
-      lats <- aux[ , grep("^latitude$", names(aux), ignore.case = TRUE)]
-      if (!is.null(lonLim) | !is.null(latLim)) {
-            if (is.null(lonLim)) lonLim <- range(lons)
-            if (is.null(latLim)) latLim <- range(lats)
-            latLon <- getLatLonDomainStations(lonLim, latLim, lons, lats)
-            if (length(latLon$stInd) == 0) {
-                  stop("No stations were found in the selected spatial domain", call. = FALSE)
-            }
-            stInd <- latLon$stInd
-            coords <- setNames(data.frame(latLon$stCoords), nm = c("x", "y"))
-            latLon <- NULL
-      } else {
-             coords <- setNames(data.frame(matrix(cbind(lons, lats)[stInd, ], ncol = 2)), nm = c("x", "y"))
-      }
-      stids <- stids[stInd]
-      ##############################################
-      #dimnames(coords) <- list(stids, c("longitude", "latitude"))
-      attr(coords, "projection") <- projection
-      attr(coords, "resX") <- 0
-      attr(coords, "resY") <- 0
-      ################################################
-      ## Time dimension
-      # TODO - fix potential MACOSX errors
-      fileInd <- grep(paste(var, "\\.txt", sep = ""), zipFileContents)
-      if (any(grepl("MACOSX", zipFileContents[fileInd]))) {
-            fileInd <- fileInd[-grep("MACOSX", zipFileContents[fileInd])]
-      } 
-      if (length(fileInd) == 0) {
-            stop("[", Sys.time(),"] Variable requested not found", call. = FALSE)
-      }
-      timeString <- read.csv(unzcond(dataset, zipFileContents[fileInd]), colClasses = "character")[ ,1]
-      timeDates <- string2date(timeString, tz = tz)
-      timeString <- NULL
-      timePars <- getTimeDomainStations(timeDates, season, years)
-      ## missing data code
-      varInd <- grep("variables", zipFileContents, ignore.case = TRUE)
-      if (any(grepl("MACOSX", zipFileContents[varInd]))) {
-            varInd <- varInd[-grep("MACOSX", zipFileContents[varInd])]
-      } 
-      vars <- read.csv(unzcond(dataset, zipFileContents[varInd]))
-      miss.col <- grep("missing_code", names(vars), ignore.case = TRUE)
-      if (length(miss.col) > 0) {
-            na.string <- vars[grep(var, vars[ , grep("variable", names(vars), ignore.case = TRUE)]), miss.col]
-            vars <- NULL
-            miss.col <- NULL
-      } else {
-            na.string <- NA
-      }
-      # Data retrieval
-      message("[", Sys.time(), "] Loading data ...", sep = "")
-      var.stids <- lapply(strsplit(readLines(unzcond(dataset, zipFileContents[fileInd]), 1), split = ","), FUN = trimws)
-      var.stids <- tail(unlist(var.stids), -1)
-      closeAllConnections() 
-      stInd.var <- match(stids, var.stids)
-      Data <- unname(as.matrix(read.csv(unzcond(dataset, zipFileContents[fileInd]), na.strings = na.string)[timePars$timeInd, stInd.var + 1]))
-      # Metadata
-      message("[", Sys.time(), "] Retrieving metadata ...", sep = "")
-      # Assumes that at least station ids must exist, and therefore meta.list is never empty
-      ind.meta <- c(1:length(names(aux)))[-pmatch(c("longitude", "latitude", "station_id"), names(aux))]
-      meta.list <- list()
-      meta.list[[1]] <- stids
-      for (i in 1:length(ind.meta)) {
-            meta.list[[i + 1]] <- aux[stInd, ind.meta[i]]
-      }
-      names(meta.list) <- c("station_id", names(aux)[ind.meta])
-      aux <- NULL  
-      out <- list("Variable" = list("varName" = var), "Data" = Data, "xyCoords" = coords, "Dates" = timeBoundsValue(timePars$timeDates, tz), "Metadata" = meta.list)
-      attr(out$Data, "dimensions") <- c("time", "loc")
-      message(paste("[", Sys.time(), "] Done.", sep = ""))
-      return(out)
+                            projection = "+proj=longlat +init=epsg:4326 +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0",
+                            units = NULL) {
+    if (grepl("\\.zip$", dataset)) {
+        unzcond <- unz
+        zipFileContents <- unzip(dataset, list = TRUE)$Name
+    } else {
+        # unzcond <- function(...){params <- list(...); return(params$filename)}
+        unzcond <- function(description, filename){paste0(description, "/", filename)}
+        zipFileContents <- list.files(dataset)
+    }
+    if ((!is.null(lonLim) | !is.null(latLim)) & !is.null(stationID)) { 
+        lonLim <- NULL 
+        latLim <- NULL
+        warning("lonLim/latLim arguments ignored as Station Codes have been specified.", call. = FALSE)
+    }
+    # Reading stations from zip file
+    stations.file <- grep("stations\\.", zipFileContents, ignore.case = TRUE, value = TRUE)
+    if (any(grepl("MACOSX", stations.file))) {
+        stations.file <- stations.file[-grep("MACOSX", stations.file)]
+    }      
+    aux <- read.csv(unzcond(description = dataset, filename = stations.file), stringsAsFactors = FALSE, strip.white = TRUE)
+    # Station codes
+    trim <- function(x) gsub("^\\s+|\\s+$", "", x)
+    stids <- trim(read.csv(unzcond(dataset, stations.file), colClasses = "character")[ ,grep("station_id", names(aux), ignore.case = TRUE)])
+    if (!is.null(stationID)) {
+        stInd <- match(stationID, stids)
+        if (any(is.na(stInd))) {
+            stop("'stationID' values not found.\nCheck data inventory", call. = FALSE)
+        }
+    } else {
+        stInd <- 1:length(stids)
+    }
+    ## Longitude and latitude
+    lons <- aux[ , grep("^longitude$", names(aux), ignore.case = TRUE)]
+    lats <- aux[ , grep("^latitude$", names(aux), ignore.case = TRUE)]
+    if (!is.null(lonLim) | !is.null(latLim)) {
+        if (is.null(lonLim)) lonLim <- range(lons)
+        if (is.null(latLim)) latLim <- range(lats)
+        latLon <- getLatLonDomainStations(lonLim, latLim, lons, lats)
+        if (length(latLon$stInd) == 0) {
+            stop("No stations were found in the selected spatial domain", call. = FALSE)
+        }
+        stInd <- latLon$stInd
+        coords <- setNames(data.frame(latLon$stCoords), nm = c("x", "y"))
+        latLon <- NULL
+    } else {
+        coords <- setNames(data.frame(matrix(cbind(lons, lats)[stInd, ], ncol = 2)), nm = c("x", "y"))
+    }
+    stids <- stids[stInd]
+    ##############################################
+    #dimnames(coords) <- list(stids, c("longitude", "latitude"))
+    attr(coords, "projection") <- projection
+    attr(coords, "resX") <- 0
+    attr(coords, "resY") <- 0
+    ################################################
+    ## Time dimension
+    # TODO - fix potential MACOSX errors
+    fileInd <- grep(paste(var, "\\.txt", sep = ""), zipFileContents)
+    if (any(grepl("MACOSX", zipFileContents[fileInd]))) {
+        fileInd <- fileInd[-grep("MACOSX", zipFileContents[fileInd])]
+    } 
+    if (length(fileInd) == 0) {
+        stop("[", Sys.time(),"] Variable requested not found", call. = FALSE)
+    }
+    timeString <- read.csv(unzcond(dataset, zipFileContents[fileInd]), colClasses = "character")[ ,1]
+    timeDates <- string2date(timeString, tz = tz)
+    timeString <- NULL
+    timePars <- getTimeDomainStations(timeDates, season, years)
+    ## missing data code
+    varInd <- grep("variables", zipFileContents, ignore.case = TRUE)
+    if (any(grepl("MACOSX", zipFileContents[varInd]))) {
+        varInd <- varInd[-grep("MACOSX", zipFileContents[varInd])]
+    } 
+    vars <- read.csv(unzcond(dataset, zipFileContents[varInd]))
+    miss.col <- grep("missing_code", names(vars), ignore.case = TRUE)
+    if (length(miss.col) > 0) {
+        na.string <- vars[grep(var, vars[ , grep("variable", names(vars), ignore.case = TRUE)]), miss.col]
+        vars <- NULL
+        miss.col <- NULL
+    } else {
+        na.string <- NA
+    }
+    # Data retrieval
+    message("[", Sys.time(), "] Loading data ...", sep = "")
+    var.stids <- lapply(strsplit(readLines(unzcond(dataset, zipFileContents[fileInd]), 1), split = ", "), FUN = trim)
+    var.stids <- tail(unlist(var.stids), -1)
+    closeAllConnections() 
+    stInd.var <- match(stids, var.stids)
+    Data <- unname(as.matrix(read.csv(unzcond(dataset, zipFileContents[fileInd]), na.strings = na.string)[timePars$timeInd, stInd.var + 1]))
+    # Metadata
+    message("[", Sys.time(), "] Retrieving metadata ...", sep = "")
+    # Assumes that at least station ids must exist, and therefore meta.list is never empty
+    ind.meta <- c(1:length(names(aux)))[-pmatch(c("longitude", "latitude", "station_id"), names(aux))]
+    meta.list <- list()
+    meta.list[[1]] <- stids
+    for (i in 1:length(ind.meta)) {
+        meta.list[[i + 1]] <- aux[stInd, ind.meta[i]]
+    }
+    names(meta.list) <- c("station_id", names(aux)[ind.meta])
+    aux <- NULL  
+    out <- list("Variable" = list("varName" = var), "Data" = Data, "xyCoords" = coords, "Dates" = timeBoundsValue(timePars$timeDates, tz), "Metadata" = meta.list)
+    attr(out$Variable, "units") <- units
+    if (is.null(units)) message("NOTE: The \'units\' argument is undefined: It is highly recommended to indicate this attribute\nThis can be made afterwards with transformeR's function \'setGridUnits\'")
+    attr(out$Data, "dimensions") <- c("time", "loc")
+    message(paste("[", Sys.time(), "] Done.", sep = ""))
+    return(out)
 }
 # End      
 
@@ -184,14 +192,14 @@ loadStationData <- function(dataset,
 #'  @author juaco
 
 string2date <- function(timeString, tz = tz) {
-      timeString = gsub("^\\s+|\\s+$", "", timeString)
-      if (nchar(timeString[1]) == 8) {
-            timeDates <- strptime(timeString, "%Y%m%d", tz = tz)  
-      }
-      if (nchar(timeString[1]) == 10) {
-            timeDates <- strptime(timeString, "%Y%m%d%H", tz = tz)
-      }
-      return(timeDates)
+    timeString = gsub("^\\s+|\\s+$", "", timeString)
+    if (nchar(timeString[1]) == 8) {
+        timeDates <- strptime(timeString, "%Y%m%d", tz = tz)  
+    }
+    if (nchar(timeString[1]) == 10) {
+        timeDates <- strptime(timeString, "%Y%m%d%H", tz = tz)
+    }
+    return(timeDates)
 }
 # End
 
@@ -204,13 +212,13 @@ string2date <- function(timeString, tz = tz) {
 #' @return A list with components start and end, of POSIXct dates
 
 timeBoundsValue <- function(timeDates, tz) {
-      varTimeStep <- difftime(timeDates[2], timeDates[1])
-      dateSliceStart <- as.POSIXct(timeDates)
-      dateSliceEnd <- as.POSIXct(as.POSIXlt(timeDates + varTimeStep))
-      usetz <- ifelse(identical(tz, ""), FALSE, TRUE)
-      dateSliceStart <- format.POSIXct(dateSliceStart, "%Y-%m-%d %H:%M:%S", usetz = usetz, tz = tz)
-      dateSliceEnd <- format.POSIXct(dateSliceEnd, "%Y-%m-%d %H:%M:%S", usetz = usetz, tz = tz)
-      return(list("start" = dateSliceStart, "end" = dateSliceEnd))
+    varTimeStep <- difftime(timeDates[2], timeDates[1])
+    dateSliceStart <- as.POSIXct(timeDates)
+    dateSliceEnd <- as.POSIXct(as.POSIXlt(timeDates + varTimeStep))
+    usetz <- ifelse(identical(tz, ""), FALSE, TRUE)
+    dateSliceStart <- format.POSIXct(dateSliceStart, "%Y-%m-%d %H:%M:%S", usetz = usetz, tz = tz)
+    dateSliceEnd <- format.POSIXct(dateSliceEnd, "%Y-%m-%d %H:%M:%S", usetz = usetz, tz = tz)
+    return(list("start" = dateSliceStart, "end" = dateSliceEnd))
 }
 # End
 
@@ -227,47 +235,47 @@ timeBoundsValue <- function(timeDates, tz) {
 #' @importFrom utils tail
 
 getTimeDomainStations <- function(timeDates, season, years) {
-      if (is.null(season)) {
-            season <- 1:12
-      }
-      allYears <- unique(timeDates$year + 1900)
-      startYear <- head(allYears, 1L)
-      endYear <- tail(allYears, 1L)
-      if (is.null(years)) {
-            years <- allYears
-      } 
-      if (years[1] < startYear & tail(years, 1L) > endYear) {
-            warning("Year selection out of dataset range. Only available years will be returned")
-            years <- allYears
-      }
-      if (years[1] < startYear) {
-            warning("First year in dataset: ", startYear,". Only available years will be returned")
-            years <- startYear:years[length(years)]
-      }
-      if (tail(years, 1L) > endYear) {
-            warning("Last year in dataset: ", endYear,". Only available years will be returned")
-            years <- years[1]:endYear
-      }
-      # Year-crossing seasons - year to take the initialization
-      if (!identical(season, sort(season))) {
-            if (years[1] == startYear) { 
-                  warning(paste("First forecast day in dataset: ", timeDates[1], ".\nRequested seasonal data for ", startYear," not available", sep=""))
-                  years <- years[-length(years)]
-            } else {
-                  years <- append(years[1] - 1, years)
-            }
-            timeInd <- which((timeDates$year + 1900) %in% years & (timeDates$mon + 1) %in% season)
-            crossSeason <- which(c(1, diff(season)) < 0)
-            rm.ind <- which((timeDates$mon + 1) %in% season[1 : (crossSeason - 1)] & (timeDates$year + 1900) %in% years[length(years)])
-            if (length(years) > 1) {
-                  rm.ind <- c(rm.ind, which((timeDates$mon + 1) %in% season[crossSeason : length(season)] & (timeDates$year + 1900) %in% years[1]))
-            }
-            timeInd <- setdiff(timeInd, rm.ind)
-      }else{
-            timeInd <- which((timeDates$year + 1900) %in% years & (timeDates$mon + 1) %in% season)
-      }  
-      timeDates <- timeDates[timeInd]
-      return(list("timeInd" = timeInd, "timeDates" = timeDates))
+    if (is.null(season)) {
+        season <- 1:12
+    }
+    allYears <- unique(timeDates$year + 1900)
+    startYear <- head(allYears, 1L)
+    endYear <- tail(allYears, 1L)
+    if (is.null(years)) {
+        years <- allYears
+    } 
+    if (years[1] < startYear & tail(years, 1L) > endYear) {
+        warning("Year selection out of dataset range. Only available years will be returned")
+        years <- allYears
+    }
+    if (years[1] < startYear) {
+        warning("First year in dataset: ", startYear,". Only available years will be returned")
+        years <- startYear:years[length(years)]
+    }
+    if (tail(years, 1L) > endYear) {
+        warning("Last year in dataset: ", endYear,". Only available years will be returned")
+        years <- years[1]:endYear
+    }
+    # Year-crossing seasons - year to take the initialization
+    if (!identical(season, sort(season))) {
+        if (years[1] == startYear) { 
+            warning(paste("First forecast day in dataset: ", timeDates[1], ".\nRequested seasonal data for ", startYear," not available", sep = ""))
+            years <- years[-length(years)]
+        } else {
+            years <- append(years[1] - 1, years)
+        }
+        timeInd <- which((timeDates$year + 1900) %in% years & (timeDates$mon + 1) %in% season)
+        crossSeason <- which(c(1, diff(season)) < 0)
+        rm.ind <- which((timeDates$mon + 1) %in% season[1:(crossSeason - 1)] & (timeDates$year + 1900) %in% years[length(years)])
+        if (length(years) > 1) {
+            rm.ind <- c(rm.ind, which((timeDates$mon + 1) %in% season[crossSeason:length(season)] & (timeDates$year + 1900) %in% years[1]))
+        }
+        timeInd <- setdiff(timeInd, rm.ind)
+    }else{
+        timeInd <- which((timeDates$year + 1900) %in% years & (timeDates$mon + 1) %in% season)
+    }  
+    timeDates <- timeDates[timeInd]
+    return(list("timeInd" = timeInd, "timeDates" = timeDates))
 }
 
 # end

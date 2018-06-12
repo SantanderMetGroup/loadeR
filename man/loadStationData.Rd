@@ -6,7 +6,8 @@
 \usage{
 loadStationData(dataset, var, stationID = NULL, lonLim = NULL,
   latLim = NULL, season = NULL, years = NULL, tz = "",
-  projection = "+proj=longlat +init=epsg:4326 +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
+  projection = "+proj=longlat +init=epsg:4326 +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0",
+  units = NULL)
 }
 \arguments{
 \item{dataset}{A character string indicating the database to be accessed. This is usually a path to a local file or a URL 
@@ -37,9 +38,13 @@ it will be ignored.}
 \code{\link[base]{timezones}} for details). Default to unspecified (i.e. \code{tz = ""}).}
 
 \item{projection}{Optional. Coordinate projection that is passed to attribute \code{projection} in the 
-output object, providing geo-referencing information for more advanced spatial operations/conversions, 
-in the form of a character string following the \href{http://trac.osgeo.org/proj/}{PROJ.4 specifications}. 
-Default is set to the most common projection used for station data, this is, WGS84 longitude latitude coordinates.}
+output object, providing geo-referencing information for more advanced spatial operations/conversions.
+Preferable, this should be indicated in the form of CRS character string following the
+ \href{http://trac.osgeo.org/proj/}{PROJ.4 specifications}. Default is set to WGS84 lon-lat coordinates.}
+
+\item{units}{Optional (but strongly advised when possible). This is a character string indicating the units
+of the variable. This should be whenever possible compatible with the udunits valid (\dQuote{parseable})
+ definitions. See \code{C4R.vocabulary()} for examples of standard unit string definitions.}
 }
 \value{
 a list with the following elements:
@@ -85,7 +90,7 @@ must take care of variable units and eventual conversions when necessary.
 }
 
 \references{
-\url{https://github.com/SantanderMetGroup/downscaleR/wiki/Observation-Data-format}
+\url{https://github.com/SantanderMetGroup/loadeR/wiki/Standard-(ASCII)-format-for-station-data}
 }
 \seealso{
 Other loading: \code{\link{loadGridData}},
