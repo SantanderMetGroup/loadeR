@@ -1,7 +1,5 @@
 loadeR
 ======
 
-* Optionally include the "units" attribute when loading station data (strongly recommended, though)
-* Fix variable attributes when computing frequency indices on-the-fly
-* Other minor documentation updates and internal changes
+* Update the inventory and labels of available datasets
 
