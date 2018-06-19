@@ -35,8 +35,8 @@ CMIP5_HadGEM2-ES_r1i1p1_historical,projection,http://meteo.unican.es/tds5/dodsC/
 CMIP5_HadGEM2-ES_r1i1p1_rcp45,projection,http://meteo.unican.es/tds5/dodsC/cmip5/MOHC/HADGEM2-ES/rcp45/day/mohc_hadgem2-es_rcp45_r1i1p1.ncml,CMIP5.dic
 CMIP5_HadGEM2-ES_r1i1p1_rcp85,projection,http://meteo.unican.es/tds5/dodsC/cmip5/MOHC/HADGEM2-ES/rcp85/day/mohc_hadgem2-es_rcp85_r1i1p1.ncml,CMIP5.dic
 CMIP5_EC-EARTH_r12i1p1_historical,projection,http://meteo.unican.es/tds5/dodsC/cmip5/EC-EARTH/EC-EARTH/historical/day/ec-earth_ec-earth_historical_r12i1p1.ncml,CMIP5.dic
-CMIP5_EC-EARTH_r12i1p1_rcp85,projection,http://meteo.unican.es/tds5/dodsC/cmip5/EC-EARTH/EC-EARTH/rcp45/day/ec-earth_ec-earth_rcp45_r12i1p1.ncml,CMIP5.dic
-CMIP5_EC-EARTH_r12i1p1_rcp45,projection,http://meteo.unican.es/tds5/dodsC/cmip5/EC-EARTH/EC-EARTH/rcp85/day/ec-earth_ec-earth_rcp85_r12i1p1.ncml,CMIP5.dic
+CMIP5_EC-EARTH_r12i1p1_rcp45,projection,http://meteo.unican.es/tds5/dodsC/cmip5/EC-EARTH/EC-EARTH/rcp45/day/ec-earth_ec-earth_rcp45_r12i1p1.ncml,CMIP5.dic
+CMIP5_EC-EARTH_r12i1p1_rcp85,projection,http://meteo.unican.es/tds5/dodsC/cmip5/EC-EARTH/EC-EARTH/rcp85/day/ec-earth_ec-earth_rcp85_r12i1p1.ncml,CMIP5.dic
 CMIP5_NorESM1-M_r1i1p1_historical,projection,http://meteo.unican.es/tds5/dodsC/cmip5/NCC/NORESM1-M/historical/day/ncc_noresm1-m_historical_r1i1p1.ncml,CMIP5.dic
 CMIP5_NorESM1-M_r1i1p1_rcp45,projection,http://meteo.unican.es/tds5/dodsC/cmip5/NCC/NORESM1-M/rcp45/day/ncc_noresm1-m_rcp45_r1i1p1.ncml,CMIP5.dic
 CMIP5_NorESM1-M_r1i1p1_rcp85,projection,http://meteo.unican.es/tds5/dodsC/cmip5/NCC/NORESM1-M/rcp85/day/ncc_noresm1-m_rcp85_r1i1p1.ncml,CMIP5.dic
