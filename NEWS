@@ -1,6 +1,6 @@
 # loadeR changelog
 
-For earlier version changes, see the GitHub Releases [Tab]()
+For earlier version changes, see the GitHub Releases [Tab](https://github.com/SantanderMetGroup/loadeR/releases)
 
 ## v1.4.0 (29 Mar 2018)
 * New PUBLIC UDG datasets now available trough `loadGridData` using abbreviated dataset labels (instead of full URLs). Data harmonization is performed on-the-fly.
