@@ -153,7 +153,7 @@ loadStationData <- function(dataset,
     }
     # Data retrieval
     message("[", Sys.time(), "] Loading data ...", sep = "")
-    var.stids <- lapply(strsplit(readLines(unzcond(dataset, zipFileContents[fileInd]), 1), split = ", "), FUN = trim)
+    var.stids <- lapply(strsplit(readLines(unzcond(dataset, zipFileContents[fileInd]), 1), split = ","), FUN = trim)
     var.stids <- tail(unlist(var.stids), -1)
     closeAllConnections() 
     stInd.var <- match(stids, var.stids)
