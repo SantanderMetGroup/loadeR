@@ -12,6 +12,8 @@ ps,air pressure at surface level,Pa
 psl,air pressure at sea level,Pa
 rlds,surface downwelling longwave radiation,W.m-2
 rlut,toa outgoing longwave flux,W.m-2
+rlus,surface upwelling longwave flux in air,W.m-2
+rsus,surface upwelling shortwave flux in air,W.m-2
 rsds,surface downwelling shortwave radiation,W.m-2
 sftlf,land area fraction,1
 ta,air temperature,degC
@@ -33,4 +35,4 @@ wsgmax,maximum wind speed of gust,m.s-1
 z,geopotential,m2.s-2
 zg,geopotential height,m
 zs,surface geopotential,m2.s-2
-zsg,surface geopotential height,m
+zgs,surface geopotential height,m

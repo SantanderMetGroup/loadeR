@@ -1,5 +1,24 @@
-loadeR
-======
+# loadeR changelog
 
+For earlier version changes, see the GitHub Releases [Tab](https://github.com/SantanderMetGroup/loadeR/releases)
+
+## v1.4.0 (29 Mar 2018)
+* New PUBLIC UDG datasets now available trough `loadGridData` using abbreviated dataset labels (instead of full URLs). Data harmonization is performed on-the-fly.
+  * For an overview of these datasets, use the new helper `UDG.datasets()`
+* Internal change to alter treshold value when transforming non-standard variables via dictionary
+* Other minor documentation updates and internal changes
+* NOTE: version used in the submitted paper to EMS on 29 Mar 2018
+
+## v1.4.1 (11 Jun 2018)
+* Optionally include the "units" attribute when loading station data (strongly recommended, though)
+* Fix variable attributes when computing frequency indices on-the-fly (issue #39)
+* Other minor documentation updates and internal changes
+
+## v1.4.2 (15 Jun 2018)
 * Update the inventory and labels of available datasets
+
+## v1.4.3 (25 Jun 2018)
+* Bug fix in UDG NCEP_Reanalysis1 dataset dictionary names (longwave/shortwave downwelling surface radiations were pointing to l/s net surface radiations)
+* Add upwelling radiation to NCEP_Reanalysis1 dataset
+* Fix vocabulary typo in geopotential identifier (zsg --> zgs)
 
