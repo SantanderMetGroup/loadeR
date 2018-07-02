@@ -22,3 +22,5 @@ For earlier version changes, see the GitHub Releases [Tab](https://github.com/Sa
 * Add upwelling radiation to NCEP_Reanalysis1 dataset
 * Fix vocabulary typo in geopotential identifier (zsg --> zgs)
 
+## v1.4.4 (2 Jul 2018)
+* Bug fix in loadStationData
