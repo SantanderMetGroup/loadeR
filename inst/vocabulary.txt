@@ -21,6 +21,7 @@ tas,2-meter air temperature,degC
 tasmax,maximum 2-m air temperature,degC
 tasmin,minimum 2-m air temperature,degC
 tdps,2-meter dewpoint temperature,degC
+ts,surface_temperature,degC
 pr,total precipitation amount,mm
 prr,total rainfall amount,mm
 prsn,total snowfall amount,mm
