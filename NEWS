@@ -24,3 +24,7 @@ For earlier version changes, see the GitHub Releases [Tab](https://github.com/Sa
 
 ## v1.4.4 (2 Jul 2018)
 * Bug fix in loadStationData
+
+## v1.4.5 (15 Aug 2018)
+* Add optional argument pattern in function UDG.datasets()
+
