@@ -23,8 +23,8 @@ For earlier version changes, see the GitHub Releases [Tab](https://github.com/Sa
 * Fix vocabulary typo in geopotential identifier (zsg --> zgs)
 
 ## v1.4.4 (2 Jul 2018)
-* Bug fix in loadStationData
+* Bug fix in loadStationData [issue #41](https://github.com/SantanderMetGroup/loadeR/issues/41)
 
-## v1.4.5 (15 Aug 2018)
-* Add optional argument pattern in function UDG.datasets()
+## v1.4.5 (13 Jul 2018)
+* Update C4R vocabulary with ts (surface_temperature)
 
