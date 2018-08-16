@@ -99,3 +99,4 @@ Other loading: \code{\link{loadGridData}},
 \author{
 J. Bedia
 }
+\concept{loading}

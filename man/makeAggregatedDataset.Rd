@@ -5,8 +5,8 @@
 \title{Create a dataset from a collection of (netCDF) files}
 \usage{
 makeAggregatedDataset(source.dir, ncml.file, file.ext = "nc",
-  aggr.dim = "time", pattern = NULL, recursive = FALSE, verbose = TRUE,
-  timeUnitsChange = TRUE)
+  aggr.dim = "time", pattern = NULL, recursive = FALSE,
+  verbose = TRUE, timeUnitsChange = TRUE)
 }
 \arguments{
 \item{source.dir}{Parent directory containing the files to be aggregated}
@@ -76,3 +76,4 @@ Other loading: \code{\link{loadGridData}},
 \author{
 J. Bedia, with contributions of E. Tourigny and A. Cofiño
 }
+\concept{loading}

@@ -4,8 +4,8 @@
 \alias{makeSubset.decadal}
 \title{Makes a logical subset of a System4 GeoGrid}
 \usage{
-makeSubset.decadal(grid, latLon, runTimePars, memberRangeList, foreTimePars,
-  verticalPars)
+makeSubset.decadal(grid, latLon, runTimePars, memberRangeList,
+  foreTimePars, verticalPars)
 }
 \arguments{
 \item{grid}{An input java GeoGrid}
