@@ -16,9 +16,9 @@ devtools::install_github(c("SantanderMetGroup/loadeR.java", "SantanderMetGroup/l
 ---
 Reference and further information: 
 
-[General description of the framework] Iturbide et al. (2018) climate4R: An R-based Open Framework for Reproducible Climate Data Access and Post-processing. **Environmental Modelling and Software**. https://doi.org/10.1016/j.envsoft.2018.09.009
+**[General description of the framework]** Iturbide et al. (2018) climate4R: An R-based Open Framework for Reproducible Climate Data Access and Post-processing. **Environmental Modelling and Software**. https://doi.org/10.1016/j.envsoft.2018.09.009
 Check out the companion notebooks for the two examples [GitHub](https://github.com/SantanderMetGroup/notebooks).
 
-[Seasonal forecasting applications] Cofiño et al. (2018) The ECOMS User Data Gateway: Towards seasonal forecast data provision and research reproducibility in the era of Climate Services. **Climate Services**, 9, 33-43. http://doi.org/10.1016/j.cliser.2017.07.001
+**[Seasonal forecasting applications]** Cofiño et al. (2018) The ECOMS User Data Gateway: Towards seasonal forecast data provision and research reproducibility in the era of Climate Services. **Climate Services**, 9, 33-43. http://doi.org/10.1016/j.cliser.2017.07.001
 
-[Example of a sectoral application (fire danger)] Bedia et al. (2018) Seasonal predictions of Fire Weather Index: Paving the way for their operational applicability in Mediterranean Europe. **Climate Services**, 9, 101-110. http://doi.org/10.1016/j.cliser.2017.04.001
+**[Example of a sectoral application (fire danger)]** Bedia et al. (2018) Seasonal predictions of Fire Weather Index: Paving the way for their operational applicability in Mediterranean Europe. **Climate Services**, 9, 101-110. http://doi.org/10.1016/j.cliser.2017.04.001
