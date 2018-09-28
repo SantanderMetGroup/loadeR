@@ -9,6 +9,8 @@ The recommended installation procedure (for loader and the companion loadeR.java
 ```r
 devtools::install_github(c("SantanderMetGroup/loadeR.java", "SantanderMetGroup/loadeR"))
 ```
+**IMPORTANT:** On OS X, be sure to execute this in R started from the Terminal, not the R App! (This is because the R app doesn’t honor $PATH changes in ~/.bash_profile)
+
 **IMPORTANT:** The package requires Java version 1.7 or higher. Several _recommendations for known problems with R and Java_ are given in the [wiki installation info](https://github.com/SantanderMetGroup/loadeR/wiki/Installation)). 
  
 **NOTE:** loadeR is enhanced by [loadeR.ECOMS](http://meteo.unican.es/udg-wiki/ecoms/RPackage) package which allows to remotely access harmonized data from several state-of-the-art seasonal forecasting databases stored at the ECOMS-UDG. 
