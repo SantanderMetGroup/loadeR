@@ -21,7 +21,7 @@
                   packageStartupMessage(ver.mess)
             }
       }
-      packageStartupMessage("Please use 'citation(\"loadeR\")' to cite this package.")
+      packageStartupMessage("Please use 'citation(\"", pkgname, "\")' to cite this package.")
 }
 # End
 

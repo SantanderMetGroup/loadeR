@@ -1,5 +1,5 @@
 bibentry(bibtype = "Article",
-         title = "climate4R: An R-based open framework for reproducible climate data access and post-processing",
+         title = "The R-based climate4R open framework for reproducible climate data access and post-processing",
          author = c(person(given = "Maialen", family =  "Iturbide", role = "aut"),
                   person(given = "Joaquín", family =  "Bedia", role = "aut"),
                   person(given = "Sixto", family = "Herrera", role = "aut"),
