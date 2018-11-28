@@ -9,6 +9,8 @@ The recommended installation procedure (for loader and the companion loadeR.java
 ```r
 devtools::install_github(c("SantanderMetGroup/loadeR.java", "SantanderMetGroup/loadeR"))
 ```
+**IMPORTANT:** On OS X, be sure to execute this in R started from the Terminal, not the R App! (This is because the R app doesn’t honor $PATH changes in ~/.bash_profile)
+
 **IMPORTANT:** The package requires Java version 1.7 or higher. Several _recommendations for known problems with R and Java_ are given in the [wiki installation info](https://github.com/SantanderMetGroup/loadeR/wiki/Installation)). 
  
 **NOTE:** loadeR is enhanced by [loadeR.ECOMS](http://meteo.unican.es/udg-wiki/ecoms/RPackage) package which allows to remotely access harmonized data from several state-of-the-art seasonal forecasting databases stored at the ECOMS-UDG. 
@@ -16,6 +18,9 @@ devtools::install_github(c("SantanderMetGroup/loadeR.java", "SantanderMetGroup/l
 ---
 Reference and further information: 
 
-Iturbide et al. (2018) climate4R: An R-based Framework for Climate Data Access, Post-processing and Bias Correction. Submitted to **Environmental Modeling and Software***, http://www.meteo.unican.es/climate4r_paper 
+**[General description of the climate4R framework]** Iturbide et al. (2019) The R-based climate4R open framework for reproducible climate data access and post-processing. **Environmental Modelling and Software**, 111, 42-54. https://doi.org/10.1016/j.envsoft.2018.09.009
+Check out the companion notebooks for the two examples [GitHub](https://github.com/SantanderMetGroup/notebooks).
 
-Cofiño et al. (2018) The ECOMS User Data Gateway: Towards seasonal forecast data provision and research reproducibility in the era of Climate Services. **Climate Services**, http://dx.doi.org/10.1016/j.cliser.2017.07.001.
+**[Seasonal forecasting applications]** Cofiño et al. (2018) The ECOMS User Data Gateway: Towards seasonal forecast data provision and research reproducibility in the era of Climate Services. **Climate Services**, 9, 33-43. http://doi.org/10.1016/j.cliser.2017.07.001
+
+**[Example of a sectoral application (fire danger)]** Bedia et al. (2018) Seasonal predictions of Fire Weather Index: Paving the way for their operational applicability in Mediterranean Europe. **Climate Services**, 9, 101-110. http://doi.org/10.1016/j.cliser.2017.04.001

@@ -124,7 +124,7 @@ makeSubset <- function(grid, timePars, levelPars, latLon, memberPars) {
   }
   mdArray <- unname(mdArray)
   attr(mdArray, "dimensions") <- dimNames
-  timePars$dateSliceList <- as.POSIXct(do.call("c", timePars$dateSliceList), tz = "GMT")      
+  if (!is.null(timePars$dateSliceList)) timePars$dateSliceList <- as.POSIXct(do.call("c", timePars$dateSliceList), tz = "GMT")      
   return(list("timePars" = timePars, "mdArray" = mdArray))
 }
 # End

@@ -267,7 +267,11 @@ loadGridDataset <- function(var, grid, dic, level, season, years, members, time,
       timePars <- getTimeDomain(grid, dic, season, years, time, aggr.d, aggr.m, threshold, condition)
       levelPars <- getVerticalLevelPars(grid, level)
       cube <- makeSubset(grid, timePars, levelPars, latLon, memberPars)
-      orig.hh.timeres <- timePars$timeResInSeconds / 3600
+      if (!is.null(timePars$timeResInSeconds)) {
+          orig.hh.timeres <- timePars$timeResInSeconds / 3600
+      } else {
+          orig.hh.timeres <- NULL
+      }
       timePars <- NULL
       isStandard <- FALSE
       if (!is.null(dic)) isStandard <- TRUE
@@ -306,7 +310,6 @@ loadGridDataset <- function(var, grid, dic, level, season, years, members, time,
       attr(Variable, "daily_agg_cellfun") <- cube$timePars$aggr.d
       attr(Variable, "monthly_agg_cellfun") <- cube$timePars$aggr.m
       attr(Variable, "verification_time") <- time
-      
       out <- list("Variable" = Variable, "Data" = cube$mdArray, "xyCoords" = latLon$xyCoords, "Dates" = Dates)
       return(out)
 }
@@ -323,18 +326,22 @@ loadGridDataset <- function(var, grid, dic, level, season, years, members, time,
 
 # timePars <- cube$timePars
 adjustDates <- function(timePars) {
-      interval <- 0
-      if (timePars$aggr.m != "none") {
+    if (!is.null(timePars$dateSliceList)) {  
+        interval <- 0
+        if (timePars$aggr.m != "none") {
             mon.len <- sapply(timePars$dateSliceList, ndays)
             interval <- mon.len * 86400
-      } else if (timePars$aggr.d != "none") {
+        } else if (timePars$aggr.d != "none") {
             timePars$dateSliceList <- format(as.Date(substr(timePars$dateSliceList, 1, 10)), format = "%Y-%m-%d %H:%M:%S", usetz = TRUE) 
             interval <- 86400
-      }
-      formato <- ifelse(interval[1] == 0, "%Y-%m-%d %H:%M:%S", "%Y-%m-%d")
-      dates.end <- format(as.POSIXct(as.POSIXlt(timePars$dateSliceList, tz = "GMT") + interval), format = formato, usetz = TRUE)
-      dates.start <- format(as.POSIXct(as.POSIXlt(timePars$dateSliceList, tz = "GMT"), tz = "GMT"), format = formato, usetz = TRUE)
-      return(list("start" = dates.start, "end" = dates.end))
+        }
+        formato <- ifelse(interval[1] == 0, "%Y-%m-%d %H:%M:%S", "%Y-%m-%d")
+        dates.end <- format(as.POSIXct(as.POSIXlt(timePars$dateSliceList, tz = "GMT") + interval), format = formato, usetz = TRUE)
+        dates.start <- format(as.POSIXct(as.POSIXlt(timePars$dateSliceList, tz = "GMT"), tz = "GMT"), format = formato, usetz = TRUE)
+    } else {
+        dates.start <- dates.end <- NULL
+    }
+    return(list("start" = dates.start, "end" = dates.end))
 }
 # End
 

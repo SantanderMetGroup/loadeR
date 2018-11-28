@@ -29,4 +29,17 @@ For earlier version changes, see the GitHub Releases [Tab](https://github.com/Sa
 * Update C4R vocabulary with ts (surface_temperature)
 
 ## v1.4.6 (15 Aug 2018)
-* Add optional argument pattern in UDG.datsets() 
+* Add optional argument pattern in UDG.datsets()
+
+## v1.4.7 (22 Aug 2018)
+* Added support for static variables (undefined time axis datasets)
+
+## v1.4.8 (23 sep 2018)
+ * Add new CITATION
+ * Edited startup package message
+
+## v1.4.9 (in devel)
+ * Update CITATION
+
+
+
