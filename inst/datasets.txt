@@ -1,6 +1,6 @@
 name,type,url,dicname
 JRA55,reanalysis,http://meteo.unican.es/tds5/dodsC/jra55/JRA55_Dataset.ncml,JRA55.dic
-ECMWF_ERA-Interim-ESD,reanalysis,http://meteo.unican.es/tds5/dodsC/interim/interim20.ncml,ERA_interim.dic
+ECMWF_ERA-Interim-ESD,reanalysis,http://meteo.unican.es/tds5/dodsC/interim/daily/interim20_daily.ncml,ERA_interim.dic
 WATCH_WFDEI,observation,http://meteo.unican.es/tds5/dodsC/wfdei/wfdei_daily.ncml,WATCH_WFDEI.dic
 PIK_Obs-EWEMBI,observation,http://meteo.unican.es/tds5/dodsC/ewembi/ewembi_daily.ncml,EWEMBI_DM.dic
 E-OBS_v14_0.50regular,observation,http://meteo.unican.es/tds5/dodsC/eobs/e-obs_v14_0.50regular.ncml,E-OBS_v14.dic

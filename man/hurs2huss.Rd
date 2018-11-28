@@ -29,4 +29,5 @@ Other conversion: \code{\link{mslp2ps}},
 \author{
 S. Herrera
 }
+\concept{conversion}
 \keyword{internal}

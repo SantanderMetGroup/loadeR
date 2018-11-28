@@ -2,7 +2,6 @@
 % Please edit documentation in R/getTimeDomainStations.R, R/loadStationData.R
 \name{getTimeDomainStations}
 \alias{getTimeDomainStations}
-\alias{getTimeDomainStations}
 \title{Time  index positions for station dataset selections}
 \usage{
 getTimeDomainStations(timeDates, season, years)

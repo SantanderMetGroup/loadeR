@@ -26,4 +26,5 @@ Other conversion: \code{\link{hurs2huss}},
 \author{
 S. Herrera
 }
+\concept{conversion}
 \keyword{internal}
