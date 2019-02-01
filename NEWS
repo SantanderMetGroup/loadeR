@@ -42,5 +42,10 @@ For earlier version changes, see the GitHub Releases [Tab](https://github.com/Sa
  * Update CITATION
  * Update url for dataset label "ECMWF_ERA-Interim-ESD"
 
+## v1.4.10 (2 Feb 2019)
+ * Automatic attachment of the "units" attribute in `loadStationData` when available
+ * Internal exports for package VALUE
+
+
 
 

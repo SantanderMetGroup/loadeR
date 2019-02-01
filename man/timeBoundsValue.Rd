@@ -17,4 +17,7 @@ A list with components start and end, of POSIXct dates
 \description{
 Compute start/end verification time bounds from a vector of dates.
 }
+\note{
+The function is currently exported to be internally used by the VALUE package to load predictions.
+}
 \keyword{internal}

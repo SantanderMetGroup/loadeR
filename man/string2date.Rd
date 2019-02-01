@@ -21,6 +21,11 @@ Converts the date codes of the Value format to \code{"POSIXlt"}
 Currently the VALUE format is intended for daily data of the form YYYMMDD. However,
  the function also considers the possibility of subdaily data if hourly data are introduced in
  the form YYYYMMDDHH, eading to a string of 10 characters.
- @keywords internal
- @author juaco
 }
+\note{
+The function is currently exported to be internally used by the VALUE package to load predictions.
+}
+\author{
+juaco
+}
+\keyword{internal}

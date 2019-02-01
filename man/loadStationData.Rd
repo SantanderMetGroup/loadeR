@@ -89,6 +89,23 @@ must take care of variable units and eventual conversions when necessary.
  the \code{lon} and \code{lat} elements.
 }
 
+\examples{
+\dontrun{
+## This example is further illustrated in the loadeR's wiki at:
+## <https://github.com/SantanderMetGroup/loadeR/wiki/Accessing-and-loading-station-data>
+
+# Download the VALUE-ECA-86 dataset (https://rmets.onlinelibrary.wiley.com/doi/10.1002/joc.5462) as a temp file
+
+value <- tempfile(fileext = ".zip")
+download.file("www.value-cost.eu/sites/default/files/VALUE_ECA_86_v2.zip", destfile = value)
+stationInfo(value)
+example <- loadStationData(dataset = value, 
+                           var = "tmax", 
+                           stationID = c("000234", "003946"), 
+                           season = 6:8,
+                           years = 1981:2000)
+}
+}
 \references{
 \url{https://github.com/SantanderMetGroup/loadeR/wiki/Standard-(ASCII)-format-for-station-data}
 }
