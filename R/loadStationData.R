@@ -1,6 +1,6 @@
 #     loadStationData.R Load station data in standard ASCII format
 #
-#     Copyright (C) 2018 Santander Meteorology Group (http://www.meteo.unican.es)
+#     Copyright (C) 2019 Santander Meteorology Group (http://www.meteo.unican.es)
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -60,6 +60,21 @@
 #' 
 #' 
 #' @family loading
+#' @examples \dontrun{
+#' ## This example is further illustrated in the loadeR's wiki at:
+#' ## <https://github.com/SantanderMetGroup/loadeR/wiki/Accessing-and-loading-station-data>
+#' 
+#' # Download the VALUE-ECA-86 dataset (https://rmets.onlinelibrary.wiley.com/doi/10.1002/joc.5462) as a temp file
+#' 
+#' value <- tempfile(fileext = ".zip")
+#' download.file("www.value-cost.eu/sites/default/files/VALUE_ECA_86_v2.zip", destfile = value)
+#' stationInfo(value)
+#' example <- loadStationData(dataset = value, 
+#'                            var = "tmax", 
+#'                            stationID = c("000234", "003946"), 
+#'                            season = 6:8,
+#'                            years = 1981:2000)
+#' }
 
 loadStationData <- function(dataset, 
                             var, 
@@ -75,8 +90,9 @@ loadStationData <- function(dataset,
         unzcond <- unz
         zipFileContents <- unzip(dataset, list = TRUE)$Name
     } else {
-        # unzcond <- function(...){params <- list(...); return(params$filename)}
-        unzcond <- function(description, filename){paste0(description, "/", filename)}
+        unzcond <- function(description, filename) {
+            paste0(description, "/", filename)
+        }
         zipFileContents <- list.files(dataset)
     }
     if ((!is.null(lonLim) | !is.null(latLim)) & !is.null(stationID)) { 
@@ -118,14 +134,11 @@ loadStationData <- function(dataset,
         coords <- setNames(data.frame(matrix(cbind(lons, lats)[stInd, ], ncol = 2)), nm = c("x", "y"))
     }
     stids <- stids[stInd]
-    ##############################################
-    #dimnames(coords) <- list(stids, c("longitude", "latitude"))
+    ## Spatial dimension
     attr(coords, "projection") <- projection
     attr(coords, "resX") <- 0
     attr(coords, "resY") <- 0
-    ################################################
     ## Time dimension
-    # TODO - fix potential MACOSX errors
     fileInd <- grep(paste(var, "\\.txt", sep = ""), zipFileContents)
     if (any(grepl("MACOSX", zipFileContents[fileInd]))) {
         fileInd <- fileInd[-grep("MACOSX", zipFileContents[fileInd])]
@@ -144,10 +157,26 @@ loadStationData <- function(dataset,
     } 
     vars <- read.csv(unzcond(dataset, zipFileContents[varInd]))
     miss.col <- grep("missing_code", names(vars), ignore.case = TRUE)
+    unit.col <- grep("^unit", names(vars), ignore.case = TRUE)
+    # Missing data value
     if (length(miss.col) > 0) {
         na.string <- vars[grep(var, vars[ , grep("variable", names(vars), ignore.case = TRUE)]), miss.col]
-        vars <- NULL
         miss.col <- NULL
+    } else {
+        na.string <- NA
+    }
+    # Units
+    if (length(unit.col) > 0) {
+        units.meta <- gsub(" ","", as.character(vars[grep(var, vars[ , grep("variable", names(vars), ignore.case = TRUE)]), unit.col]))
+        if (!is.null(units)) {
+            if (!identical(units, units.meta)) {
+                warning("the dataset units metadata definition, (\'", units.meta,
+                        "\') and the \'units\' value provided, (\'", units,
+                        "\') differ.\nThe latter will be used.")
+            }
+        } else {
+            units <- units.meta
+        }
     } else {
         na.string <- NA
     }
@@ -168,6 +197,9 @@ loadStationData <- function(dataset,
         meta.list[[i + 1]] <- aux[stInd, ind.meta[i]]
     }
     names(meta.list) <- c("station_id", names(aux)[ind.meta])
+    # Units
+    
+    
     aux <- NULL  
     out <- list("Variable" = list("varName" = var), "Data" = Data, "xyCoords" = coords, "Dates" = timeBoundsValue(timePars$timeDates, tz), "Metadata" = meta.list)
     attr(out$Variable, "units") <- units
@@ -188,8 +220,10 @@ loadStationData <- function(dataset,
 #' @details Currently the VALUE format is intended for daily data of the form YYYMMDD. However,
 #'  the function also considers the possibility of subdaily data if hourly data are introduced in
 #'  the form YYYYMMDDHH, eading to a string of 10 characters.
-#'  @keywords internal
-#'  @author juaco
+#' @note The function is currently exported to be internally used by the VALUE package to load predictions.
+#' @keywords internal
+#' @export
+#' @author juaco
 
 string2date <- function(timeString, tz = tz) {
     timeString = gsub("^\\s+|\\s+$", "", timeString)
@@ -209,6 +243,8 @@ string2date <- function(timeString, tz = tz) {
 #' @param timeDates A POSIXlt vector of dates
 #' @param tz Time zone
 #' @keywords internal
+#' @export
+#' @note The function is currently exported to be internally used by the VALUE package to load predictions.
 #' @return A list with components start and end, of POSIXct dates
 
 timeBoundsValue <- function(timeDates, tz) {
@@ -232,6 +268,8 @@ timeBoundsValue <- function(timeDates, tz) {
 #' @return A list with a vector of time index positions and the corresponding POSIXlt dates
 #' @author J. Bedia 
 #' @keywords internal
+#' @export
+#' @note The function is currently exported to be internally used by the VALUE package to load predictions.
 #' @importFrom utils tail
 
 getTimeDomainStations <- function(timeDates, season, years) {
