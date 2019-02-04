@@ -283,21 +283,21 @@ getTimeDomainStations <- function(timeDates, season, years) {
         years <- allYears
     } 
     if (years[1] < startYear & tail(years, 1L) > endYear) {
-        warning("Year selection out of dataset range. Only available years will be returned")
+        warning("Year selection out of dataset range. Only available years will be returned", call. = FALSE)
         years <- allYears
     }
     if (years[1] < startYear) {
-        warning("First year in dataset: ", startYear,". Only available years will be returned")
+        warning("First year in dataset: ", startYear,". Only available years will be returned", call. = FALSE)
         years <- startYear:years[length(years)]
     }
     if (tail(years, 1L) > endYear) {
-        warning("Last year in dataset: ", endYear,". Only available years will be returned")
+        warning("Last year in dataset: ", endYear,". Only available years will be returned", call. = FALSE)
         years <- years[1]:endYear
     }
     # Year-crossing seasons - year to take the initialization
     if (!identical(season, sort(season))) {
         if (years[1] == startYear) { 
-            warning(paste("First forecast day in dataset: ", timeDates[1], ".\nRequested seasonal data for ", startYear," not available", sep = ""))
+            warning(paste("First forecast day in dataset: ", timeDates[1], ".\nRequested seasonal data for ", startYear," not available", sep = ""), call. = FALSE)
             years <- years[-length(years)]
         } else {
             years <- append(years[1] - 1, years)
