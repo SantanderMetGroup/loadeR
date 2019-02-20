@@ -31,6 +31,9 @@ Get time index positions for loading ascii station data
 
 Get time index positions for loading ascii station data
 }
+\note{
+The function is currently exported to be internally used by the VALUE package to load predictions.
+}
 \author{
 J. Bedia
 
