@@ -47,6 +47,10 @@ For earlier version changes, see the GitHub Releases [Tab](https://github.com/Sa
  * Internal exports for package VALUE
  * Other minor changes and documentation updates
 
+## v1.4.11 (16 Apr 2019)
+ * New function loadCircularGridData 
+ * E-OBSv17 dataset added 
+ * Further CORDEX datasets added (for ANT44, EUR44 and AFR44)
 
 
 
