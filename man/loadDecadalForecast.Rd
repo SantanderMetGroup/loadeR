@@ -136,7 +136,8 @@ tasDECA <- loadDecadalForecast(
 }
 }
 \seealso{
-Other loading.grid: \code{\link{loadGridData}}
+Other loading.grid: \code{\link{loadCircularGridData}},
+  \code{\link{loadGridData}}
 }
 \author{
 J. Bedia, S. Herrera, M. Iturbide, J.M. Gutierrez

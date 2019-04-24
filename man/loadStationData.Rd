@@ -110,7 +110,8 @@ example <- loadStationData(dataset = value,
 \url{https://github.com/SantanderMetGroup/loadeR/wiki/Standard-(ASCII)-format-for-station-data}
 }
 \seealso{
-Other loading: \code{\link{loadGridData}},
+Other loading: \code{\link{loadCircularGridData}},
+  \code{\link{loadGridData}},
   \code{\link{makeAggregatedDataset}}
 }
 \author{

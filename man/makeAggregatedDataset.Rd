@@ -70,8 +70,8 @@ using \code{\link[utils]{glob2rx}}.
 NcML Tutorial \url{http://www.unidata.ucar.edu/software/thredds/current/netcdf-java/ncml/Tutorial.html}. (Last accessed 14 Mar 2016.).
 }
 \seealso{
-Other loading: \code{\link{loadGridData}},
-  \code{\link{loadStationData}}
+Other loading: \code{\link{loadCircularGridData}},
+  \code{\link{loadGridData}}, \code{\link{loadStationData}}
 }
 \author{
 J. Bedia, with contributions of E. Tourigny and A. Cofiño

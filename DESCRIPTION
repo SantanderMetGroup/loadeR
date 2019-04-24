@@ -15,7 +15,7 @@ Suggests:
 Type: Package
 Title: Climate data loading package of the climate4R framework <http://meteo.unican.es/climate4r>
 Version: 1.4.11
-Date: 2019-02-04
+Date: 2019-04-16
 Authors@R: as.person(c(
     "Santander Meteorology Group <http://meteo.unican.es> [cph]",
     "Joaquín Bedia <bediaj@unican.es> [aut,cre]",

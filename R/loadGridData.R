@@ -197,7 +197,8 @@ loadGridData <- function(dataset,
       # Spatial collocation -------------
       latLon <- getLatLonDomain(grid, lonLim, latLim)
       proj <- grid$getCoordinateSystem()$getProjection()
-      if (!proj$isLatLon()) latLon <- adjustRCMgrid(gds, latLon, lonLim, latLim)
+      #if (!proj$isLatLon()) latLon <- adjustRCMgrid(gds, latLon, lonLim, latLim)
+      if (!proj$isLatLon() | proj$getName() == "LambertConformal") latLon <- adjustRCMgrid(gds, latLon, lonLim, latLim)
       # Read data -------------------
       out <- loadGridDataset(var, grid, dic, level, season, years, members,
                              time, latLon, aggr.d, aggr.m, threshold, condition)
