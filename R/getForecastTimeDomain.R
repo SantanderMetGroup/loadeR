@@ -48,8 +48,7 @@ getForecastTimeDomain <- function(grid, dataset, dic, runTimePars, time, aggr.d,
       foreDatesList <- foreTimesList
       for (i in 1:length(runTimePars$runTimeRanges)) {
             auxDates <- javaCalendarDate2rPOSIXlt(gcs$getTimeAxisForRun(runTimePars$runTimeRanges[[i]]$element(0L))$getCalendarDates())
-            ind <- which(((auxDates$mon + 1) %in% runTimePars$season) & ((auxDates$year + 1900) %in% runTimePars$years))
-            foreTimesList[[i]] <- seq(from = min(ind), to = max(ind), by = 1)
+            foreTimesList[[i]] <- which((auxDates$mon + 1) %in% runTimePars$season)
             foreDatesList[[i]] <- auxDates[foreTimesList[[i]]]
             auxDates <- NULL
       }
@@ -62,7 +61,7 @@ getForecastTimeDomain <- function(grid, dataset, dic, runTimePars, time, aggr.d,
                   which(foreDatesList[[x]]$hour == time)
             })
             if (length(timeIndList[[1]]) == 0) {
-                  stop("Non-existing verification time selected.\nCheck value of argument 'time'")
+                  stop("Non-existing verification time selected.\nCheck value of argument 'time'", call. = FALSE)
             }
             foreDatesList <- lapply(1:length(foreDatesList), function(x) {
                   foreDatesList[[x]][timeIndList[[x]]]
