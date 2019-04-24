@@ -13,9 +13,9 @@ Suggests:
     visualizeR,
     downscaleR
 Type: Package
-Title: Climate data loading package of the climate4R framework <http://meteo.unican.es/climate4r>
-Version: 1.4.11
-Date: 2019-04-16
+Title: A climate4R package for data access <http://meteo.unican.es/climate4r>
+Version: 1.4.12
+Date: 2019-04-24
 Authors@R: as.person(c(
     "Santander Meteorology Group <http://meteo.unican.es> [cph]",
     "Joaquín Bedia <bediaj@unican.es> [aut,cre]",
@@ -31,6 +31,6 @@ Authors@R: as.person(c(
 BugReports: https://github.com/SantanderMetGroup/loadeR/issues
 URL: https://github.com/SantanderMetGroup/loadeR/wiki
 Encoding: UTF-8
-Description: Enables harmonized access to either remote climate databases via OPeNDAP or to locally stored data, allowing the retrieval of user-defined dimensional slices from large climate datasets. For more details see e.g. Cofiño et al 2017 <http://dx.doi.org/10.1016/j.cliser.2017.07.001>.
+Description: Enables harmonized access to either remote climate databases via OPeNDAP or to locally stored data, allowing the retrieval of user-defined dimensional slices from large climate datasets. For more details see Iturbide et al 2019 <http://dx.doi.org/10.1016/j.envsoft.2018.09.009>.
 License: file LICENSE
 RoxygenNote: 6.1.1
