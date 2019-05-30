@@ -52,5 +52,9 @@ For earlier version changes, see the GitHub Releases [Tab](https://github.com/Sa
  * E-OBSv17 dataset added 
  * Further CORDEX datasets added (for ANT44, EUR44 and AFR44)
 
+## v1.4.12 (24 Apr 2019)
+ * Bug fix in initialization dates structure in `loadSeasonalForecast`
+ * Bug fix in retrieval of year-crossing season by `loadSeasonalForecast`
+
 
 

@@ -146,12 +146,14 @@ loadSeasonalForecast <- function(dataset,
   attr(Variable, "daily_agg_cellfun") <- cube$foreTimePars$aggr.d
   attr(Variable, "monthly_agg_cellfun") <- cube$foreTimePars$aggr.m
   attr(Variable, "verification_time") <- time
+  rtList <- rep(list(runTimePars$runDates), length(memberRangeList))
+  names(rtList) <- names(memberRangeList)
   # Output list -------------------
   out <- list("Variable" = Variable,
               "Data" = cube$mdArray,
               "xyCoords" = latLon$xyCoords,
               "Dates" = cube$foreTimePars$forecastDates,
-              "InitializationDates" = runTimePars$runDates,
+              "InitializationDates" = rtList,
               "Members" = names(memberRangeList))
   gds$close()
   # Other attributes -----------------
