@@ -17,12 +17,12 @@
 #' @keywords internal
 
 dictionaryLookup <- function(dicPath, var, time) {
-      message("[", Sys.time(), "] Defining harmonization parameters for variable \"", var, "\"")
       dictionary <- tryCatch({read.csv(dicPath, stringsAsFactors = FALSE)}, error = function(e) stop("Dictionary not found"))
       dicRow <- grep(paste("^", var, "$", sep = ""), dictionary$identifier) 
       if (length(dicRow) == 0) {
             stop("Variable requested does not match any identifier in the dictionary\nType 'help(C4R.vocabulary)' for help on standard variable nomenclature", call. = FALSE)
       }
+      message("[", Sys.time(), "] Defining harmonization parameters for variable \"", var, "\"")
       if (length(dicRow) > 1) {
             if (time == "DD") {
                   dicRow <- dicRow[dictionary$time_step[dicRow] == "24h"]

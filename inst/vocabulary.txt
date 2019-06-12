@@ -2,7 +2,6 @@ identifier,standard_name,units
 hurs,2-meter relative humidity,%
 hursmax,maximum 2-meter relative humidity,%
 hursmin,minimum 2-meter relative humidity,%
-hus,specific humidity,kg.kg-1
 huss,2-meter specific humidity,kg.kg-1
 hussmax,maximum 2-meter specific humidity,kg.kg-1
 hussmin,minimum 2-meter specific humidity,kg.kg-1
@@ -16,7 +15,6 @@ rlus,surface upwelling longwave flux in air,W.m-2
 rsus,surface upwelling shortwave flux in air,W.m-2
 rsds,surface downwelling shortwave radiation,W.m-2
 sftlf,land area fraction,1
-ta,air temperature,degC
 tas,2-meter air temperature,degC
 tasmax,maximum 2-m air temperature,degC
 tasmin,minimum 2-m air temperature,degC
@@ -33,7 +31,11 @@ wss,near-surface wind speed,m.s-1
 wssmax,maximum near-surface wind speed,m.s-1
 wsg,wind speed of gust,m.s-1
 wsgmax,maximum wind speed of gust,m.s-1
-z,geopotential,m2.s-2
-zg,geopotential height,m
 zs,surface geopotential,m2.s-2
 zgs,surface geopotential height,m
+hus,specific humidity at different mbar levels,kg.kg-1
+ta,air temperature at different mbar levels,degC
+z,geopotential at different mbar levels,m2.s-2
+zg,geopotential height at different mbar levels,m
+
+
