@@ -165,6 +165,9 @@ loadStationData <- function(dataset,
     } else {
         na.string <- NA
     }
+    # Level (fake slot)
+    aux.level <- findVerticalLevel(var)
+    level <- aux.level$level
     # Units
     if (length(unit.col) > 0) {
         units.meta <- gsub(" ","", as.character(vars[grep(var, vars[ , grep("variable", names(vars), ignore.case = TRUE)]), unit.col]))
@@ -198,10 +201,8 @@ loadStationData <- function(dataset,
     }
     names(meta.list) <- c("station_id", names(aux)[ind.meta])
     # Units
-    
-    
     aux <- NULL  
-    out <- list("Variable" = list("varName" = var), "Data" = Data, "xyCoords" = coords, "Dates" = timeBoundsValue(timePars$timeDates, tz), "Metadata" = meta.list)
+    out <- list("Variable" = list("varName" = var, "level" = level), "Data" = Data, "xyCoords" = coords, "Dates" = timeBoundsValue(timePars$timeDates, tz), "Metadata" = meta.list)
     attr(out$Variable, "units") <- units
     if (is.null(units)) message("NOTE: The \'units\' argument is undefined: It is highly recommended to indicate this attribute\nThis can be made afterwards with transformeR's function \'setGridUnits\'")
     attr(out$Data, "dimensions") <- c("time", "loc")
