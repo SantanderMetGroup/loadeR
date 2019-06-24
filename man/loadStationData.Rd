@@ -7,7 +7,7 @@
 loadStationData(dataset, var, stationID = NULL, lonLim = NULL,
   latLim = NULL, season = NULL, years = NULL, tz = "",
   projection = "+proj=longlat +init=epsg:4326 +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0",
-  units = NULL)
+  units = NULL, level = NULL)
 }
 \arguments{
 \item{dataset}{A character string indicating the database to be accessed. This is usually a path to a local file or a URL 
@@ -45,6 +45,9 @@ Preferable, this should be indicated in the form of CRS character string followi
 \item{units}{Optional (but strongly advised when possible). This is a character string indicating the units
 of the variable. This should be whenever possible compatible with the udunits valid (\dQuote{parseable})
  definitions. See \code{C4R.vocabulary()} for examples of standard unit string definitions.}
+
+\item{level}{Optional character of the atmospheric level. This information about the variable will be 
+included in the output grid. Requires knowledge about the dataset.}
 }
 \value{
 a list with the following elements:
