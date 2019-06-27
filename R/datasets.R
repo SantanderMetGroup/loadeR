@@ -1,7 +1,7 @@
 #' @title Show UDG datasets
 #' @description Access the installed user's vocabulary
-#' @param pattern Optional. Pattern of the dataset name as passed to function grep.
-#' @return The datasets table, in the form of a data.frame
+#' @param pattern Optional. Pattern in the dataset name as passed to function \code{\link{grep}} (case-insensitive).
+#' @return The datasets table, in the form of a \code{data.frame}
 #' @note The function assumes that the user has read permission to the package installation directory
 #' @author M Iturbide
 #' @export
@@ -15,6 +15,6 @@
 #' UDG.datasets(pattern = "CORDEX-EUR44.*historical")$name
 
 UDG.datasets <- function(pattern = "") {
-      df <- read.csv(file.path(find.package("loadeR"), "datasets.txt"), stringsAsFactors = FALSE)[ ,1:3]
-      df[grep(pattern, df$name),]
+    df <- read.csv(file.path(find.package("loadeR"), "datasets.txt"), stringsAsFactors = FALSE)[ ,1:3]
+    df[grep(pattern, df$name, ignore.case = TRUE),]
 }
