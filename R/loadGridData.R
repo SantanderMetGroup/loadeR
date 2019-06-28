@@ -185,7 +185,7 @@ loadGridData <- function(dataset,
       # For datasets where level variables exist but are not handled as an extra dimension (e.g. ERA_Interim):
       aux.var <- if (!is.null(aux.level$level)) paste0(aux.level$var, "@", aux.level$level, collapse = "")
       cd <- check.dictionary(dataset, aux.var, dictionary, time)
-      if (is.null(cd)) cd <- check.dictionary(dataset, var, dictionary, time)
+      if (is.null(cd[["shortName"]])) cd <- check.dictionary(dataset, var, dictionary, time)
       # ----------
       shortName <- cd$shortName
       dic <- cd$dic
