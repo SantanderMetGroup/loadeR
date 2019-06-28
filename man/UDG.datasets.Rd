@@ -7,10 +7,10 @@
 UDG.datasets(pattern = "")
 }
 \arguments{
-\item{pattern}{Optional. Pattern of the dataset name as passed to function grep.}
+\item{pattern}{Optional. Pattern in the dataset name as passed to function \code{\link{grep}} (case-insensitive).}
 }
 \value{
-The datasets table, in the form of a data.frame
+The datasets table, in the form of a \code{data.frame}
 }
 \description{
 Access the installed user's vocabulary
