@@ -56,5 +56,9 @@ For earlier version changes, see the GitHub Releases [Tab](https://github.com/Sa
  * Bug fix in initialization dates structure in `loadSeasonalForecast`
  * Bug fix in retrieval of year-crossing season by `loadSeasonalForecast`
 
+## v1.4.13 (02 Jul 2019)
+ * Add 'level' attribute to station data on load
+ * Other minor bug fixes and enhancements
+
 
 
