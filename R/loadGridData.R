@@ -184,8 +184,13 @@ loadGridData <- function(dataset,
       # Dictionary lookup -------------
       # For datasets where level variables exist but are not handled as an extra dimension (e.g. ERA_Interim):
       aux.var <- if (!is.null(aux.level$level)) paste0(aux.level$var, "@", aux.level$level, collapse = "")
-      cd <- tryCatch({check.dictionary(dataset, aux.var, dictionary, time)}, error = function(err) {NULL})
+      cd <- tryCatch({check.dictionary(dataset, aux.var, dictionary, time)}, error = function(err) {list(shortName = NULL, dic = NULL)})
       if (is.null(cd[["shortName"]])) cd <- check.dictionary(dataset, var, dictionary, time)
+      if (is.null(cd[["dic"]]) & !is.null(cd[["shortName"]])) {
+            if (grepl("@", cd[["shortName"]])) {
+                  cd <- check.dictionary(dataset, var, dictionary, time)
+            }
+      }
       # ----------
       shortName <- cd$shortName
       dic <- cd$dic
