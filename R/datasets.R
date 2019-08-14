@@ -15,6 +15,8 @@
 #' UDG.datasets(pattern = "CORDEX-EUR44.*historical")$name
 
 UDG.datasets <- function(pattern = "") {
+    .Deprecated("UDG.datasets", package = "climate4R.UDG",
+                  msg = "'UDG.datasets' is deprecated and will eventually be removed from loadeR.\nUse 'UDG.datasets' from package climate4R.UDG instead.") 
     df <- read.csv(file.path(find.package("loadeR"), "datasets.txt"), stringsAsFactors = FALSE)[ ,1:3]
     df[grep(pattern, df$name, ignore.case = TRUE),]
 }
