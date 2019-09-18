@@ -6,7 +6,8 @@ Depends:
 Imports:
     utils,
     abind,
-    RCurl
+    RCurl,
+    climate4R.UDG
 Suggests:
     loadeR.ECOMS,
     transformeR,

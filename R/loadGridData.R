@@ -57,6 +57,7 @@
 #' 
 #' @importFrom stats na.exclude
 #' @importFrom utils packageVersion tail
+#' @importFrom climate4R.UDG UDG.datasets
 #' 
 #' @examples \dontrun{
 #' #Download dataset
@@ -174,11 +175,14 @@ loadGridData <- function(dataset,
       var <- aux.level$var
       level <- aux.level$level
       # UDG public data parameters -----------------
-      if (dataset %in% UDG.datasets()$name) {
-        datasetind <- which(UDG.datasets()$name == dataset)
-        dataset <- UDG.datasets()$url[datasetind]
-        dic.filename <- read.csv(file.path(find.package("loadeR"), "datasets.txt"), stringsAsFactors = FALSE)[datasetind,4]
-        dictionary <- file.path(find.package("loadeR"), "dictionaries", dic.filename)
+      if (dataset %in% suppressMessages(do.call("c", UDG.datasets()))) {
+        lf <- list.files(file.path(find.package("climate4R.UDG")), pattern = "datasets.*.txt", full.names = TRUE)
+        df <- lapply(lf, function(x) read.csv(x, stringsAsFactors = FALSE))
+        df <- do.call("rbind", df)
+        datasetind <- which(df[["name"]] == dataset)
+        dataset <- df$url[datasetind]
+        dic.filename <- df$dic[datasetind]
+        dictionary <- file.path(find.package("climate4R.UDG"), "dictionaries", dic.filename)
         message("NOTE: Accessing harmonized data from a public UDG dataset")
       }
       # Dictionary lookup -------------

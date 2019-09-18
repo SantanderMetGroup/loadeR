@@ -46,9 +46,12 @@
 #' @author J Bedia 
 
 dataInventory <- function(dataset, return.stats = FALSE) {
-      if (dataset %in% UDG.datasets()$name) {
-            datasetind <- which(UDG.datasets()$name == dataset)
-            dataset <- as.character(UDG.datasets()$url[datasetind])
+      if (dataset %in% suppressMessages(do.call("c", UDG.datasets()))) {
+            lf <- list.files(file.path(find.package("climate4R.UDG")), pattern = "datasets.*.txt", full.names = TRUE)
+            df <- lapply(lf, function(x) read.csv(x, stringsAsFactors = FALSE))
+            df <- do.call("rbind", df)
+            datasetind <- which(df[["name"]] == dataset)
+            dataset <- df$url[datasetind]
       }
       rs <- return.stats
       message(paste("[", Sys.time(), "] Doing inventory ...", sep = ""))
