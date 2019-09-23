@@ -179,7 +179,7 @@ loadGridData <- function(dataset,
         lf <- list.files(file.path(find.package("climate4R.UDG")), pattern = "datasets.*.txt", full.names = TRUE)
         df <- lapply(lf, function(x) read.csv(x, stringsAsFactors = FALSE))
         df <- do.call("rbind", df)
-        datasetind <- which(df[["name"]] == dataset)
+        datasetind <- which(df[["name"]] == dataset)[1]
         dataset <- df$url[datasetind]
         dic.filename <- df$dic[datasetind]
         dictionary <- file.path(find.package("climate4R.UDG"), "dictionaries", dic.filename)
