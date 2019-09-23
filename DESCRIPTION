@@ -2,12 +2,12 @@ Package: loadeR
 Depends:
     R(>= 3.1.0),
     rJava,
-    loadeR.java
+    loadeR.java,
+    climate4R.UDG
 Imports:
     utils,
     abind,
-    RCurl,
-    climate4R.UDG
+    RCurl
 Suggests:
     loadeR.ECOMS,
     transformeR,

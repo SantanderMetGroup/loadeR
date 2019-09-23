@@ -51,7 +51,7 @@ dataInventory <- function(dataset, return.stats = FALSE) {
             df <- lapply(lf, function(x) read.csv(x, stringsAsFactors = FALSE))
             df <- do.call("rbind", df)
             datasetind <- which(df[["name"]] == dataset)
-            dataset <- df$url[datasetind]
+            dataset <- df$url[datasetind][1]
       }
       rs <- return.stats
       message(paste("[", Sys.time(), "] Doing inventory ...", sep = ""))
