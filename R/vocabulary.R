@@ -13,6 +13,8 @@
 #' voc[grep("^ta", voc$identifier), ]
 
 C4R.vocabulary <- function() {
+      .Deprecated("C4R.vocabulary", package = "climate4R.UDG",
+                  msg = "'C4R.vocabulary' is deprecated and will eventually be removed from loadeR.\nUse 'C4R.vocabulary' from package climate4R.UDG instead.") 
       read.csv(file.path(find.package("loadeR"), "vocabulary.txt"))
 }
 

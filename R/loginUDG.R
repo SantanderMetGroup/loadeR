@@ -16,6 +16,8 @@
 #' @importFrom utils URLencode
 
 loginUDG <- function(username, password, proxy.host = NULL, proxy.port = NULL) {
+      .Deprecated("loginUDG", package = "climate4R.UDG",
+                  msg = "'loginUDG' is deprecated and will eventually be removed from loadeR.\nUse 'loginUDG' from package climate4R.UDG instead.") 
       proxy.port <- as.integer(proxy.port)
       if (!is.character(username) | !is.character(password)) {
             stop("\'username\' and \'password\' must be character strings", call. = FALSE)
