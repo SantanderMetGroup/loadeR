@@ -69,14 +69,14 @@ getTimeDomain <- function(grid, dic, season, years, time, aggr.d, aggr.m, thresh
             years <- as.integer(startYear:endYear)
         }
         if (years[1] < startYear | years[length(years)] > endYear) {
-            warning("Year selection out of boundaries. Only available years will be returned")
+            stop("Year selection out of boundaries. Use function dataInventory to check available years.")
         }
-        if (years[1] < startYear) {
-            years <- startYear:years[length(years)]
-        }
-        if (years[length(years)] > endYear) {
-            years <- years[1]:endYear
-        }
+        # if (years[1] < startYear) {
+        #     years <- startYear:years[length(years)]
+        # }
+        # if (years[length(years)] > endYear) {
+        #     years <- years[1]:endYear
+        # }
         if (is.null(season)) {
             season <- as.integer(1:12)
         } else {
