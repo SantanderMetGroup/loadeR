@@ -321,6 +321,7 @@ loadGridDataset <- function(var, grid, dic, level, season, years, members, time,
           Variable$varName <- "Frequency Index"
           attr(Variable, "description") <- paste0(var, "-based threshold exceedance count index")
       }
+      if ("lon" %in% names(latLon$xyCoords)) latLon$xyCoords$lon[which(latLon$xyCoords$lon>180)] <- latLon$xyCoords$lon[which(latLon$xyCoords$lon>180)] - 360
       attr(Variable, "daily_agg_cellfun") <- cube$timePars$aggr.d
       attr(Variable, "monthly_agg_cellfun") <- cube$timePars$aggr.m
       attr(Variable, "verification_time") <- time
