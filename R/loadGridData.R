@@ -164,26 +164,26 @@ loadGridData <- function(dataset,
       aggr.m <- match.arg(aggr.m, choices = c("none", "mean", "min", "max", "sum"))
       # Count aggregations
       if (!is.null(condition)) {
-        condition <- match.arg(condition, choices = c("GT", "GE", "LT", "LE"))
-        if (is.null(threshold)) {
-          stop("A 'threshold' argument value is required given 'condition', with no default", call. = FALSE)
-        }
-        if (!is.numeric(threshold)) stop("Invalid non-numeric 'threshold' argument value", call. = FALSE)
-        if (aggr.m == "none") stop("Invalid 'aggr.m' argument value given 'threshold' and 'condition'", call. = FALSE)
+            condition <- match.arg(condition, choices = c("GT", "GE", "LT", "LE"))
+            if (is.null(threshold)) {
+                  stop("A 'threshold' argument value is required given 'condition', with no default", call. = FALSE)
+            }
+            if (!is.numeric(threshold)) stop("Invalid non-numeric 'threshold' argument value", call. = FALSE)
+            if (aggr.m == "none") stop("Invalid 'aggr.m' argument value given 'threshold' and 'condition'", call. = FALSE)
       }
       aux.level <- findVerticalLevel(var)
       var <- aux.level$var
       level <- aux.level$level
       # UDG public data parameters -----------------
       if (dataset %in% suppressMessages(do.call("c", UDG.datasets()))) {
-        lf <- list.files(file.path(find.package("climate4R.UDG")), pattern = "datasets.*.txt", full.names = TRUE)
-        df <- lapply(lf, function(x) read.csv(x, stringsAsFactors = FALSE))
-        df <- do.call("rbind", df)
-        datasetind <- which(df[["name"]] == dataset)[1]
-        dataset <- df$url[datasetind]
-        dic.filename <- df$dic[datasetind]
-        dictionary <- file.path(find.package("climate4R.UDG"), "dictionaries", dic.filename)
-        message("NOTE: Accessing harmonized data from a public UDG dataset")
+            lf <- list.files(file.path(find.package("climate4R.UDG")), pattern = "datasets.*.txt", full.names = TRUE)
+            df <- lapply(lf, function(x) read.csv(x, stringsAsFactors = FALSE))
+            df <- do.call("rbind", df)
+            datasetind <- which(df[["name"]] == dataset)[1]
+            dataset <- df$url[datasetind]
+            dic.filename <- df$dic[datasetind]
+            dictionary <- file.path(find.package("climate4R.UDG"), "dictionaries", dic.filename)
+            message("NOTE: Accessing harmonized data from a public UDG dataset")
       }
       # Dictionary lookup -------------
       # For datasets where level variables exist but are not handled as an extra dimension (e.g. ERA_Interim):
@@ -210,14 +210,28 @@ loadGridData <- function(dataset,
       # Spatial collocation -------------
       latLon <- getLatLonDomain(grid, lonLim, latLim)
       proj <- grid$getCoordinateSystem()$getProjection()
+      projParams <- NULL
       #if (!proj$isLatLon()) latLon <- adjustRCMgrid(gds, latLon, lonLim, latLim)
-      if (!proj$isLatLon() | proj$getName() == "LambertConformal") latLon <- adjustRCMgrid(gds, latLon, lonLim, latLim)
+      if (!proj$isLatLon() | proj$getName() == "LambertConformal"){
+            latLon <- adjustRCMgrid(gds, latLon, lonLim, latLim)
+            projParams <- proj$getProjectionParameters()
+      }
       # Read data -------------------
       out <- loadGridDataset(var, grid, dic, level, season, years, members,
                              time, latLon, aggr.d, aggr.m, threshold, condition)
       # Metadata: projection and spatial resolution -------------
       proj <- proj$toString()
       attr(out$xyCoords, which = "projection") <- proj
+      if (!is.null(projParams)){
+            nparams <- projParams$size()
+            auxParams <- projParams$toString()
+            auxParams <- gsub(auxParams, pattern = "\\[|\\]",replacement = "")
+            nameValue <- strsplit(auxParams, ", ")
+            for (ip in c(1:nparams)){
+                  sepValues <- strsplit(nameValue[[1]][ip], " = ")
+                  attr(out$xyCoords, which = sepValues[[1]][1]) <- sepValues[[1]][2]
+            }
+      }
       attr(out$xyCoords, "resX") <- (tail(out$xyCoords$x, 1) - out$xyCoords$x[1]) / (length(out$xyCoords$x) - 1)
       attr(out$xyCoords, "resY") <- (tail(out$xyCoords$y, 1) - out$xyCoords$y[1]) / (length(out$xyCoords$y) - 1)
       if ("lon" %in% names(out$xyCoords)) {
@@ -282,9 +296,9 @@ loadGridDataset <- function(var, grid, dic, level, season, years, members, time,
       levelPars <- getVerticalLevelPars(grid, level)
       cube <- makeSubset(grid, timePars, levelPars, latLon, memberPars)
       if (!is.null(timePars$timeResInSeconds)) {
-          orig.hh.timeres <- timePars$timeResInSeconds / 3600
+            orig.hh.timeres <- timePars$timeResInSeconds / 3600
       } else {
-          orig.hh.timeres <- NULL
+            orig.hh.timeres <- NULL
       }
       timePars <- NULL
       isStandard <- FALSE
@@ -300,26 +314,26 @@ loadGridDataset <- function(var, grid, dic, level, season, years, members, time,
       attr(Variable, "use_dictionary") <- isStandard
       attr(Variable, "description") <- grid$getDescription()
       if (isStandard) {
-          vocabulary <- C4R.vocabulary()
-          uds <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier), 3])
-          attr(Variable, "units") <- uds
-          attr(Variable, "longname") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier), 2])
+            vocabulary <- C4R.vocabulary()
+            uds <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier), 3])
+            attr(Variable, "units") <- uds
+            attr(Variable, "longname") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier), 2])
       } else {
-          uds <- grid$getUnitsString()
-          attr(Variable, "units") <- uds
-          attr(Variable, "longname") <- grid$getFullName()
+            uds <- grid$getUnitsString()
+            attr(Variable, "units") <- uds
+            attr(Variable, "longname") <- grid$getFullName()
       }
       if (!is.null(threshold)) { # Update variable metadata for threshold exceedance counts
-          tu <- timeUnits(orig.hh.timeres)
-          attr(Variable, "units") <- tu
-          ineq <- switch(condition,
-                         "GT" = ">",
-                         "GE" = ">=",
-                         "LT" = "<",
-                         "LE" = "<=")
-          attr(Variable, "longname") <- paste("Number of", tu, "when", var, ineq, threshold, uds)
-          Variable$varName <- "Frequency Index"
-          attr(Variable, "description") <- paste0(var, "-based threshold exceedance count index")
+            tu <- timeUnits(orig.hh.timeres)
+            attr(Variable, "units") <- tu
+            ineq <- switch(condition,
+                           "GT" = ">",
+                           "GE" = ">=",
+                           "LT" = "<",
+                           "LE" = "<=")
+            attr(Variable, "longname") <- paste("Number of", tu, "when", var, ineq, threshold, uds)
+            Variable$varName <- "Frequency Index"
+            attr(Variable, "description") <- paste0(var, "-based threshold exceedance count index")
       }
       if ("lon" %in% names(latLon$xyCoords)) latLon$xyCoords$lon[which(latLon$xyCoords$lon>180)] <- latLon$xyCoords$lon[which(latLon$xyCoords$lon>180)] - 360
       attr(Variable, "daily_agg_cellfun") <- cube$timePars$aggr.d
@@ -341,22 +355,22 @@ loadGridDataset <- function(var, grid, dic, level, season, years, members, time,
 
 # timePars <- cube$timePars
 adjustDates <- function(timePars) {
-    if (!is.null(timePars$dateSliceList)) {  
-        interval <- 0
-        if (timePars$aggr.m != "none") {
-            mon.len <- sapply(timePars$dateSliceList, ndays)
-            interval <- mon.len * 86400
-        } else if (timePars$aggr.d != "none") {
-            timePars$dateSliceList <- format(as.Date(substr(timePars$dateSliceList, 1, 10)), format = "%Y-%m-%d %H:%M:%S", usetz = TRUE) 
-            interval <- 86400
-        }
-        formato <- ifelse(interval[1] == 0, "%Y-%m-%d %H:%M:%S", "%Y-%m-%d")
-        dates.end <- format(as.POSIXct(as.POSIXlt(timePars$dateSliceList, tz = "GMT") + interval), format = formato, usetz = TRUE)
-        dates.start <- format(as.POSIXct(as.POSIXlt(timePars$dateSliceList, tz = "GMT"), tz = "GMT"), format = formato, usetz = TRUE)
-    } else {
-        dates.start <- dates.end <- NULL
-    }
-    return(list("start" = dates.start, "end" = dates.end))
+      if (!is.null(timePars$dateSliceList)) {  
+            interval <- 0
+            if (timePars$aggr.m != "none") {
+                  mon.len <- sapply(timePars$dateSliceList, ndays)
+                  interval <- mon.len * 86400
+            } else if (timePars$aggr.d != "none") {
+                  timePars$dateSliceList <- format(as.Date(substr(timePars$dateSliceList, 1, 10)), format = "%Y-%m-%d %H:%M:%S", usetz = TRUE) 
+                  interval <- 86400
+            }
+            formato <- ifelse(interval[1] == 0, "%Y-%m-%d %H:%M:%S", "%Y-%m-%d")
+            dates.end <- format(as.POSIXct(as.POSIXlt(timePars$dateSliceList, tz = "GMT") + interval), format = formato, usetz = TRUE)
+            dates.start <- format(as.POSIXct(as.POSIXlt(timePars$dateSliceList, tz = "GMT"), tz = "GMT"), format = formato, usetz = TRUE)
+      } else {
+            dates.start <- dates.end <- NULL
+      }
+      return(list("start" = dates.start, "end" = dates.end))
 }
 # End
 
@@ -386,25 +400,24 @@ ndays <- function(d) {
 
 
 timeUnits <- function(dft) {
-    out <- if (dft == 1) {
-        "1h"
-    } else if (dft == 3) {
-        "3h"    
-    } else if (dft == 6) {
-        "6h"
-    } else if (dft == 12) {
-        "12h"
-    } else if (dft == 24) {
-        "days"
-    } else if (dft >= 672 & dft <= 744) {
-        "months"
-    } else if (dft >= 8640 & dft <= 8784) {
-        "years"
-    } else {
-        "undefined"
-    }
-    return(out)
+      out <- if (dft == 1) {
+            "1h"
+      } else if (dft == 3) {
+            "3h"    
+      } else if (dft == 6) {
+            "6h"
+      } else if (dft == 12) {
+            "12h"
+      } else if (dft == 24) {
+            "days"
+      } else if (dft >= 672 & dft <= 744) {
+            "months"
+      } else if (dft >= 8640 & dft <= 8784) {
+            "years"
+      } else {
+            "undefined"
+      }
+      return(out)
 }
-
 
 
