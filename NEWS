@@ -70,5 +70,6 @@ For earlier version changes, see the GitHub Releases [Tab](https://github.com/Sa
 ## v1.5.0 (13 Aug 2019)
  * Functions loginUDG, UDG.datasets and C4R.vocabulary deprecated and now available in package climate4R.UDG
 
-
-
+## v1.6.0 (5 Jan 2020)
+ * Add climate4R.UDG dependency (for accessing UDG datasets)
+ * Do not allow requests of years out of boundaries in loadGridData
