@@ -12,6 +12,6 @@ Loads a user-defined subset from a gridded dataset compliant with the Common
  Data Model interface
 }
 \author{
-J. Bedia
+J. Bedia, S. Herrera
 }
 \keyword{internal}

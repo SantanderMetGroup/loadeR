@@ -238,6 +238,25 @@ loadGridData <- function(dataset,
             attr(out$xyCoords, "resLON") <- NA 
             attr(out$xyCoords, "resLAT") <- NA
       } 
+      # Member attributes -----------------------------
+      if ("member" %in% attr(out$Data, "dimensions")) {
+            if (grid$getCoordinateSystem()$getEnsembleAxis()$isScalar()){
+                  all.members <- grid$getCoordinateSystem()$getEnsembleAxis()$getCoordValues()
+            }else{
+                  all.members <- javaString2rChar(grid$getCoordinateSystem()$getEnsembleAxis()$getNames()$toString())
+            }
+            if (!is.null(members)) {
+                  all.members <- all.members[members]
+            }
+            if (grid$getCoordinateSystem()$getEnsembleAxis()$isScalar()){
+                  out$Members <- paste0("Member_", all.members)
+            }else{
+                  out$Members <- all.members
+            }
+            inits <- vector("list", length(all.members))
+            names(inits) <- out$Members
+            out$InitializationDates <- inits
+      }
       gds$close()
       # Dimension ordering -------------
       tab <- c("member", "time", "level", "lat", "lon")
@@ -247,13 +266,6 @@ loadGridData <- function(dataset,
             dimNames <- x[b]
             out$Data <- aperm(out$Data, perm = b)    
             attr(out$Data, "dimensions")  <- dimNames
-      }
-      # Member attributes -----------------------------
-      if (!is.null(members)) {
-            out$Members <- paste0("Member_", members)
-            inits <- vector("list", length(members))
-            names(inits) <- out$Members
-            out$InitializationDates <- inits
       }
       # Source Dataset and other metadata -------------
       attr(out, "dataset") <- dataset
@@ -276,7 +288,7 @@ loadGridData <- function(dataset,
 #' Loads a user-defined subset from a gridded dataset compliant with the Common
 #'  Data Model interface
 #' 
-#' @author J. Bedia 
+#' @author J. Bedia, S. Herrera 
 #' @export
 #' @keywords internal
 #' @importFrom rJava .jnull
@@ -288,8 +300,13 @@ loadGridDataset <- function(var, grid, dic, level, season, years, members, time,
             if (!is.null(members)) warning("NOTE: The grid does not contain an Ensemble Axis: 'member' argument was ignored")
             memberPars <- .jnull()
       } else {
-            all.members <- ens.axis$getCoordValues()
-            if (!all((members - 1) %in% all.members)) stop("Invalid member selection. See 'dataInventory' for details on available members.", call. = FALSE)
+            if (ens.axis$isScalar()){
+                  all.members <- ens.axis$getCoordValues()
+                  if (!all((members - 1) %in% all.members)) stop("Invalid member selection. See 'dataInventory' for details on available members.", call. = FALSE)
+            }else{
+                  all.members <- javaString2rChar(ens.axis$getNames()$toString())
+                  if (!all((members - 1) %in% c(0:length(all.members)))) stop("Invalid member selection. See 'dataInventory' for details on available members.", call. = FALSE)
+            }
             memberPars <- getMemberDomain(grid, members, continuous = TRUE)
       }
       timePars <- getTimeDomain(grid, dic, season, years, time, aggr.d, aggr.m, threshold, condition)
@@ -349,7 +366,7 @@ loadGridDataset <- function(var, grid, dic, level, season, years, members, time,
 #' @param timePars Object containing the relevant time parameters
 #' @return A list with dates (POSIXct) start and end, defining the interval [start, end)
 #' @details Sub-daily information is displayed only in case of subdaily data
-#' @author J Bedia 
+#' @author J Bedia, S. Herrera 
 #' @keywords internal
 #' @export
 
@@ -379,6 +396,7 @@ adjustDates <- function(timePars) {
 #' @param d A date (character) in format YYYY-MM-DD...
 #' @return The number of days of the current month
 #' @references 
+#' @author S. Herrera
 #' \url{http://stackoverflow.com/questions/6243088/find-out-the-number-of-days-of-a-month-in-r}
 #' @export
 
@@ -396,7 +414,7 @@ ndays <- function(d) {
 #' @param dft A time step (numeric), in hours
 #' @return The time units
 #' @keywords internal
-#' @author J Bedia
+#' @author J Bedia, S. Herrera
 
 
 timeUnits <- function(dft) {
@@ -419,5 +437,6 @@ timeUnits <- function(dft) {
       }
       return(out)
 }
+
 
 

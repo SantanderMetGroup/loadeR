@@ -25,6 +25,6 @@ aggregation function to be applied (if any).
 \url{http://meteo.unican.es/trac/wiki/udg/ecoms/RPackage/homogeneization}
 }
 \author{
-J. Bedia
+J. Bedia, S. Herrera
 }
 \keyword{internal}

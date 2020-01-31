@@ -24,6 +24,6 @@ This functionality is similar to \code{getTimeResolution} in \pkg{transformeR}.
  but shouldn't be used elsewhere.
 }
 \author{
-J Bedia
+J Bedia, S. Herrera
 }
 \keyword{internal}

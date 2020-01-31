@@ -19,6 +19,6 @@ Adjust time/start dates of a loaded object
 Sub-daily information is displayed only in case of subdaily data
 }
 \author{
-J Bedia
+J Bedia, S. Herrera
 }
 \keyword{internal}

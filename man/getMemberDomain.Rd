@@ -29,6 +29,6 @@ rather than integers than in the former version. Otherwise, the getCoordValues()
 method should be used instead of getNames() on the ensemble axis.
 }
 \author{
-J. Bedia
+J. Bedia, S. Herrera
 }
 \keyword{internal}

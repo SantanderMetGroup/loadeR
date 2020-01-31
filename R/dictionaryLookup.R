@@ -12,7 +12,7 @@
 #' 
 #' @references \url{http://meteo.unican.es/trac/wiki/udg/ecoms/RPackage/homogeneization}
 #' 
-#' @author J. Bedia
+#' @author J. Bedia, S. Herrera
 #' 
 #' @keywords internal
 
@@ -60,7 +60,7 @@ dictionaryLookup <- function(dicPath, var, time) {
 #' @param time time
 #' @return a list with actual shortName and dic definition
 #' @keywords internal
-#' @author J. Bedia, J. Fernandez
+#' @author J. Bedia, J. Fernandez, S. Herrera
 
 check.dictionary <- function(dataset, var, dictionary, time) {
       if (dictionary == FALSE) {
