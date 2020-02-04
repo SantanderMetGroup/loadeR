@@ -16,7 +16,7 @@
             if (ver < latest.ver) {
                   ver.mess1 <- paste0("WARNING: Your current version of ", pkgname, " (v", ver, ") is not up-to-date")
                   ver.mess <- paste0("Get the latest stable version (", latest.ver,
-                                     ") using <devtools::install_github('SantanderMetGroup/", pkgname, "')>")
+                                     ") using <devtools::install_github(c('SantanderMetGroup/climate4R.UDG','SantanderMetGroup/", pkgname, "'))>")
                   packageStartupMessage(ver.mess1)
                   packageStartupMessage(ver.mess)
             }
