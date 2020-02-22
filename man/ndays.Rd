@@ -15,7 +15,9 @@ The number of days of the current month
 \description{
 Calculate the number of days of the current month
 }
-\author{
-S. Herrera
+\references{
 \url{http://stackoverflow.com/questions/6243088/find-out-the-number-of-days-of-a-month-in-r}
+}
+\author{
+J. Bedia
 }
