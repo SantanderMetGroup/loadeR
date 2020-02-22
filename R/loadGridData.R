@@ -300,10 +300,10 @@ loadGridDataset <- function(var, grid, dic, level, season, years, members, time,
             if (!is.null(members)) warning("NOTE: The grid does not contain an Ensemble Axis: 'member' argument was ignored")
             memberPars <- .jnull()
       } else {
-            if (ens.axis$isScalar()){
+            if (ens.axis$isScalar()) {
                   all.members <- ens.axis$getCoordValues()
                   if (!all((members - 1) %in% all.members)) stop("Invalid member selection. See 'dataInventory' for details on available members.", call. = FALSE)
-            }else{
+            } else {
                   all.members <- javaString2rChar(ens.axis$getNames()$toString())
                   if (!all((members - 1) %in% c(0:length(all.members)))) stop("Invalid member selection. See 'dataInventory' for details on available members.", call. = FALSE)
             }
@@ -395,9 +395,8 @@ adjustDates <- function(timePars) {
 #' Calculate the number of days of the current month
 #' @param d A date (character) in format YYYY-MM-DD...
 #' @return The number of days of the current month
-#' @references 
-#' @author S. Herrera
-#' \url{http://stackoverflow.com/questions/6243088/find-out-the-number-of-days-of-a-month-in-r}
+#' @references \url{http://stackoverflow.com/questions/6243088/find-out-the-number-of-days-of-a-month-in-r}
+#' @author J. Bedia
 #' @export
 
 ndays <- function(d) {

@@ -15,20 +15,19 @@ Suggests:
     downscaleR
 Type: Package
 Title: A climate4R package for data access <http://meteo.unican.es/climate4r>
-Version: 1.6.0
-Date: 2020-01-05
-Authors@R: as.person(c(
-    "Santander Meteorology Group <http://meteo.unican.es> [cph]",
-    "Joaquín Bedia <bediaj@unican.es> [aut,cre]",
-    "Antonio Cofiño <antonio.cofino@unican.es> [ctb]",
-    "Matteo de Felice <matteo.defelice@enea.it> [ctb]",
-    "Jesus Fernández <fernandej@unican.es> [ctb]",
-    "José Manuel Gutiérrez <gutierjm@unican.es> [ctb]",
-    "Sixto Herrera <herreras@unican.es> [ctb]",
-    "Maialen Iturbide <miturbide@ifca.unican.es> [aut]",
-    "Etienne Tourigny <etienne.tourigny@bsc.es> [ctb]",
-    "Max Tuni <max@predictia.es> [ctb]",
-    "Manuel Vega <manuel.vega@unican.es> [ctb]"))
+Version: 1.6.1
+Date: 2020-02-20
+Authors@R: c(person("Bedia", "Joaquín", email = "bediaj@unican.es", role = c("aut","cre"), comment = c(ORCID = "0000-0001-6219-4312")),
+             person("Antonio", "Cofiño", email = "antonio.cofino@unican.es", role = "ctb"),
+             person("Matteo", "de Felice", email = "matteo.defelice@enea.it", role = "ctb"),
+             person("Jesús", "Fernández", email = "fernandej@unican.es", role = "ctb"),
+             person("José Manuel", "Gutiérrez", email = "gutierjm@unican.es", role = "ctb"),
+             person("Sixto", "Herrera", email = "herreas@unican.es", role = "ctb"),
+             person("Maialen", "Iturbide", email = "miturbide@ifca.unican.es", role = "aut", comment = c(ORCID = "0000-0002-5048-0941")),
+             person("Etienne", "Tourigny", email = "etienne.tourigny@bsc.es", role = "ctb"),
+             person("Max", "Tuni", email = "max@predictia.es", role = "ctb"),
+             person("Manuel", "Vega", email = "manuel.vega@unican.es", role = "ctb"),
+             person("Santander Meteorology Group", comment = "<http://www.meteo.unican.es/en>", role = "cph"))
 BugReports: https://github.com/SantanderMetGroup/loadeR/issues
 URL: https://github.com/SantanderMetGroup/loadeR/wiki
 Encoding: UTF-8
