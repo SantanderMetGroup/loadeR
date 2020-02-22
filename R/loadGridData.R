@@ -271,7 +271,7 @@ loadGridData <- function(dataset,
       attr(out, "dataset") <- dataset
       attr(out, "R_package_desc") <- paste0("loadeR-v", packageVersion("loadeR"))
       attr(out, "R_package_URL") <- "https://github.com/SantanderMetGroup/loadeR"
-      attr(out, "R_package_ref") <- "http://dx.doi.org/10.1016/j.cliser.2017.07.001"
+      attr(out, "R_package_ref") <- "https://doi.org/10.1016/j.envsoft.2018.09.009"
       if (grepl("http://meteo\\.unican\\.es", dataset)) {
             attr(out, "source") <- "User Data Gateway"
             attr(out, "URL") <- "<http://meteo.unican.es/trac/wiki/udg>"
