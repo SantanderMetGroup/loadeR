@@ -180,8 +180,8 @@ loadGridData <- function(dataset,
             df <- lapply(lf, function(x) read.csv(x, stringsAsFactors = FALSE))
             df <- do.call("rbind", df)
             datasetind <- which(df[["name"]] == dataset)
-            df$url[rev(datasetind)][1]
-            dic.filename <- df$dic[datasetind]
+            dataset <- df$url[rev(datasetind)][1]
+            dic.filename <- df$dic[rev(datasetind)][1]
             dictionary <- file.path(find.package("climate4R.UDG"), "dictionaries", dic.filename)
             message("NOTE: Accessing harmonized data from a public UDG dataset")
       }
