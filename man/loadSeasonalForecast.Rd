@@ -4,9 +4,20 @@
 \alias{loadSeasonalForecast}
 \title{Load a seasonal forecast}
 \usage{
-loadSeasonalForecast(dataset, var, dictionary = FALSE, members = NULL,
-  lonLim = NULL, latLim = NULL, season = NULL, years = NULL,
-  leadMonth = 1, time = "none", aggr.d = "none", aggr.m = "none")
+loadSeasonalForecast(
+  dataset,
+  var,
+  dictionary = FALSE,
+  members = NULL,
+  lonLim = NULL,
+  latLim = NULL,
+  season = NULL,
+  years = NULL,
+  leadMonth = 1,
+  time = "none",
+  aggr.d = "none",
+  aggr.m = "none"
+)
 }
 \arguments{
 \item{dataset}{A character string indicating the database to be accessed. This is usually a path to a local file or a URL 

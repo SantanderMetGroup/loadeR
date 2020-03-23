@@ -14,12 +14,6 @@ getTimeDomainStations(timeDates, season, years)
 \item{season}{A vector of months defining the season selected}
 
 \item{years}{A vector of (continuous) year selection}
-
-\item{timeDates}{a POSIXlt vector of time dates}
-
-\item{season}{A vector of months defining the season selected}
-
-\item{years}{A vector of (continuous) year selection}
 }
 \value{
 A list with a vector of time index positions and the corresponding POSIXlt dates

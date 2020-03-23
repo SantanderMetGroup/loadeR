@@ -20,8 +20,9 @@ surface pressure (Pa)
 Conversion of sea-level pressure to surface pressure
 }
 \seealso{
-Other conversion: \code{\link{hurs2huss}},
-  \code{\link{tdps2hurs}}
+Other conversion: 
+\code{\link{hurs2huss}()},
+\code{\link{tdps2hurs}()}
 }
 \author{
 S. Herrera

@@ -4,9 +4,16 @@
 \alias{makeAggregatedDataset}
 \title{Create a dataset from a collection of (netCDF) files}
 \usage{
-makeAggregatedDataset(source.dir, ncml.file, file.ext = "nc",
-  aggr.dim = "time", pattern = NULL, recursive = FALSE,
-  verbose = TRUE, timeUnitsChange = TRUE)
+makeAggregatedDataset(
+  source.dir,
+  ncml.file,
+  file.ext = "nc",
+  aggr.dim = "time",
+  pattern = NULL,
+  recursive = FALSE,
+  verbose = TRUE,
+  timeUnitsChange = TRUE
+)
 }
 \arguments{
 \item{source.dir}{Parent directory containing the files to be aggregated}
@@ -70,8 +77,10 @@ using \code{\link[utils]{glob2rx}}.
 NcML Tutorial \url{http://www.unidata.ucar.edu/software/thredds/current/netcdf-java/ncml/Tutorial.html}. (Last accessed 14 Mar 2016.).
 }
 \seealso{
-Other loading: \code{\link{loadCircularGridData}},
-  \code{\link{loadGridData}}, \code{\link{loadStationData}}
+Other loading: 
+\code{\link{loadCircularGridData}()},
+\code{\link{loadGridData}()},
+\code{\link{loadStationData}()}
 }
 \author{
 J. Bedia, with contributions of E. Tourigny and A. Cofiño

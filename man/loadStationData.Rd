@@ -4,10 +4,20 @@
 \alias{loadStationData}
 \title{Load station data}
 \usage{
-loadStationData(dataset, var, stationID = NULL, lonLim = NULL,
-  latLim = NULL, season = NULL, years = NULL, tz = "",
-  projection = "+proj=longlat +init=epsg:4326 +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0",
-  units = NULL, level = NULL)
+loadStationData(
+  dataset,
+  var,
+  stationID = NULL,
+  lonLim = NULL,
+  latLim = NULL,
+  season = NULL,
+  years = NULL,
+  tz = "",
+ 
+    projection = "+proj=longlat +init=epsg:4326 +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0",
+  units = NULL,
+  level = NULL
+)
 }
 \arguments{
 \item{dataset}{A character string indicating the database to be accessed. This is usually a path to a local file or a URL 
@@ -113,9 +123,10 @@ example <- loadStationData(dataset = value,
 \url{https://github.com/SantanderMetGroup/loadeR/wiki/Standard-(ASCII)-format-for-station-data}
 }
 \seealso{
-Other loading: \code{\link{loadCircularGridData}},
-  \code{\link{loadGridData}},
-  \code{\link{makeAggregatedDataset}}
+Other loading: 
+\code{\link{loadCircularGridData}()},
+\code{\link{loadGridData}()},
+\code{\link{makeAggregatedDataset}()}
 }
 \author{
 J. Bedia

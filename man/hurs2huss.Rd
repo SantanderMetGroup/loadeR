@@ -23,8 +23,9 @@ Derive specific humidity from relative humidity
 Bohren & Albrecht (2000) Atmospheric thermodynamics. Oxford University Press. 402 pp
 }
 \seealso{
-Other conversion: \code{\link{mslp2ps}},
-  \code{\link{tdps2hurs}}
+Other conversion: 
+\code{\link{mslp2ps}()},
+\code{\link{tdps2hurs}()}
 }
 \author{
 S. Herrera

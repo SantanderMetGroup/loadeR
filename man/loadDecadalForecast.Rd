@@ -4,9 +4,19 @@
 \alias{loadDecadalForecast}
 \title{Load a grid from a decadal forecast}
 \usage{
-loadDecadalForecast(dataset, var, dictionary = FALSE, members = NULL,
-  lonLim = NULL, latLim = NULL, season = NULL, years = NULL,
-  time = "none", aggr.d = "none", aggr.m = "none")
+loadDecadalForecast(
+  dataset,
+  var,
+  dictionary = FALSE,
+  members = NULL,
+  lonLim = NULL,
+  latLim = NULL,
+  season = NULL,
+  years = NULL,
+  time = "none",
+  aggr.d = "none",
+  aggr.m = "none"
+)
 }
 \arguments{
 \item{dataset}{A character string indicating the database to be accessed. This is usually a path to a local file or a URL 
@@ -136,8 +146,9 @@ tasDECA <- loadDecadalForecast(
 }
 }
 \seealso{
-Other loading.grid: \code{\link{loadCircularGridData}},
-  \code{\link{loadGridData}}
+Other loading.grid: 
+\code{\link{loadCircularGridData}()},
+\code{\link{loadGridData}()}
 }
 \author{
 J. Bedia, S. Herrera, M. Iturbide, J.M. Gutierrez

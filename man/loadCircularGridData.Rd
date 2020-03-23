@@ -4,10 +4,21 @@
 \alias{loadCircularGridData}
 \title{Load a grid from a circular gridded dataset}
 \usage{
-loadCircularGridData(dataset, var, dictionary = FALSE, lonLim = NULL,
-  latLim = NULL, season = NULL, years = NULL, members = NULL,
-  time = "none", aggr.d = "none", aggr.m = "none",
-  condition = NULL, threshold = NULL)
+loadCircularGridData(
+  dataset,
+  var,
+  dictionary = FALSE,
+  lonLim = NULL,
+  latLim = NULL,
+  season = NULL,
+  years = NULL,
+  members = NULL,
+  time = "none",
+  aggr.d = "none",
+  aggr.m = "none",
+  condition = NULL,
+  threshold = NULL
+)
 }
 \arguments{
 \item{dataset}{A character string indicating the database to be accessed. This is usually a path to a local file or a URL 
@@ -151,12 +162,14 @@ The argument \code{time} controls the temporal filtering/aggregation options tha
 }
 
 \seealso{
-Other loading: \code{\link{loadGridData}},
-  \code{\link{loadStationData}},
-  \code{\link{makeAggregatedDataset}}
+Other loading: 
+\code{\link{loadGridData}()},
+\code{\link{loadStationData}()},
+\code{\link{makeAggregatedDataset}()}
 
-Other loading.grid: \code{\link{loadDecadalForecast}},
-  \code{\link{loadGridData}}
+Other loading.grid: 
+\code{\link{loadDecadalForecast}()},
+\code{\link{loadGridData}()}
 }
 \author{
 S. Herrera

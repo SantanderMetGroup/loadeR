@@ -4,8 +4,7 @@
 \alias{getForecastTimeDomain}
 \title{Selection of time slices of forecast datasets}
 \usage{
-getForecastTimeDomain(grid, dataset, dic, runTimePars, time, aggr.d,
-  aggr.m)
+getForecastTimeDomain(grid, dataset, dic, runTimePars, time, aggr.d, aggr.m)
 }
 \arguments{
 \item{grid}{a java \sQuote{GeoGrid}}

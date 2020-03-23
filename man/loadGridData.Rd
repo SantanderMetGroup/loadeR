@@ -4,10 +4,21 @@
 \alias{loadGridData}
 \title{Load a grid from a gridded dataset}
 \usage{
-loadGridData(dataset, var, dictionary = FALSE, lonLim = NULL,
-  latLim = NULL, season = NULL, years = NULL, members = NULL,
-  time = "none", aggr.d = "none", aggr.m = "none",
-  condition = NULL, threshold = NULL)
+loadGridData(
+  dataset,
+  var,
+  dictionary = FALSE,
+  lonLim = NULL,
+  latLim = NULL,
+  season = NULL,
+  years = NULL,
+  members = NULL,
+  time = "none",
+  aggr.d = "none",
+  aggr.m = "none",
+  condition = NULL,
+  threshold = NULL
+)
 }
 \arguments{
 \item{dataset}{A character string indicating the database to be accessed. This is usually a path to a local file or a URL 
@@ -230,12 +241,14 @@ spatialPlot(climatology(tx25.annual), main = "Number of Summer Days 1981-1990")
 }
 }
 \seealso{
-Other loading: \code{\link{loadCircularGridData}},
-  \code{\link{loadStationData}},
-  \code{\link{makeAggregatedDataset}}
+Other loading: 
+\code{\link{loadCircularGridData}()},
+\code{\link{loadStationData}()},
+\code{\link{makeAggregatedDataset}()}
 
-Other loading.grid: \code{\link{loadCircularGridData}},
-  \code{\link{loadDecadalForecast}}
+Other loading.grid: 
+\code{\link{loadCircularGridData}()},
+\code{\link{loadDecadalForecast}()}
 }
 \author{
 J. Bedia, S. Herrera, M. Iturbide, J.M. Gutierrez

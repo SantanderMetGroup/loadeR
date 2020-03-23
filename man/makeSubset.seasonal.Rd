@@ -4,8 +4,14 @@
 \alias{makeSubset.seasonal}
 \title{Makes a logical subset of a seasonal forecast GeoGrid}
 \usage{
-makeSubset.seasonal(grid, latLon, runTimePars, memberRangeList,
-  foreTimePars, verticalPars)
+makeSubset.seasonal(
+  grid,
+  latLon,
+  runTimePars,
+  memberRangeList,
+  foreTimePars,
+  verticalPars
+)
 }
 \arguments{
 \item{grid}{An input java GeoGrid}

@@ -18,8 +18,9 @@ vector of relative humidity (\%)
 Conversion of dew point to relative humidity
 }
 \seealso{
-Other conversion: \code{\link{hurs2huss}},
-  \code{\link{mslp2ps}}
+Other conversion: 
+\code{\link{hurs2huss}()},
+\code{\link{mslp2ps}()}
 }
 \author{
 J Bedia, S Herrera
