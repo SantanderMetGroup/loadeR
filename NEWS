@@ -73,3 +73,6 @@ For earlier version changes, see the GitHub Releases [Tab](https://github.com/Sa
 ## v1.6.0 (5 Jan 2020)
  * Add climate4R.UDG dependency (for accessing UDG datasets)
  * Do not allow requests of years out of boundaries in loadGridData
+ 
+## v1.6.1 (23 Mar 2020) 
+ * Minor bug fixes and and enhancements
