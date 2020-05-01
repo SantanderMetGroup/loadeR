@@ -116,7 +116,7 @@ loadStationData <- function(dataset,
   if (grepl("\\.ncml$|\\.nc$|\\.nc4$|", dataset)) {
     stids <- nc$findVariable("station_id")
     stids <- stids$read()
-    stids <- stids$make1DStringArray()
+    stids <- tryCatch({stids$make1DStringArray()}, error = function(err) {stids})
     stids <- stids$copyToNDJavaArray()
   } else {
     # Reading stations from zip file
@@ -140,9 +140,13 @@ loadStationData <- function(dataset,
   ## Longitude and latitude
   if (grepl("\\.ncml$|\\.nc$|\\.nc4$|", dataset)) {
     lons <- nc$findVariable("lon")
+    if (is.null(lons)) lons <- nc$findVariable("Lon")
+    if (is.null(lons)) lons <- nc$findVariable("x")
     lons <- lons$read()
     lons <- lons$copyToNDJavaArray()
     lats <- nc$findVariable("lat")
+    if (is.null(lats)) lats <- nc$findVariable("Lat")
+    if (is.null(lats)) lats <- nc$findVariable("y")
     lats <- lats$read()
     lats <- lats$copyToNDJavaArray()
   }else{
