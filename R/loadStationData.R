@@ -89,7 +89,7 @@ loadStationData <- function(dataset,
                             projection = "+proj=longlat +init=epsg:4326 +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0",
                             units = NULL,
                             level = NULL) {
-      aux <- NULL
+  aux <- NULL
   if (grepl("\\.zip$", dataset)) {
     unzcond <- unz
     zipFileContents <- unzip(dataset, list = TRUE)$Name
@@ -192,10 +192,15 @@ loadStationData <- function(dataset,
   }
   timePars <- getTimeDomainStations(timeDates, season, years)
   if(grepl("\\.ncml$|\\.nc$|\\.nc4$|", dataset)) {
-    varId <- varId$read()
+    # varId <- varId$read()
+    # Data <- varId$toString()
+    # Data <- t(matrix(as.double(strsplit(Data,' ')[[1]]), nrow = varId$getShape()[2], ncol = varId$getShape()[1]))
+    # Data <- unname(Data[timePars$timeInd, stInd])
+    # gds$close()
+    varId <- varId$read(paste0(range(timePars$timeInd)[1]-1,":",range(timePars$timeInd)[2]-1,":1,",range(stInd)[1]-1,":",range(stInd)[2]-1,":1"));
     Data <- varId$toString()
     Data <- t(matrix(as.double(strsplit(Data,' ')[[1]]), nrow = varId$getShape()[2], ncol = varId$getShape()[1]))
-    Data <- unname(Data[timePars$timeInd, stInd])
+    Data <- unname(Data[timePars$timeInd-(range(timePars$timeInd)[1]-1), stInd-(range(stInd)[1]-1)])
     gds$close()
   }else{
     ## missing data code
