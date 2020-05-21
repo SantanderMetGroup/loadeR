@@ -32,7 +32,7 @@ getMemberDomain <- function(grid, members, continuous = FALSE) {
                   names(memberRangeList) <- paste0("Member_", members + 1)
                   as.integer(javaString2rChar(gcs$getEnsembleAxis()$getNames()$toString()))
             }else{
-                  names(memberRangeList) <- javaString2rChar(gcs$getEnsembleAxis()$getNames()$toString())
+                  names(memberRangeList) <- javaString2rChar(gcs$getEnsembleAxis()$getNames()$toString())[members + 1]            
             }
       } else {
             if (!all(diff(members) == 1)) stop("Non-continuous member selections are not allowed", call. = FALSE)
