@@ -98,7 +98,7 @@ scanVarDimensions <- function(grid) {
     dim.list[[xDimIndex]] <- list("Type" = axis$getAxisType()$toString(),
                                   "Units" = axis$getUnitsString(),
                                   "Values" = values)
-    names(dim.list)[xDimIndex] <- "lon" # axis$getDimensionsString()
+    names(dim.list)[xDimIndex] <- axis$getDimensionsString() # "lon"
   }
   if (grid$getYDimensionIndex() >= 0) {
     yDimIndex <- grid$getYDimensionIndex() + 1
@@ -111,7 +111,7 @@ scanVarDimensions <- function(grid) {
     dim.list[[yDimIndex]] <- list("Type" = axis$getAxisType()$toString(),
                                   "Units" = axis$getUnitsString(),
                                   "Values" = values)
-    names(dim.list)[yDimIndex] <- "lat" # axis$getDimensionsString()
+    names(dim.list)[yDimIndex] <- axis$getDimensionsString() # "lat"
   }
   return(dim.list)
 }
