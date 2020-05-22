@@ -239,7 +239,7 @@ loadGridData <- function(dataset,
     attr(out$xyCoords, "resLAT") <- NA
   } 
   # Member attributes -----------------------------
-  if ("member" %in% attr(out$Data, "dimensions")) {
+  if (("member" %in% attr(out$Data, "dimensions")) | ("Members" %in% names(out))){
     if (grid$getCoordinateSystem()$getEnsembleAxis()$isScalar()){
       all.members <- grid$getCoordinateSystem()$getEnsembleAxis()$getCoordValues()
     }else{
@@ -248,17 +248,16 @@ loadGridData <- function(dataset,
     if (!is.null(members)) {
       all.members <- all.members[members]
     }
-    if (grid$getCoordinateSystem()$getEnsembleAxis()$isScalar()){
-      out$Members <- paste0("Member_", all.members)
-    }else{
-      out$Members <- all.members
-    }
     inits <- vector("list", length(all.members))
     names(inits) <- out$Members
     out$InitializationDates <- inits
   }
   gds$close()
   # Dimension ordering -------------
+  if (any(dim(out$Data) == 1)) {
+    attr(out$Data, "dimensions") <- attr(out$Data, "dimensions")[which(dim(out$Data) != 1)]    
+    out$Data <- drop(out$Data)
+  } 
   tab <- c("member", "time", "level", "lat", "lon")
   x <- attr(out$Data, "dimensions")
   if (length(x) > 1) {
@@ -314,6 +313,19 @@ loadGridDataset <- function(var, grid, dic, level, season, years, members, time,
       if (!all((members - 1) %in% c(0:length(all.members)))) stop("Invalid member selection. See 'dataInventory' for details on available members.", call. = FALSE)
     }
     memberPars <- getMemberDomain(grid, members, continuous = TRUE)
+####  
+    if (!is.null(members)) {
+      all.members <- all.members[members]
+    }
+    if (ens.axis$isScalar()) {
+      out.Members <- paste0("Member_", all.members)
+    }else{
+      out.Members <- all.members
+    }
+    inits <- vector("list", length(all.members))
+    names(inits) <- out.Members
+    out.InitializationDates <- inits
+####
   }
   timePars <- getTimeDomain(grid, dic, season, years, time, aggr.d, aggr.m, threshold, condition)
   levelPars <- getVerticalLevelPars(grid, level)
@@ -362,7 +374,11 @@ loadGridDataset <- function(var, grid, dic, level, season, years, members, time,
   attr(Variable, "daily_agg_cellfun") <- cube$timePars$aggr.d
   attr(Variable, "monthly_agg_cellfun") <- cube$timePars$aggr.m
   attr(Variable, "verification_time") <- time
-  out <- list("Variable" = Variable, "Data" = cube$mdArray, "xyCoords" = latLon$xyCoords, "Dates" = Dates)
+  if (is.null(ens.axis)) {
+	out <- list("Variable" = Variable, "Data" = cube$mdArray, "xyCoords" = latLon$xyCoords, "Dates" = Dates)
+  } else {
+	out <- list("Variable" = Variable, "Data" = cube$mdArray, "xyCoords" = latLon$xyCoords, "Dates" = Dates, "Members" = out.Members)
+  }
   return(out)
 }
 # End
