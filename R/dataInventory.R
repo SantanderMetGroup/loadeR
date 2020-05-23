@@ -206,9 +206,10 @@ dataInventory.NetCDF <- function(dataset) {
                   version <- tryCatch({trimws(gds$getDataVariable(varNames[i])$findAttribute("version")$getValues()$toString())}, error = function(e){NA})
                   dataType <- gds$getDataVariable(varNames[i])$getDataType()$toString()
                   units <- gds$getDataVariable(varNames[i])$getUnitsString()
+                  shape <- gds$getDataVariable(varNames[i])$getShape()
                   grid <- gds$findGridByShortName(varName)
                   dim.list <- scanVarDimensions(grid)
-                  var.list[[i]] <- list("Description" = description, "DataType" = dataType, "Units" = units, "Dimensions" = dim.list, "Version" = version)
+                  var.list[[i]] <- list("Description" = description, "DataType" = dataType, "Shape" = shape, "Units" = units, "Dimensions" = dim.list, "Version" = version)
             }
             names(var.list) <- varNames
       }
