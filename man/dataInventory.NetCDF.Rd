@@ -12,7 +12,7 @@ dataInventory.NetCDF(dataset)
 \value{
 A (named) list whose length is determined by the number of variables stored in the dataset,
 its names corresponding to the short names of the variables.
-For each variable, information on the variable long name, data type, units and
+For each variable, information on the variable long name, data type, units, data size (in Mb) and
 characteristics of its dimensions is provided.
 }
 \description{
