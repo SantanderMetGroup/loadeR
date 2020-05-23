@@ -76,3 +76,8 @@ For earlier version changes, see the GitHub Releases [Tab](https://github.com/Sa
  
 ## v1.6.1 (23 Mar 2020) 
  * Minor bug fixes and and enhancements
+ 
+## v1.6.2 (in devel)
+ * Minor bug fixes and enhancements for dealing with ensemble axes
+ * Enhancements in NetCDF support for loading station datasets via loadStationData
+ * Other minor documentation updates
