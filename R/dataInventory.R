@@ -58,7 +58,16 @@ dataInventory <- function(dataset, return.stats = FALSE) {
       if (isTRUE(file.info(dataset)$isdir) | grepl("\\.zip$", dataset)) {
             out <- dataInventory.ASCII(dataset, rs)
       } else {
-            out <- dataInventory.NetCDF(dataset)
+            gds <- tryCatch({openDataset(dataset)}, error = function(err) {NA})
+            nc <- tryCatch({gds$getNetcdfDataset()}, error = function(err) {NA})
+            grep.result <- tryCatch({grep("timeSeries",nc$getGlobalAttributes()$toString())}, error = function(err) {NULL})
+            gds$close()
+            if (length(grep.result) == 0 | is.null(grep.result)) {
+                  out <- dataInventory.NetCDF(dataset)
+                  
+            } else {
+                  out <- dataInventory.NetCDF.ts(dataset)
+            }
       }
       message(paste("[", Sys.time(), "] Done.", sep = ""))
       return(out)
@@ -226,6 +235,120 @@ dataInventory.NetCDF <- function(dataset) {
    return(var.list)
 }
 # End
+
+#' @title Inventory of a Time Series dataset
+#' @description Returns a list with summary information about the variables stored in a time series dataset.
+#' Sub-routine of \code{dataInventory}
+#' @param dataset A full path to the file describing the dataset (NcML)
+#' @return A (named) list whose length is determined by the number of variables stored in the dataset,
+#' its names corresponding to the short names of the variables.
+#' For each variable, information on the variable long name, data type, units, data size (in Mb) and
+#' characteristics of its dimensions is provided.
+#' @author S. Herrera 
+#' @keywords internal
+#' @importFrom rJava J
+
+dataInventory.NetCDF.ts <- function(dataset) {
+      gds <- openDataset(dataset)
+      nc <- gds$getNetcdfDataset()
+      listString <- strsplit(nc$getVariables()$toString(), ";")
+      varNames <-NULL
+      for (l in c(1:length(listString[[1]]))){
+            if ((length(grep("time",listString[[1]][l])) > 0) & (length(grep("station_id",listString[[1]][l])) > 0)){
+                  auxString <- gsub("\\[double |]|\\\\s", "",strsplit(listString[[1]][l],"\\(")[[1]][1])
+                  varNames <- c(varNames,auxString)
+            }
+      }
+      if (length(varNames) == 0) {
+            stop("No variables found", call. = FALSE)
+      } else {
+            var.list <- vector(mode = "list", length = length(varNames))   
+            for (i in 1:length(varNames)) {
+                  message("[", Sys.time(), "] Retrieving info for \'", varNames[i], "\' (", length(varNames) - i, " vars remaining)")
+                  datavar <- gds$getDataVariable(varNames[i])
+                  description <- datavar$getDescription()
+                  varName <- datavar$getShortName()
+                  version <- tryCatch({trimws(datavar$findAttribute("version")$getValues()$toString())}, error = function(e){NA})
+                  dataType <- datavar$getDataType()$toString()
+                  element.size <- datavar$getDataType()$getSize()
+                  data.number <- datavar$getSize()
+                  dataSize <- element.size * data.number * 1e-06
+                  units <- datavar$getUnitsString()
+                  shape <- datavar$getShape()
+                  grid <- nc$findVariable(varName)
+                  gridShape <- grid$getShape()
+                  dim.list <- list()
+                  
+                  length(dim.list) <- length(gridShape) + 2
+                  
+                  gcs <- nc$getDimensions()
+                  dim.Names <- NULL
+                  auxList <- strsplit(gsub("\\[|]|\\\\s", "",gcs$toString()),";")
+                  for (l in c(1:length(auxList[[1]]))){
+                        aux <- strsplit(gsub("\\, |]|\\\\s", "",auxList[[1]][l])," = ")
+                        dim.Names <- c(dim.Names,aux[[1]][1])
+                  }
+                  if (any(dim.Names == "time")) {
+                        tDimIndex <- which(dim.Names == "time")
+                        axis <- nc$findCoordinateAxis("time")
+                        date.range <- gds$getCalendarDateRange()
+                        if (!is.null(date.range)){
+                              date.range <- gds$getCalendarDateRange()$toString()
+                        }
+                        tdim.name <- "time"
+                        time.agg <- nc$getAggregation()
+                        dim.list[[tDimIndex]] <- list("Type" = axis$getAxisType()$toString(),
+                                                      "Units" = axis$getUnitsString(),
+                                                      "Values" = axis$getCoordValues())
+                        names(dim.list)[tDimIndex] <- "time"
+                  }
+                  if (any(dim.Names == "station_id")) {
+                        sDimIndex <- which(dim.Names == "station_id")
+                        axis <- nc$findCoordinateAxis("station_id")
+                        axis.var <- nc$findVariable("station_id")
+                        sdim.name <- "station_id"
+                        dim.list[[sDimIndex]] <- list("Type" = "Station Name",
+                                                      "Units" = axis$getUnitsString(),
+                                                      "Values" = axis.var$read())
+                        names(dim.list)[sDimIndex] <- "station_id"
+                  }
+                  xDimIndex <- length(dim.Names) + 1
+                  if (!is.null(nc$findVariable("lon"))){
+                        axis.var <- nc$findVariable("lon")
+                  } else {
+                        axis.var <- nc$findVariable("x")
+                  }
+                  xdim.name <- axis.var$getName()
+                  dim.list[[xDimIndex]] <- list("Type" = axis.var$getDescription(),
+                                                "Units" = axis.var$getUnitsString(),
+                                                "Values" = axis.var$read()$copyTo1DJavaArray())
+                  names(dim.list)[xDimIndex] <- "longitude"
+                  yDimIndex <- length(dim.Names) + 2
+                  if (!is.null(nc$findVariable("lat"))){
+                        axis.var <- nc$findVariable("lat")
+                  } else {
+                        axis.var <- nc$findVariable("y")
+                  }
+                  ydim.name <- axis.var$getName()
+                  dim.list[[yDimIndex]] <- list("Type" = axis.var$getDescription(),
+                                                "Units" = axis.var$getUnitsString(),
+                                                "Values" = axis.var$read()$copyTo1DJavaArray())
+                  names(dim.list)[yDimIndex] <- "latitude"
+                  
+                  var.list[[i]] <- list("Description" = description,
+                                        "DataType" = dataType,
+                                        "Shape" = shape,
+                                        "Units" = units,
+                                        "DataSizeMb" = dataSize,
+                                        "Version" = version,
+                                        "Dimensions" = dim.list)
+            }
+            names(var.list) <- varNames
+      }
+      gds$close()
+      return(var.list)
+}
+# end
 
 
 #' @title Retrieve station info
