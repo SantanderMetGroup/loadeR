@@ -61,7 +61,7 @@ dataInventory <- function(dataset, return.stats = FALSE) {
             gds <- tryCatch({openDataset(dataset)}, error = function(err) {NA})
             nc <- tryCatch({gds$getNetcdfDataset()}, error = function(err) {NA})
             grep.result <- tryCatch({grep("timeSeries",nc$getGlobalAttributes()$toString())}, error = function(err) {NULL})
-            gds$close()
+            if(!is.na(gds)) gds$close()
             if (length(grep.result) == 0 | is.null(grep.result)) {
                   out <- dataInventory.NetCDF(dataset)
                   
