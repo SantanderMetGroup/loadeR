@@ -15,8 +15,8 @@ Suggests:
     downscaleR
 Type: Package
 Title: A climate4R package for data access <http://meteo.unican.es/climate4r>
-Version: 1.6.2
-Date: 2020-05-23
+Version: 1.7.0
+Date: 2020-05-29
 Authors@R: c(person("Bedia", "Joaquín", email = "bediaj@unican.es", role = c("aut","cre"), comment = c(ORCID = "0000-0001-6219-4312")),
              person("Antonio", "Cofiño", email = "antonio.cofino@unican.es", role = "ctb"),
              person("Matteo", "de Felice", email = "matteo.defelice@enea.it", role = "ctb"),

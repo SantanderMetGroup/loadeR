@@ -77,7 +77,7 @@ For earlier version changes, see the GitHub Releases [Tab](https://github.com/Sa
 ## v1.6.1 (23 Mar 2020) 
  * Minor bug fixes and and enhancements
  
-## v1.6.2 (in devel)
+## v1.7.0 (in devel)
  * Enhancements in NetCDF support for loading station datasets via loadStationData
  * Include 'Shape' and 'MemorySizeMb' attributes in dataInventory for NetCDF datasets
  * Minor bug fixes and enhancements for dealing with ensemble axes
