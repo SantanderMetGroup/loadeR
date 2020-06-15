@@ -9,24 +9,26 @@
 #' @param grid A java object of the class \sQuote{ucar.nc2.dt.grid.GeoGrid}
 #' @return a list of length \emph{N}, being N the number of dimensions defining the grid shape.
 #' @details All possible dimensions of a gridded datasets are searched and included if existing. This is done
-#'  following the canonical dimension ordering [runtime, member, time, level, lat, lon], although function
+#'  following the canonical dimension ordering [runtime, member, time, level, lat, lon], although the function
 #'  does not assume this ordering and therefore non-standard orderings should be adequately treated
 #'  (this might be the case for instance when creating a new aggregation dimension via NcML).
+#'  
 #'  In case of existing vertical levels for a given dataset, all possible dataset level values are scanned
 #'  one by one and those that do not exist for that particular variable are removed. This way, the inventory returns
-#'  only the non-empty level values for each variable. In case of horizontal 2D axes,
-#'  coordinate values are truncated to 1D for conciseness in the inventory.
+#'  only the non-empty level values for each variable.
+#'  
+#'  In case of horizontal 2D axes, the coordinate values are truncated to 1D for conciseness in fisrt instance. However,
+#'  the coordinate values of the 2D dimensions are listed in a lower level element of the Dimensions list.
 #'  
 #' @references \url{http://www.unidata.ucar.edu/software/thredds/v4.3/netcdf-java/v4.3/javadocAll/ucar/nc2/dt/grid/GeoGrid.html}
-#' @author J. Bedia 
+#' @author J. Bedia, S. Herrera
 #' @export
 #' @keywords internal
 
 scanVarDimensions <- function(grid) {
   gridShape <- grid$getShape()
   gcs <- grid$getCoordinateSystem()
-  dim.list <- list()
-  length(dim.list) <- length(gridShape)
+  dim.list <- vector(mode = "list", length = length(gridShape)) 
   if (grid$getRunTimeDimensionIndex() >= 0) {
     rtDimIndex <- grid$getRunTimeDimensionIndex() + 1
     axis <- gcs$getRunTimeAxis()
@@ -92,26 +94,34 @@ scanVarDimensions <- function(grid) {
     axis <- gcs$getXHorizAxis()
     lonAxisShape <- axis$getShape()        
     values <- axis$getCoordValues()
+    aux.XAxis <- axis$getDimensionsString()
     if (length(lonAxisShape) == 2) {
       values <- apply(t(matrix(values, ncol = lonAxisShape[1])), 2, min)
+      aux.XAxis <- unlist(strsplit(axis$getDimensionsString(), split = "\\s"))
     }
     dim.list[[xDimIndex]] <- list("Type" = axis$getAxisType()$toString(),
                                   "Units" = axis$getUnitsString(),
-                                  "Values" = values)
-    names(dim.list)[xDimIndex] <- axis$getDimensionsString() # "lon"
+                                  "Values" = values,
+                                  "Shape" =  lonAxisShape,
+                                  "Coordinates" = aux.XAxis)
+    names(dim.list)[xDimIndex] <- axis$getShortName() # "lon"
   }
   if (grid$getYDimensionIndex() >= 0) {
     yDimIndex <- grid$getYDimensionIndex() + 1
     axis <- gcs$getYHorizAxis()
     latAxisShape <- axis$getShape()
     values <- axis$getCoordValues()
+    aux.YAxis <- axis$getDimensionsString()
     if (length(latAxisShape) == 2) {
       values <- apply(t(matrix(values, ncol = latAxisShape[1])), 1, min)
+      aux.YAxis <- unlist(strsplit(axis$getDimensionsString(), split = "\\s"))
     }
     dim.list[[yDimIndex]] <- list("Type" = axis$getAxisType()$toString(),
                                   "Units" = axis$getUnitsString(),
-                                  "Values" = values)
-    names(dim.list)[yDimIndex] <- axis$getDimensionsString() # "lat"
+                                  "Values" = values,
+                                  "Shape" =  latAxisShape,
+                                  "Coordinates" = aux.YAxis)
+    names(dim.list)[yDimIndex] <- axis$getShortName() # "lat"
   }
   return(dim.list)
 }
