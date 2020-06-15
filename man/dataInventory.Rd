@@ -44,6 +44,8 @@ print(di.stats$Summary.stats)
 }
 \seealso{
 \code{\link{stationInfo}} for a quick overview of available stations in station datasets.
+Further details are given in \code{\link{scanVarDimensions}}, which is the internal performing
+ the dimension info retrieval.
 }
 \author{
 J Bedia

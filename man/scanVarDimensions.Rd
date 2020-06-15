@@ -18,18 +18,21 @@ This is a sub-routine of \code{dataInventory.NetCDF}, \code{makeSubset}.
 }
 \details{
 All possible dimensions of a gridded datasets are searched and included if existing. This is done
- following the canonical dimension ordering [runtime, member, time, level, lat, lon], although function
+ following the canonical dimension ordering [runtime, member, time, level, lat, lon], although the function
  does not assume this ordering and therefore non-standard orderings should be adequately treated
  (this might be the case for instance when creating a new aggregation dimension via NcML).
+ 
  In case of existing vertical levels for a given dataset, all possible dataset level values are scanned
  one by one and those that do not exist for that particular variable are removed. This way, the inventory returns
- only the non-empty level values for each variable. In case of horizontal 2D axes,
- coordinate values are truncated to 1D for conciseness in the inventory.
+ only the non-empty level values for each variable.
+ 
+ In case of horizontal 2D axes, the coordinate values are truncated to 1D for conciseness in fisrt instance. However,
+ the coordinate values of the 2D dimensions are listed in a lower level element of the Dimensions list.
 }
 \references{
 \url{http://www.unidata.ucar.edu/software/thredds/v4.3/netcdf-java/v4.3/javadocAll/ucar/nc2/dt/grid/GeoGrid.html}
 }
 \author{
-J. Bedia
+J. Bedia, S. Herrera
 }
 \keyword{internal}
