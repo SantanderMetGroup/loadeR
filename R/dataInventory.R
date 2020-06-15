@@ -1,6 +1,6 @@
-# dataInventory.R Get an overview of the contents of a dataset
+#     dataInventory.R Get an overview of the contents of a dataset
 #
-#     Copyright (C) 2016 Santander Meteorology Group (http://www.meteo.unican.es)
+#     Copyright (C) 2020 Santander Meteorology Group (http://www.meteo.unican.es)
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -42,10 +42,13 @@
 #' print(di.stats$Summary.stats)
 #' } 
 #' @seealso \code{\link{stationInfo}} for a quick overview of available stations in station datasets.
+#' Further details are given in \code{\link{scanVarDimensions}}, which is the internal performing
+#'  the dimension info retrieval.
 #' @export
 #' @author J Bedia 
 
 dataInventory <- function(dataset, return.stats = FALSE) {
+      stopifnot(is.logical(return.stats))
       if (dataset %in% suppressMessages(do.call("c", UDG.datasets()))) {
             lf <- list.files(file.path(find.package("climate4R.UDG")), pattern = "datasets.*.txt", full.names = TRUE)
             df <- lapply(lf, function(x) read.csv(x, stringsAsFactors = FALSE))
@@ -60,8 +63,8 @@ dataInventory <- function(dataset, return.stats = FALSE) {
       } else {
             gds <- tryCatch({openDataset(dataset)}, error = function(err) {NA})
             nc <- tryCatch({gds$getNetcdfDataset()}, error = function(err) {NA})
-            grep.result <- tryCatch({grep("timeSeries",nc$getGlobalAttributes()$toString())}, error = function(err) {NULL})
-            if(!is.na(gds)) gds$close()
+            grep.result <- tryCatch({grep("timeSeries", nc$getGlobalAttributes()$toString())}, error = function(err) {NULL})
+            suppressWarnings(if (!is.na(gds)) gds$close())
             if (length(grep.result) == 0 | is.null(grep.result)) {
                   out <- dataInventory.NetCDF(dataset)
                   
