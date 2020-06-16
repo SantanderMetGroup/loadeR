@@ -57,7 +57,7 @@
 #' 
 #' @importFrom stats na.exclude
 #' @importFrom utils packageVersion tail
-#' @importFrom climate4R.UDG UDG.datasets
+#' @importFrom climate4R.UDG UDG.datasets C4R.vocabulary
 #' 
 #' @examples \dontrun{
 #' #Download dataset
@@ -82,7 +82,7 @@
 #' # Same but using the original variable (not harmonized via dictionary):
 #' di <- dataInventory(ncep)
 #' names(di)
-#' C4R.vocabulary()
+#' climate4R.UDG::C4R.vocabulary()
 #' # Variable is named 'T', instead of the standard name 'ta' in the vocabulary
 #' # Vertical level is indicated using the '@@' symbol:
 #' non.standard.grid <- loadGridData(ncep, var = "T@@850", dictionary = FALSE, lonLim = c(-10,5),
@@ -212,7 +212,7 @@ loadGridData <- function(dataset,
   proj <- grid$getCoordinateSystem()$getProjection()
   projParams <- NULL
   #if (!proj$isLatLon()) latLon <- adjustRCMgrid(gds, latLon, lonLim, latLim)
-  if (!proj$isLatLon() | proj$getName() == "LambertConformal"){
+  if (!proj$isLatLon() | proj$getName() == "LambertConformal") {
     latLon <- adjustRCMgrid(gds, latLon, lonLim, latLim)
     projParams <- proj$getProjectionParameters()
   }
@@ -222,12 +222,12 @@ loadGridData <- function(dataset,
   # Metadata: projection and spatial resolution -------------
   proj <- proj$toString()
   attr(out$xyCoords, which = "projection") <- proj
-  if (!is.null(projParams)){
+  if (!is.null(projParams)) {
     nparams <- projParams$size()
     auxParams <- projParams$toString()
     auxParams <- gsub(auxParams, pattern = "\\[|\\]",replacement = "")
     nameValue <- strsplit(auxParams, ", ")
-    for (ip in c(1:nparams)){
+    for (ip in c(1:nparams)) {
       sepValues <- strsplit(nameValue[[1]][ip], " = ")
       attr(out$xyCoords, which = sepValues[[1]][1]) <- sepValues[[1]][2]
     }
@@ -239,8 +239,8 @@ loadGridData <- function(dataset,
     attr(out$xyCoords, "resLAT") <- NA
   } 
   # Member attributes -----------------------------
-  if (("member" %in% attr(out$Data, "dimensions")) | ("Members" %in% names(out))){
-    if (grid$getCoordinateSystem()$getEnsembleAxis()$isScalar()){
+  if (("member" %in% attr(out$Data, "dimensions")) | ("Members" %in% names(out))) {
+    if (grid$getCoordinateSystem()$getEnsembleAxis()$isScalar()) {
       all.members <- grid$getCoordinateSystem()$getEnsembleAxis()$getCoordValues()
     }else{
       all.members <- javaString2rChar(grid$getCoordinateSystem()$getEnsembleAxis()$getNames()$toString())
@@ -261,10 +261,10 @@ loadGridData <- function(dataset,
   tab <- c("member", "time", "level", "lat", "lon")
   x <- attr(out$Data, "dimensions")
   if (length(x) > 1) {
-    if (length(grep(x, pattern = "x")) > 0){
+    if (length(grep(x, pattern = "x")) > 0) {
       x[grep(x, pattern = "x")] <- "lon"
     }
-    if (length(grep(x, pattern = "y")) > 0){
+    if (length(grep(x, pattern = "y")) > 0) {
       x[grep(x, pattern = "y")] <- "lat"
     }
     b <- na.exclude(match(tab, x))
@@ -349,7 +349,7 @@ loadGridDataset <- function(var, grid, dic, level, season, years, members, time,
   attr(Variable, "use_dictionary") <- isStandard
   attr(Variable, "description") <- grid$getDescription()
   if (isStandard) {
-    vocabulary <- C4R.vocabulary()
+    vocabulary <- climate4R.UDG::C4R.vocabulary()
     uds <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier), 3])
     attr(Variable, "units") <- uds
     attr(Variable, "longname") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier), 2])

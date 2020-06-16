@@ -29,7 +29,7 @@
 #'  \href{http://trac.osgeo.org/proj/}{PROJ.4 specifications}. Default is set to WGS84 lon-lat coordinates.
 #' @param units Optional (but strongly advised when possible). This is a character string indicating the units
 #' of the variable. This should be whenever possible compatible with the udunits valid (\dQuote{parseable})
-#'  definitions. See \code{C4R.vocabulary()} for examples of standard unit string definitions.
+#'  definitions. See \code{\link[climate4R.UDG]{C4R.vocabulary}} for examples of standard unit string definitions.
 #' @param level Optional character of the atmospheric level. This information about the variable will be 
 #' included in the output grid. Requires knowledge about the dataset.
 #' 

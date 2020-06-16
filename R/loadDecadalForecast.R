@@ -44,6 +44,7 @@
 #' @author J. Bedia, S. Herrera, M. Iturbide, J.M. Gutierrez 
 #' @family loading.grid
 #' @importFrom utils tail
+#' @importFrom climate4R.UDG C4R.vocabulary
 #' @importFrom rJava J
 #'
 #' @examples \dontrun{
@@ -151,7 +152,7 @@ loadDecadalForecast <- function(dataset,
   Variable <- list("varName" = var, "level" = level)
   attr(Variable, "is_standard") <- isStandard
   if (isStandard) {
-    vocabulary <- C4R.vocabulary()
+    vocabulary <- climate4R.UDG::C4R.vocabulary()
     attr(Variable, "units") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier), 3])
     attr(Variable, "longname") <- as.character(vocabulary[grep(paste0("^", var, "$"), vocabulary$identifier), 2])
   } else {
