@@ -185,7 +185,7 @@ str(grid.mm)
 # Same but using the original variable (not harmonized via dictionary):
 di <- dataInventory(ncep)
 names(di)
-C4R.vocabulary()
+climate4R.UDG::C4R.vocabulary()
 # Variable is named 'T', instead of the standard name 'ta' in the vocabulary
 # Vertical level is indicated using the '@' symbol:
 non.standard.grid <- loadGridData(ncep, var = "T@850", dictionary = FALSE, lonLim = c(-10,5),

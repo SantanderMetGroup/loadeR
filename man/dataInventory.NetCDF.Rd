@@ -20,6 +20,6 @@ Returns a list with summary information about the variables stored in a gridded 
 Sub-routine of \code{dataInventory}
 }
 \author{
-J. Bedia
+J. Bedia, S. Herrera
 }
 \keyword{internal}
