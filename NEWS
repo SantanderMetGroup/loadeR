@@ -77,10 +77,11 @@ For earlier version changes, see the GitHub Releases [Tab](https://github.com/Sa
 ## v1.6.1 (23 Mar 2020) 
  * Minor bug fixes and and enhancements
  
-## v1.7.0 (in devel)
+## v1.7.0 (16 Jun 2020)
  * Enhancements in NetCDF support for loading station datasets via loadStationData
  * Include 'Shape' and 'MemorySizeMb' attributes in dataInventory for NetCDF datasets
  * Include 2D coordinates of irregular grids in dataInventories
  * Minor bug fixes and enhancements for dealing with ensemble axes
+ * loginUDG, C4R.vocabulary and C4R.vocabulary.update utilities moved to climate4R.UDG dependency
  * Other minor documentation updates
  
