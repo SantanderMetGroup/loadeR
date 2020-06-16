@@ -6,7 +6,7 @@
 #' its names corresponding to the short names of the variables.
 #' For each variable, information on the variable long name, data type, units, data size (in Mb) and
 #' characteristics of its dimensions is provided.
-#' @author J. Bedia 
+#' @author J. Bedia, S. Herrera
 #' @keywords internal
 #' @importFrom rJava J
 
@@ -39,38 +39,50 @@ dataInventory.NetCDF <- function(dataset) {
          dim.list <- scanVarDimensions(grid)
          if (grid$getXDimensionIndex() >= 0) {
            xDimIndex <- grid$getXDimensionIndex() + 1
-           if (length(dim.list[[xDimIndex]]$Shape) > 1){
+           if (length(dim.list[[xDimIndex]]$Shape) > 1) {
              dimX.list <- list()
              length(dimX.list) <- length(dim.list[[xDimIndex]]$Shape)
-             for (v in c(1:length(dimX.list))){
-               Xcoord <- nc.dataset$findVariable(dim.list[[xDimIndex]]$Coordinates[v])
-               Xunits <- Xcoord$getUnitsString()
-               XType <- Xcoord$getAxisType()$toString()
-               XAxisShape <- Xcoord$getShape()
-               values <- Xcoord$getCoordValues()
-               aux.XAxis <- Xcoord$getDimensionsString()
-               dimX.list[[v]] <- list("Type" = XType, "Units" = Xunits,
-                                              "Values" = values, "Shape" =  XAxisShape,"Coordinates" = aux.XAxis)
-               names(dimX.list)[v] <- Xcoord$getShortName() # "lon"
+             for (v in c(1:length(dimX.list))) {
+                dimX.list[[v]] <- tryCatch({
+                   Xcoord <- nc.dataset$findVariable(dim.list[[xDimIndex]]$Coordinates[v])
+                   Xunits <- Xcoord$getUnitsString()
+                   XType <- Xcoord$getAxisType()$toString()
+                   XAxisShape <- Xcoord$getShape()
+                   values <- Xcoord$getCoordValues()
+                   aux.XAxis <- Xcoord$getDimensionsString()
+                   list("Type" = XType, "Units" = Xunits,
+                        "Values" = values, "Shape" =  XAxisShape,"Coordinates" = aux.XAxis)
+                }, error = function(e) {
+                   list("Type" = NULL, "Units" = NULL,
+                        "Values" = NULL, "Shape" =  NULL,
+                        "Coordinates" = NULL)
+                   })
+                names(dimX.list)[v] <- dim.list[[xDimIndex]]$Coordinates[v] # "lon"
              }
              dim.list[[xDimIndex]]$Dimensions <- dimX.list
            }
          }
          if (grid$getYDimensionIndex() >= 0) {
            yDimIndex <- grid$getYDimensionIndex() + 1
-           if (length(dim.list[[yDimIndex]]$Shape) > 1){
+           if (length(dim.list[[yDimIndex]]$Shape) > 1) {
              dimX.list <- list()
              length(dimX.list) <- length(dim.list[[yDimIndex]]$Shape)
-             for (v in c(1:length(dimX.list))){
-               Xcoord <- nc.dataset$findVariable(dim.list[[yDimIndex]]$Coordinates[v])
-               Xunits <- Xcoord$getUnitsString()
-               XType <- Xcoord$getAxisType()$toString()
-               XAxisShape <- Xcoord$getShape()
-               values <- Xcoord$getCoordValues()
-               aux.XAxis <- Xcoord$getDimensionsString()
-               dimX.list[[v]] <- list("Type" = XType, "Units" = Xunits,
-                                      "Values" = values, "Shape" =  XAxisShape,"Coordinates" = aux.XAxis)
-               names(dimX.list)[v] <- Xcoord$getShortName() # "lon"
+             for (v in c(1:length(dimX.list))) {
+                dimX.list[[v]] <- tryCatch({
+                   Xcoord <- nc.dataset$findVariable(dim.list[[yDimIndex]]$Coordinates[v])
+                   Xunits <- Xcoord$getUnitsString()
+                   XType <- Xcoord$getAxisType()$toString()
+                   XAxisShape <- Xcoord$getShape()
+                   values <- Xcoord$getCoordValues()
+                   aux.XAxis <- Xcoord$getDimensionsString()
+                   list("Type" = XType, "Units" = Xunits,
+                        "Values" = values, "Shape" =  XAxisShape,"Coordinates" = aux.XAxis)
+                }, error = function(e) {
+                   list("Type" = NULL, "Units" = NULL,
+                        "Values" = NULL, "Shape" =  NULL,
+                        "Coordinates" = NULL)
+                   })
+                names(dimX.list)[v] <- dim.list[[yDimIndex]]$Coordinates[v] # "lon"
              }
              dim.list[[yDimIndex]]$Dimensions <- dimX.list
            }
