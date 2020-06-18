@@ -252,6 +252,14 @@ loadGridData <- function(dataset,
     names(inits) <- out$Members
     out$InitializationDates <- inits
   }
+  # Global attributes ------------
+  global.attr <- gds$getGlobalAttributes()$toString()
+  global.attr <- strsplit(global.attr, split = "\",")
+  z <- unlist(lapply(global.attr, strsplit, " = \""), recursive = FALSE)
+  eo <- do.call("rbind", z)
+  eo <- gsub("\\]", "", gsub("\\[", "", eo))
+  eo <- trimws(eo) 
+  for(x in 1:nrow(eo)) attr(out, eo[x, 1]) <- eo[x, 2]
   gds$close()
   # Dimension ordering -------------
   if (any(dim(out$Data) == 1)) {
