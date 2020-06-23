@@ -46,6 +46,8 @@
 #' @param condition Optional, only needed if absolute/relative frequencies are required. Inequality operator to be applied considering the given threshold.
 #'  \code{"GT"} = greater than the value of \code{threshold}, \code{"GE"} = greater or equal,
 #'   \code{"LT"} = lower than, \code{"LE"} = lower or equal than
+#'   
+#' @param spatialTolerance Numeric. Distance (in grid coordinate units) out of the lonLim and LatLim ranges that is allowed for data retrieving.
 #' @template templateReturnGridData
 #' @template templateDicDetails  
 #' @template templateTimeAggr
@@ -154,7 +156,8 @@ loadGridData <- function(dataset,
                          aggr.d = "none",
                          aggr.m = "none",
                          condition = NULL,
-                         threshold = NULL) {
+                         threshold = NULL,
+                         spatialTolerance = NULL) {
   time <- match.arg(time, choices = c("none","00","03","06","09","12","15","18","21","DD"))
   aggr.d <- match.arg(aggr.d, choices = c("none", "mean", "min", "max", "sum"))
   if (time != "DD" & aggr.d != "none") {
@@ -208,7 +211,7 @@ loadGridData <- function(dataset,
     stop("Variable requested not found\nCheck 'dataInventory' output and/or dictionary 'identifier'.", call. = FALSE)
   }
   # Spatial collocation -------------
-  latLon <- getLatLonDomain(grid, lonLim, latLim)
+  latLon <- getLatLonDomain(grid, lonLim, latLim, spatialTolerance = spatialTolerance)
   proj <- grid$getCoordinateSystem()$getProjection()
   projParams <- NULL
   #if (!proj$isLatLon()) latLon <- adjustRCMgrid(gds, latLon, lonLim, latLim)
@@ -252,14 +255,6 @@ loadGridData <- function(dataset,
     names(inits) <- out$Members
     out$InitializationDates <- inits
   }
-  # Global attributes ------------
-  global.attr <- gds$getGlobalAttributes()$toString()
-  global.attr <- strsplit(global.attr, split = "\",")
-  z <- unlist(lapply(global.attr, strsplit, " = \""), recursive = FALSE)
-  eo <- do.call("rbind", z)
-  eo <- gsub("\\]", "", gsub("\\[", "", eo))
-  eo <- trimws(eo) 
-  for(x in 1:nrow(eo)) attr(out, eo[x, 1]) <- eo[x, 2]
   gds$close()
   # Dimension ordering -------------
   if (any(dim(out$Data) == 1)) {

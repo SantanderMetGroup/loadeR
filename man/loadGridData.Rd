@@ -17,7 +17,8 @@ loadGridData(
   aggr.d = "none",
   aggr.m = "none",
   condition = NULL,
-  threshold = NULL
+  threshold = NULL,
+  spatialTolerance = NULL
 )
 }
 \arguments{
@@ -75,6 +76,8 @@ If \code{aggr.m = "none"} (the default), no monthly aggregation is undertaken.}
 
 \item{threshold}{Optional, only needed if absolute/relative frequencies are required. A float number defining the threshold
 used by  \code{condition} (the next argument).}
+
+\item{spatialTolerance}{Numeric. Distance (in grid coordinate units) out of the lonLim and LatLim ranges that is allowed for data retrieving.}
 }
 \value{
 A list with the following elements providing the necessary information 

@@ -40,7 +40,7 @@
 #' @export
 #' @importFrom rJava .jnew .jnull
 
-getLatLonDomain <- function(grid, lonLim, latLim) {
+getLatLonDomain <- function(grid, lonLim, latLim, spatialTolerance = NULL) {
   if (any(lonLim > 180) | any(lonLim < -180) | any(latLim > 90) | any(latLim < -90)) {
     stop("Invalid geographical coordinates. Check 'lonLim' and/or 'latLim' argument values")
   }
@@ -48,15 +48,22 @@ getLatLonDomain <- function(grid, lonLim, latLim) {
   gcs <- grid$getCoordinateSystem()
   bboxDataset <- gcs$getLatLonBoundingBox()
   if (length(lonLim) == 1 | length(latLim) == 1) {
-    pointXYpars <- findPointXYindex(lonLim, latLim, gcs)
+    pointXYpars <- findPointXYindex(lonLim, latLim, gcs, spatialTolerance = NULL)
     lonLim <- pointXYpars$lonLim
     latLim <- pointXYpars$latLim
     pointXYindex <- pointXYpars$pointXYindex
   } else {
     pointXYindex <- c(-1L, -1L)
-  }    
+  }
   if (is.null(latLim)) {
     latLim <- c(bboxDataset$getLatMin(), bboxDataset$getLatMax())
+  }else if (!is.null(spatialTolerance)){
+    if ((latLim[1] > bboxDataset$getLatMax()) & (latLim[1] - spatialTolerance <= bboxDataset$getLatMax())){
+      latLim[1] <- bboxDataset$getLatMax()
+    } 
+    if ((latLim[2] < bboxDataset$getLatMin()) & (latLim[2] + spatialTolerance >= bboxDataset$getLatMin())){
+      latLim[2] <- bboxDataset$getLatMin()
+    } 
   }
   deltaLat <- latLim[2] - latLim[1]
   if (is.null(lonLim)) {
@@ -94,7 +101,14 @@ getLatLonDomain <- function(grid, lonLim, latLim) {
       }
     }
   } else {
-    deltaLat <- latLim[2] - latLim[1]
+    if (!is.null(spatialTolerance)){
+      if ((lonLim[1] > bboxDataset$getLonMax()) & (lonLim[1] - spatialTolerance <= bboxDataset$getLonMax())){
+        lonLim[1] <- bboxDataset$getLonMax()
+      } 
+      if ((lonLim[2] < bboxDataset$getLonMin()) & (lonLim[2] + spatialTolerance >= bboxDataset$getLonMin())){
+        lonLim[2] <- bboxDataset$getLonMin()
+      } 
+    }
     deltaLon <- lonLim[2] - lonLim[1]
     spec <- .jnew("java/lang/String", paste(latLim[1], lonLim[1], deltaLat, deltaLon, sep = ", "))
     bboxRequest <- .jnew("ucar/unidata/geoloc/LatLonRect", spec)
@@ -111,7 +125,6 @@ getLatLonDomain <- function(grid, lonLim, latLim) {
       llbbox[[1]] <- .jnew("ucar/unidata/geoloc/LatLonRect", spec)
       llRanges[[1]] <- gcs$getRangesFromLatLonRect(.jnew("ucar/unidata/geoloc/LatLonRect", spec))
     }
-    
   }
   if (pointXYindex[1] >= 0) {
     aux <- grid$makeSubset(.jnull(), .jnull(), .jnull(), 1L, 1L, 1L)
@@ -242,3 +255,4 @@ adjustRCMgrid <- function(gds, latLon, lonLim, latLim) {
   })
   return(latLon)
 }
+

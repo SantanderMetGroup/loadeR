@@ -4,7 +4,7 @@
 \alias{getLatLonDomain}
 \title{Determine the geo-location parameters of an arbitrary user selection}
 \usage{
-getLatLonDomain(grid, lonLim, latLim)
+getLatLonDomain(grid, lonLim, latLim, spatialTolerance = NULL)
 }
 \arguments{
 \item{grid}{Java class \sQuote{GeoGrid}}

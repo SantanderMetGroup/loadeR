@@ -4,7 +4,7 @@
 \alias{findPointXYindex}
 \title{Define user-defined geolocation parameters}
 \usage{
-findPointXYindex(lonLim, latLim, gcs)
+findPointXYindex(lonLim, latLim, gcs, spatialTolerance = NULL)
 }
 \arguments{
 \item{lonLim}{x domain definition}
