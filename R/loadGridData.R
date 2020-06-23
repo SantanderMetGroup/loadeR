@@ -46,8 +46,8 @@
 #' @param condition Optional, only needed if absolute/relative frequencies are required. Inequality operator to be applied considering the given threshold.
 #'  \code{"GT"} = greater than the value of \code{threshold}, \code{"GE"} = greater or equal,
 #'   \code{"LT"} = lower than, \code{"LE"} = lower or equal than
-#'   
-#' @param spatialTolerance Numeric. Distance (in grid coordinate units) out of the lonLim and LatLim ranges that is allowed for data retrieving.
+#' @param spatialTolerance Numeric. The use of this argument is NOT RECOMMENDED. Distance 
+#' (in grid coordinate units) out of the lonLim and LatLim ranges that is allowed for data retrieving.
 #' @template templateReturnGridData
 #' @template templateDicDetails  
 #' @template templateTimeAggr
