@@ -266,7 +266,9 @@ loadStationData <- function(dataset,
             aux <- NULL  
             out <- list("Variable" = list("varName" = var, "level" = level), "Data" = Data, "xyCoords" = coords, "Dates" = timeBoundsValue(timePars$timeDates, tz), "Metadata" = meta.list)
             if (is.null(units)) message("NOTE: The \'units\' argument is undefined: It is highly recommended to indicate this attribute\nThis can be made afterwards with transformeR's function \'setGridUnits\'")
-            attr(out$Data, "dimensions") <- c("time", "loc")
+            datadimnames <- c("time", "loc")
+            if (class(out$Data) == "numeric") datadimnames <- "time"
+            attr(out$Data, "dimensions") <- datadimnames
             attr(out$Variable, "units") <- units
             attr(out, "dataset") <- dataset
             attr(out, "R_package_desc") <- paste0("loadeR-v", packageVersion("loadeR"))
