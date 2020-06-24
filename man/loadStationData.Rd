@@ -16,7 +16,8 @@ loadStationData(
  
     projection = "+proj=longlat +init=epsg:4326 +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0",
   units = NULL,
-  level = NULL
+  level = NULL,
+  spatialTolerance = NULL
 )
 }
 \arguments{
@@ -58,6 +59,9 @@ of the variable. This should be whenever possible compatible with the udunits va
 
 \item{level}{Optional character of the atmospheric level. This information about the variable will be 
 included in the output grid. Requires knowledge about the dataset.}
+
+\item{spatialTolerance}{Numeric. The use of this argument is NOT RECOMMENDED. Distance 
+(in grid coordinate units) out of the lonLim and LatLim ranges that is allowed for data retrieving.}
 }
 \value{
 a list with the following elements:
