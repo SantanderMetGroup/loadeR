@@ -128,7 +128,17 @@ getLatLonDomain <- function(grid, lonLim, latLim, spatialTolerance = NULL) {
   }
   if (pointXYindex[1] >= 0) {
     aux <- grid$makeSubset(.jnull(), .jnull(), .jnull(), 1L, 1L, 1L)
-    lonSlice <- aux$getCoordinateSystem()$getLonAxis()$getCoordValue(pointXYindex[1])
+    lonSlice <- tryCatch(aux$getCoordinateSystem()$getLonAxis()$getCoordValue(pointXYindex[1]), error = function(e) NULL, finally = NULL)
+    if (is.null(lonSlice)){
+      lonAxisShape <- aux$getCoordinateSystem()$getXHorizAxis()$getShape()
+      lonSlice <- aux$getCoordinateSystem()$getXHorizAxis()$getCoordValues()
+      if (length(lonAxisShape) > 1) {
+        lonSlice <- t(matrix(lonSlice, nrow = lonAxisShape[2], ncol = lonAxisShape[1]))
+        lonSlice <- lonSlice[,pointXYindex[1]]
+      } else {
+        lonSlice <- lonSlice[pointXYindex[1]]
+      }
+    }
   } else {
     lonAux <- list()
     for (k in 1:length(llbbox)) {
@@ -146,12 +156,22 @@ getLatLonDomain <- function(grid, lonLim, latLim, spatialTolerance = NULL) {
   aux <- grid$makeSubset(.jnull(), .jnull(), llbbox[[1]], 1L, 1L, 1L)
   revLat <- FALSE
   if (pointXYindex[2] >= 0) {
-    latSlice <- aux$getCoordinateSystem()$getYHorizAxis()$getCoordValue(pointXYindex[2])
+    latSlice <- tryCatch(aux$getCoordinateSystem()$getYHorizAxis()$getCoordValue(pointXYindex[2]), error = function(e) NULL, finally = NULL)
+    if (is.null(latSlice)){
+      latSlice <- aux$getCoordinateSystem()$getYHorizAxis()$getCoordValues()
+      latAxisShape <- aux$getCoordinateSystem()$getYHorizAxis()$getShape()
+      if (length(latAxisShape) > 1) {
+        latSlice <- t(matrix(latSlice, nrow = latAxisShape[2], ncol = latAxisShape[1]))
+        latSlice <- latSlice[pointXYindex[2],]
+      } else {
+        latSlice <- latSlice[pointXYindex[2]]
+      }
+    }
   } else {
     latSlice <- aux$getCoordinateSystem()$getYHorizAxis()$getCoordValues()
     latAxisShape <- aux$getCoordinateSystem()$getYHorizAxis()$getShape()
     if (length(latAxisShape) > 1) {
-      latSlice <- apply(t(matrix(latSlice, nrow = latAxisShape[2], ncol = latAxisShape[1])), 1, min)
+      latSlice <- t(matrix(latSlice, nrow = latAxisShape[2], ncol = latAxisShape[1]))
     }
     if (latAxisShape[1] > 1 & diff(latSlice)[1] < 0) {
       latSlice <- rev(latSlice)
