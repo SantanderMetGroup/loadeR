@@ -44,18 +44,36 @@ makeSubset <- function(grid, timePars, levelPars, latLon, memberPars) {
                                 latLon$llRanges[[j]]$get(1L))
       shapeArray <- rev(subSet$getShape()) # Reversed!!
       # shape of the output depending on spatial selection
+      # if (latLon$pointXYindex[1] >= 0) {
+      #   rm.dim <- grep(gcs$getXHorizAxis()$getDimensionsString(),
+      #                  dimNamesRef, fixed = TRUE)
+      #   shapeArray <- shapeArray[-rm.dim]
+      #   dimNamesRef <- dimNamesRef[-rm.dim]
+      # }
       if (latLon$pointXYindex[1] >= 0) {
-        rm.dim <- grep(gcs$getXHorizAxis()$getDimensionsString(),
-                       dimNamesRef, fixed = TRUE)
+        rm.dim <- strsplit(gcs$getXHorizAxis()$getDimensionsString(), " ")[[1]]
+        if ((length(grep(rm.dim, pattern = "x")) > 0) & (length(grep(dimNamesRef, pattern = "lon")) > 0)) {
+          rm.dim[grep(rm.dim, pattern = "x")] <- "lon"
+        }
+        if ((length(grep(rm.dim, pattern = "y")) > 0) & (length(grep(dimNamesRef, pattern = "lat")) > 0)) {
+          rm.dim[grep(rm.dim, pattern = "y")] <- "lat"
+        }
+        rm.dim <- which(is.element(dimNamesRef,rm.dim))
         shapeArray <- shapeArray[-rm.dim]
         dimNamesRef <- dimNamesRef[-rm.dim]
-      }
-      if (latLon$pointXYindex[2] >= 0) {
-        rm.dim <- grep(gcs$getYHorizAxis()$getDimensionsString(),
-                       dimNamesRef, fixed = TRUE)
+      } 
+      if ((latLon$pointXYindex[2] >= 0) & !(latLon$pointXYindex[1] >= 0)) {
+        rm.dim <- strsplit(gcs$getYHorizAxis()$getDimensionsString(), " ")[[1]]
+        if ((length(grep(rm.dim, pattern = "x")) > 0) & (length(grep(dimNamesRef, pattern = "lon")) > 0)) {
+          rm.dim[grep(rm.dim, pattern = "x")] <- "lon"
+        }
+        if ((length(grep(rm.dim, pattern = "y")) > 0) & (length(grep(dimNamesRef, pattern = "lat")) > 0)) {
+          rm.dim[grep(rm.dim, pattern = "y")] <- "lat"
+        }
+        rm.dim <- which(is.element(dimNamesRef,rm.dim))
         shapeArray <- shapeArray[-rm.dim]
         dimNamesRef <- dimNamesRef[-rm.dim]
-      }        
+      } 
       aux.list2[[j]] <- array(subSet$readDataSlice(-1L, -1L, -1L, -1L,
                                                    latLon$pointXYindex[2],
                                                    latLon$pointXYindex[1])$copyTo1DJavaArray(),
@@ -126,11 +144,11 @@ makeSubset <- function(grid, timePars, levelPars, latLon, memberPars) {
   }
   aux.list <- timePars$tRanges <- NULL
   if (any(dim(mdArray) == 1)) {
-	  ind2drop <- setdiff(which(dim(mdArray) == 1), grep("member", dimNamesRef))
-	  if (length(ind2drop) > 0){
-        dimNames <- dimNamesRef[-ind2drop]    
-        mdArray <- drop(mdArray)
-	  }
+    ind2drop <- setdiff(which(dim(mdArray) == 1), grep("member", dimNamesRef))
+    if (length(ind2drop) > 0){
+      dimNames <- dimNamesRef[-ind2drop]    
+      mdArray <- drop(mdArray)
+    }
   } else {
     dimNames <- dimNamesRef
   }
