@@ -32,6 +32,8 @@
 #'  definitions. See \code{\link[climate4R.UDG]{C4R.vocabulary}} for examples of standard unit string definitions.
 #' @param level Optional character of the atmospheric level. This information about the variable will be 
 #' included in the output grid. Requires knowledge about the dataset.
+#' @param spatialTolerance Numeric. The use of this argument is NOT RECOMMENDED. Distance 
+#' (in grid coordinate units) out of the lonLim and LatLim ranges that is allowed for data retrieving.
 #' 
 #' @return a list with the following elements:
 #' \itemize{
@@ -88,7 +90,11 @@ loadStationData <- function(dataset,
                             tz = "", 
                             projection = "+proj=longlat +init=epsg:4326 +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0",
                             units = NULL,
-                            level = NULL) {
+                            level = NULL,
+                            spatialTolerance = NULL) {
+      if (!is.null(spatialTolerance)) {
+          warning("Argument spatialTolerance not implemeted yet. Ignored")
+      }
       aux <- NULL
       empty.area <- FALSE
       if (grepl("\\.zip$", dataset)) {
