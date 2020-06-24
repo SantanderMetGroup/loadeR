@@ -77,4 +77,3 @@ findPointXYindex <- function(lonLim, latLim, gcs, spatialTolerance = NULL)  {
   return(list("lonLim" = lonLim, "latLim" = latLim, "pointXYindex" = pointXYindex))
 }
 # End
-
