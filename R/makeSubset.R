@@ -64,9 +64,9 @@ makeSubset <- function(grid, timePars, levelPars, latLon, memberPars) {
       } 
       if ((latLon$pointXYindex[2] >= 0) & !(latLon$pointXYindex[1] >= 0)) {
         rm.dim <- strsplit(gcs$getYHorizAxis()$getDimensionsString(), " ")[[1]]
-        if ((length(grep(rm.dim, pattern = "x")) > 0) & (length(grep(dimNamesRef, pattern = "lon")) > 0)) {
-          rm.dim[grep(rm.dim, pattern = "x")] <- "lon"
-        }
+        # if ((length(grep(rm.dim, pattern = "x")) > 0) & (length(grep(dimNamesRef, pattern = "lon")) > 0)) {
+        #   rm.dim[grep(rm.dim, pattern = "x")] <- "lon"
+        # }
         if ((length(grep(rm.dim, pattern = "y")) > 0) & (length(grep(dimNamesRef, pattern = "lat")) > 0)) {
           rm.dim[grep(rm.dim, pattern = "y")] <- "lat"
         }
