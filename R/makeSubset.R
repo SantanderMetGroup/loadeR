@@ -73,6 +73,17 @@ makeSubset <- function(grid, timePars, levelPars, latLon, memberPars) {
         rm.dim <- which(is.element(dimNamesRef,rm.dim))
         shapeArray <- shapeArray[-rm.dim]
         dimNamesRef <- dimNamesRef[-rm.dim]
+      } else if (latLon$pointXYindex[2] >= 0) {
+        rm.dim <- strsplit(gcs$getYHorizAxis()$getDimensionsString(), " ")[[1]]
+        if ((length(grep(rm.dim, pattern = "x")) > 0) & (length(grep(dimNamesRef, pattern = "lon")) > 0)) {
+          rm.dim[grep(rm.dim, pattern = "x")] <- "lon"
+        }
+        if ((length(grep(rm.dim, pattern = "y")) > 0) & (length(grep(dimNamesRef, pattern = "lat")) > 0)) {
+          rm.dim[grep(rm.dim, pattern = "y")] <- "lat"
+        }
+        rm.dim <- which(is.element(dimNamesRef,rm.dim))
+        shapeArray <- shapeArray[-rm.dim]
+        dimNamesRef <- dimNamesRef[-rm.dim]
       } 
       aux.list2[[j]] <- array(subSet$readDataSlice(-1L, -1L, -1L, -1L,
                                                    latLon$pointXYindex[2],
