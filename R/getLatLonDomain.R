@@ -47,6 +47,8 @@ getLatLonDomain <- function(grid, lonLim, latLim, spatialTolerance = NULL) {
   message("[", Sys.time(), "] Defining geo-location parameters")
   gcs <- grid$getCoordinateSystem()
   bboxDataset <- gcs$getLatLonBoundingBox()
+  resY <- tryCatch((bboxDataset$getLatMax() - bboxDataset$getLatMin())/(grid$getYDimension()$getLength()-1), error = function(e) NA, finally = NA)
+  resX <- tryCatch((bboxDataset$getLonMax() - bboxDataset$getLonMin())/(grid$getXDimension()$getLength()-1), error = function(e) NA, finally = NA)
   if (length(lonLim) == 1 | length(latLim) == 1) {
     pointXYpars <- findPointXYindex(lonLim, latLim, gcs, spatialTolerance = NULL)
     lonLim <- pointXYpars$lonLim
@@ -178,7 +180,7 @@ getLatLonDomain <- function(grid, lonLim, latLim, spatialTolerance = NULL) {
       revLat <- TRUE
     }
   }
-  return(list("llRanges" = llRanges, "llbbox" = llbbox, "pointXYindex" = pointXYindex, "xyCoords" = list("x" = lonSlice, "y" = latSlice), "revLat" = revLat))
+  return(list("llRanges" = llRanges, "llbbox" = llbbox, "pointXYindex" = pointXYindex, "xyCoords" = list("x" = lonSlice, "y" = latSlice, "resX" = resX, "resY" = resY), "revLat" = revLat))
 }
 # End
 
