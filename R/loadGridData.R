@@ -235,8 +235,18 @@ loadGridData <- function(dataset,
       attr(out$xyCoords, which = sepValues[[1]][1]) <- sepValues[[1]][2]
     }
   }
-  attr(out$xyCoords, "resX") <- (tail(out$xyCoords$x, 1) - out$xyCoords$x[1]) / (length(out$xyCoords$x) - 1)
-  attr(out$xyCoords, "resY") <- (tail(out$xyCoords$y, 1) - out$xyCoords$y[1]) / (length(out$xyCoords$y) - 1)
+  if (length(out$xyCoords$x) > 1){
+    attr(out$xyCoords, "resX") <- (tail(out$xyCoords$x, 1) - out$xyCoords$x[1]) / (length(out$xyCoords$x) - 1)
+  } else {
+    attr(out$xyCoords, "resX") <- latLon$xyCoords$resX
+  }
+  if (length(out$xyCoords$y) > 1){
+    attr(out$xyCoords, "resY") <- (tail(out$xyCoords$y, 1) - out$xyCoords$y[1]) / (length(out$xyCoords$y) - 1)
+  } else {
+    attr(out$xyCoords, "resY") <- latLon$xyCoords$resY
+  }
+  out$xyCoords["resX"] <- NULL
+  out$xyCoords["resY"] <- NULL
   if ("lon" %in% names(out$xyCoords)) {
     attr(out$xyCoords, "resLON") <- NA 
     attr(out$xyCoords, "resLAT") <- NA
