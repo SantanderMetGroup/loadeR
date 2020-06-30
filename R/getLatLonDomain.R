@@ -57,7 +57,7 @@ getLatLonDomain <- function(grid, lonLim, latLim, spatialTolerance = NULL) {
     }
   }
   if (length(lonLim) > 1) {
-    deltaLat <- lonLim[2] - lonLim[1]
+    deltaLon <- lonLim[2] - lonLim[1]
     if (deltaLon < resX) {
       lonLim <- mean(lonLim)
       warning("Requested lonLim range is smaller than the grid resolution. The nearest cell to ", lonLim, " will be returned.")
