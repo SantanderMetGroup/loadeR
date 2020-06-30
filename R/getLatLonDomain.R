@@ -49,6 +49,20 @@ getLatLonDomain <- function(grid, lonLim, latLim, spatialTolerance = NULL) {
   bboxDataset <- gcs$getLatLonBoundingBox()
   resY <- tryCatch((bboxDataset$getLatMax() - bboxDataset$getLatMin())/(grid$getYDimension()$getLength()-1), error = function(e) NA, finally = NA)
   resX <- tryCatch((bboxDataset$getLonMax() - bboxDataset$getLonMin())/(grid$getXDimension()$getLength()-1), error = function(e) NA, finally = NA)
+  if (length(latLim) > 1) {
+    deltaLat <- latLim[2] - latLim[1]
+    if (deltaLat < resY) {
+      latLim <- mean(latLim)
+      warning("Requested latLim range is smaller than the grid resolution. The nearest cell to ", latLim, " will be returned.")
+    }
+  }
+  if (length(lonLim) > 1) {
+    deltaLat <- lonLim[2] - lonLim[1]
+    if (deltaLon < resX) {
+      lonLim <- mean(lonLim)
+      warning("Requested lonLim range is smaller than the grid resolution. The nearest cell to ", lonLim, " will be returned.")
+    }
+  }
   if (length(lonLim) == 1 | length(latLim) == 1) {
     pointXYpars <- findPointXYindex(lonLim, latLim, gcs, spatialTolerance = NULL)
     lonLim <- pointXYpars$lonLim
