@@ -150,7 +150,11 @@ getLatLonDomain <- function(grid, lonLim, latLim, spatialTolerance = NULL) {
       lonSlice <- aux$getCoordinateSystem()$getXHorizAxis()$getCoordValues()
       if (length(lonAxisShape) > 1) {
         lonSlice <- t(matrix(lonSlice, nrow = lonAxisShape[2], ncol = lonAxisShape[1]))
-        lonSlice <- lonSlice[,pointXYindex[1]]
+        if (pointXYindex[2] >= 0) {
+          lonSlice <- lonSlice[pointXYindex[2],pointXYindex[1]]
+        } else {
+          lonSlice <- lonSlice[1,pointXYindex[1]]
+        }
       } else {
         lonSlice <- lonSlice[pointXYindex[1]]
       }
@@ -178,7 +182,11 @@ getLatLonDomain <- function(grid, lonLim, latLim, spatialTolerance = NULL) {
       latAxisShape <- aux$getCoordinateSystem()$getYHorizAxis()$getShape()
       if (length(latAxisShape) > 1) {
         latSlice <- t(matrix(latSlice, nrow = latAxisShape[2], ncol = latAxisShape[1]))
-        latSlice <- latSlice[pointXYindex[2],1]
+        if (pointXYindex[2] >= 0){
+          latSlice <- latSlice[pointXYindex[2],pointXYindex[1]]
+        }else{
+          latSlice <- latSlice[pointXYindex[2],1]
+        }
       } else {
         latSlice <- latSlice[pointXYindex[2]]
       }
@@ -197,7 +205,6 @@ getLatLonDomain <- function(grid, lonLim, latLim, spatialTolerance = NULL) {
   return(list("llRanges" = llRanges, "llbbox" = llbbox, "pointXYindex" = pointXYindex, "xyCoords" = list("x" = lonSlice, "y" = latSlice, "resX" = resX, "resY" = resY), "revLat" = revLat))
 }
 # End
-
 
 
 #' @title RCM grid adjustment
