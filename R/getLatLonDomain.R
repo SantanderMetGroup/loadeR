@@ -166,7 +166,7 @@ getLatLonDomain <- function(grid, lonLim, latLim, spatialTolerance = NULL) {
       lonAxisShape <- aux$getCoordinateSystem()$getXHorizAxis()$getShape()
       lonAux[[k]] <- aux$getCoordinateSystem()$getXHorizAxis()$getCoordValues()
       if (length(lonAxisShape) > 1) {
-        lonAux[[k]] <- apply(t(matrix(lonAux[[k]], nrow = lonAxisShape[2], ncol = lonAxisShape[1])), 2, min)
+        lonAux[[k]] <- apply(t(matrix(lonAux[[k]], nrow = lonAxisShape[2], ncol = lonAxisShape[1])), 2, median)
       }
     }
     lonSlice <- do.call("c", lonAux)
@@ -195,7 +195,7 @@ getLatLonDomain <- function(grid, lonLim, latLim, spatialTolerance = NULL) {
     latSlice <- aux$getCoordinateSystem()$getYHorizAxis()$getCoordValues()
     latAxisShape <- aux$getCoordinateSystem()$getYHorizAxis()$getShape()
     if (length(latAxisShape) > 1) {
-      latSlice <- t(matrix(latSlice, nrow = latAxisShape[2], ncol = latAxisShape[1]))
+      latSlice <- apply(t(matrix(latSlice, nrow = latAxisShape[2], ncol = latAxisShape[1])), 1, median)
     }
     if (latAxisShape[1] > 1 & diff(latSlice)[1] < 0) {
       latSlice <- rev(latSlice)
