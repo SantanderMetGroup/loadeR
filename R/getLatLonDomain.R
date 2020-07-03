@@ -182,7 +182,7 @@ getLatLonDomain <- function(grid, lonLim, latLim, spatialTolerance = NULL) {
       latAxisShape <- aux$getCoordinateSystem()$getYHorizAxis()$getShape()
       if (length(latAxisShape) > 1) {
         latSlice <- t(matrix(latSlice, nrow = latAxisShape[2], ncol = latAxisShape[1]))
-        if (pointXYindex[2] >= 0){
+        if (pointXYindex[1] >= 0){
           latSlice <- latSlice[pointXYindex[2],pointXYindex[1]]
         }else{
           latSlice <- latSlice[pointXYindex[2],1]
