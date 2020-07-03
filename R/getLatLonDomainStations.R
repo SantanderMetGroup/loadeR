@@ -17,6 +17,13 @@ getLatLonDomainStations <- function(lonLim, latLim, lons, lats) {
       if (length(lonLim) > 2 | length(latLim) > 2) {
             stop("Invalid definition of geographical position")
       }
+      if (length(lonLim) == 2 & length(latLim) == 1) {
+            latLim <- c(latLim,latLim)
+             message("[", Sys.time(),"] Length of lonLim and latLim arguments are different, the bounding box if defined accordingly.") 
+      } else if (length(lonLim) == 1 & length(latLim) == 2) {
+            lonLim <- c(lonLim,lonLim)
+             message("[", Sys.time(),"] Length of lonLim and latLim arguments are different, the bounding box if defined accordingly.") 
+      }
       if (length(lonLim) != length(latLim)) {
             stop("Invalid definition of geographical position")
       }
