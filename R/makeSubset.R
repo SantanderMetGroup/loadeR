@@ -60,7 +60,7 @@ makeSubset <- function(grid, timePars, levelPars, latLon, memberPars) {
         }
         rm.dim <- which(is.element(dimNamesRef,rm.dim))
         shapeArray <- shapeArray[setdiff(c(1:length(shapeArray)),rm.dim)]
-        dimNamesRef <- dimNamesRef[setdiff(c(1:length(shapeArray)),rm.dim)]
+        dimNamesRef <- dimNamesRef[setdiff(c(1:length(dimNamesRef)),rm.dim)]
       } 
       if ((latLon$pointXYindex[2] >= 0) & !(latLon$pointXYindex[1] >= 0)) {
         rm.dim <- strsplit(gcs$getYHorizAxis()$getDimensionsString(), " ")[[1]]
@@ -83,7 +83,7 @@ makeSubset <- function(grid, timePars, levelPars, latLon, memberPars) {
         }
         rm.dim <- which(is.element(dimNamesRef,rm.dim))
         shapeArray <- shapeArray[setdiff(c(1:length(shapeArray)),rm.dim)]
-        dimNamesRef <- dimNamesRef[setdiff(c(1:length(shapeArray)),rm.dim)]
+        dimNamesRef <- dimNamesRef[setdiff(c(1:length(dimNamesRef)),rm.dim)]
       } 
       aux.list2[[j]] <- array(subSet$readDataSlice(-1L, -1L, -1L, -1L,
                                                    latLon$pointXYindex[2],
