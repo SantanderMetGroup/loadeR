@@ -85,10 +85,18 @@ makeSubset <- function(grid, timePars, levelPars, latLon, memberPars) {
         shapeArray <- shapeArray[setdiff(c(1:length(shapeArray)),rm.dim)]
         dimNamesRef <- dimNamesRef[setdiff(c(1:length(dimNamesRef)),rm.dim)]
       } 
-      aux.list2[[j]] <- array(subSet$readDataSlice(-1L, -1L, -1L, -1L,
-                                                   latLon$pointXYindex[2],
-                                                   latLon$pointXYindex[1])$copyTo1DJavaArray(),
-                              dim = shapeArray)
+      if (latLon$pointXYindex[1] >= 0) {
+        aux.pointXYindex <- as.integer(which(c(latLon$llRanges[[j]]$get(1L)$min():latLon$llRanges[[j]]$get(1L)$max()) == latLon$pointXYindex[1]) -1)
+        aux.list2[[j]] <- array(subSet$readDataSlice(-1L, -1L, -1L, -1L,
+                                                     latLon$pointXYindex[2],
+                                                     aux.pointXYindex)$copyTo1DJavaArray(),
+                                dim = shapeArray)
+      }else{
+        aux.list2[[j]] <- array(subSet$readDataSlice(-1L, -1L, -1L, -1L,
+                                                     latLon$pointXYindex[2],
+                                                     latLon$pointXYindex[1])$copyTo1DJavaArray(),
+                                dim = shapeArray)
+      }
       if (length(grep("member", dimNames)) > 0) {
         indMembers <- 1 + eval(parse(text=javaString2rChar(memberPars$toString())))
         if (length(indMembers) < dim(aux.list2[[j]])[grep(dimNames, pattern = "member")]){
