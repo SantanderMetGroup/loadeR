@@ -39,6 +39,7 @@
 #' @keywords internal
 #' @export
 #' @importFrom rJava .jnew .jnull
+#' @importFrom stats median
 
 getLatLonDomain <- function(grid, lonLim, latLim, spatialTolerance = NULL) {
   if (any(lonLim > 180) | any(lonLim < -180) | any(latLim > 90) | any(latLim < -90)) {
@@ -51,20 +52,20 @@ getLatLonDomain <- function(grid, lonLim, latLim, spatialTolerance = NULL) {
   resX <- tryCatch((bboxDataset$getLonMax() - bboxDataset$getLonMin())/(grid$getXDimension()$getLength()-1), error = function(e) NA, finally = NA)
   if (length(latLim) > 1) {
     deltaLat <- latLim[2] - latLim[1]
-    if (deltaLat < resY) {
+    if (deltaLat < resY | is.na(resY)) {
       latLim <- mean(latLim)
       warning("Requested latLim range is smaller than the grid resolution. The nearest cell to ", latLim, " will be returned.")
     }
   }
   if (length(lonLim) > 1) {
     deltaLon <- lonLim[2] - lonLim[1]
-    if (deltaLon < resX) {
+    if (deltaLon < resX | is.na(resX)) {
       lonLim <- mean(lonLim)
       warning("Requested lonLim range is smaller than the grid resolution. The nearest cell to ", lonLim, " will be returned.")
     }
   }
   if (length(lonLim) == 1 | length(latLim) == 1) {
-    pointXYpars <- findPointXYindex(lonLim, latLim, gcs, spatialTolerance = NULL)
+    pointXYpars <- findPointXYindex(lonLim, latLim, gcs, spatialTolerance = spatialTolerance)
     lonLim <- pointXYpars$lonLim
     latLim <- pointXYpars$latLim
     pointXYindex <- pointXYpars$pointXYindex
