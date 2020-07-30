@@ -69,6 +69,12 @@ getLatLonDomain <- function(grid, lonLim, latLim, spatialTolerance = NULL) {
     lonLim <- pointXYpars$lonLim
     latLim <- pointXYpars$latLim
     pointXYindex <- pointXYpars$pointXYindex
+  } else if ((bboxDataset$getLatMax() == bboxDataset$getLatMin()) & (bboxDataset$getLonMax() == bboxDataset$getLonMin())){
+    pointXYpars <- findPointXYindex(bboxDataset$getLonMax(), bboxDataset$getLatMax(), gcs, spatialTolerance = spatialTolerance)
+    lonLim <- pointXYpars$lonLim
+    latLim <- pointXYpars$latLim
+    pointXYindex <- pointXYpars$pointXYindex
+    # pointXYindex <- as.integer(c(0,0))
   } else {
     pointXYindex <- c(-1L, -1L)
   }
@@ -122,6 +128,9 @@ getLatLonDomain <- function(grid, lonLim, latLim, spatialTolerance = NULL) {
         llbbox[[2]] <- .jnew("ucar/unidata/geoloc/LatLonRect", spec2)
         llRanges[[1]] <- gcs$getRangesFromLatLonRect(.jnew("ucar/unidata/geoloc/LatLonRect", spec1))
         llRanges[[2]] <- gcs$getRangesFromLatLonRect(.jnew("ucar/unidata/geoloc/LatLonRect", spec2))
+      } else if ((bboxDataset$getLatMax() == bboxDataset$getLatMin()) & (bboxDataset$getLonMax() == bboxDataset$getLonMin())){
+        llbbox[[1]] <- .jnull()
+        llRanges[[1]] <- .jnull()
       } else {
         spec1 <- .jnew("java/lang/String", paste(latLim[1], lonLim[1], deltaLat, deltaLon, sep = ", "))
         llbbox[[1]] <- .jnew("ucar/unidata/geoloc/LatLonRect", spec1)
