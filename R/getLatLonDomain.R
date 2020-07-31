@@ -274,8 +274,16 @@ adjustRCMgrid <- function(gds, latLon, lonLim, latLim) {
     ind.x <- which.min(abs(auxLon - lonLim))
     ind.y <- which.min(abs(auxLat - latLim))
     pointXYindex <- c(ind.y,ind.x)
-    latLon$xyCoords$x <- nc$findCoordinateAxis('rlon')$getCoordValues()[ind.x]
-    latLon$xyCoords$y <- nc$findCoordinateAxis('rlat')$getCoordValues()[ind.y]
+    if (!is.null(nc$findDimension("rlon"))){
+      latLon$xyCoords$x <- nc$findCoordinateAxis('rlon')$getCoordValues()[ind.x]
+    }else{
+      latLon$xyCoords$x <- nc$findCoordinateAxis('x')$getCoordValues()[ind.x]
+    }
+    if (!is.null(nc$findDimension("rlat"))){
+      latLon$xyCoords$y <- nc$findCoordinateAxis('rlat')$getCoordValues()[ind.y]
+    }else{
+      latLon$xyCoords$x <- nc$findCoordinateAxis('y')$getCoordValues()[ind.x]
+    }
     latLon$xyCoords$lon <- auxLon[ind.y,ind.x]
     latLon$xyCoords$lat <- auxLat[ind.y,ind.x]
   } else {
@@ -289,8 +297,16 @@ adjustRCMgrid <- function(gds, latLon, lonLim, latLim) {
     lrrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
     llrowCol <- c(min(c(llrowCol[1],lrrowCol[1])), min(c(llrowCol[2],ulrowCol[2])))
     urrowCol <- c(max(c(ulrowCol[1],urrowCol[1])),max(c(lrrowCol[2],urrowCol[2])))
-    latLon$xyCoords$x <- nc$findCoordinateAxis('rlon')$getCoordValues()[llrowCol[2]:urrowCol[2]]
-    latLon$xyCoords$y <- nc$findCoordinateAxis('rlat')$getCoordValues()[llrowCol[1]:urrowCol[1]]
+    if (!is.null(nc$findDimension("rlon"))){
+      latLon$xyCoords$x <- nc$findCoordinateAxis('rlon')$getCoordValues()[llrowCol[2]:urrowCol[2]]
+    }else{
+      latLon$xyCoords$x <- nc$findCoordinateAxis('x')$getCoordValues()[llrowCol[2]:urrowCol[2]]
+    }
+    if (!is.null(nc$findDimension("rlat"))){
+      latLon$xyCoords$y <- nc$findCoordinateAxis('rlat')$getCoordValues()[llrowCol[1]:urrowCol[1]]
+    }else{
+      latLon$xyCoords$y <- nc$findCoordinateAxis('y')$getCoordValues()[llrowCol[1]:urrowCol[1]]
+    }
     latLon$xyCoords$lon <- auxLon[llrowCol[1]:urrowCol[1],llrowCol[2]:urrowCol[2]]
     latLon$xyCoords$lat <- auxLat[llrowCol[1]:urrowCol[1],llrowCol[2]:urrowCol[2]]
   }
