@@ -19,6 +19,8 @@ revArrayLatDim <- function(mdArray) {
   lat.dim.index <- grep("^lat$", dimNames)   
   if ((length(lat.dim.index) == 0) & (length(grep("^y$", dimNames)) > 0)) {
     lat.dim.index <- grep("^y$", dimNames) 
+  } else if ((length(lat.dim.index) == 0) & (length(grep("^latitude$", dimNames)) > 0)) {
+    lat.dim.index <- grep("^latitude$", dimNames) 
   }
   indices <- rep(list(bquote()), length(dim(mdArray)))
   indices[[lat.dim.index]] <- dim(mdArray)[lat.dim.index]:1
