@@ -278,11 +278,15 @@ loadGridData <- function(dataset,
       x[grep(x, pattern = "x")] <- "lon"
     } else if (length(grep(x, pattern = "longitude")) > 0) {
       x[grep(x, pattern = "longitude")] <- "lon"
+    } else if (length(grep(x, pattern = "rlon")) > 0) {
+      x[grep(x, pattern = "rlon")] <- "lon"
     }
     if (length(grep(x, pattern = "y")) > 0) {
       x[grep(x, pattern = "y")] <- "lat"
     } else if (length(grep(x, pattern = "latitude")) > 0) {
       x[grep(x, pattern = "latitude")] <- "lat"
+    } else if (length(grep(x, pattern = "rlat")) > 0) {
+      x[grep(x, pattern = "rlat")] <- "lat"
     }
     b <- na.exclude(match(tab, x))
     dimNames <- x[b]
