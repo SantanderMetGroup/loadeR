@@ -84,4 +84,9 @@ For earlier version changes, see the GitHub Releases [Tab](https://github.com/Sa
  * Minor bug fixes and enhancements for dealing with ensemble axes
  * loginUDG, C4R.vocabulary and C4R.vocabulary.update utilities moved to climate4R.UDG dependency
  * Other minor documentation updates
+
+## V1.7.1 (in devel)
+ * Several improvements and bug fixes in loadGridData for rotated grids
+ * Minor changes and improvements in loadStationData
+ * Other minor bug fixes and documentation updates
  

@@ -15,8 +15,8 @@ Suggests:
     downscaleR
 Type: Package
 Title: A climate4R package for data access <http://meteo.unican.es/climate4r>
-Version: 1.7.0
-Date: 2020-06-16
+Version: 1.7.1
+Date: 2020-08-18
 Authors@R: c(person("Bedia", "Joaquín", email = "bediaj@unican.es", role = c("aut","cre"), comment = c(ORCID = "0000-0001-6219-4312")),
              person("Antonio", "Cofiño", email = "antonio.cofino@unican.es", role = "ctb"),
              person("Matteo", "de Felice", email = "matteo.defelice@enea.it", role = "ctb"),
@@ -33,4 +33,4 @@ URL: https://github.com/SantanderMetGroup/loadeR/wiki
 Encoding: UTF-8
 Description: Enables harmonized access to either remote climate databases via OPeNDAP or to locally stored data, allowing the retrieval of user-defined dimensional slices from large climate datasets. For more details see Iturbide et al 2019 <http://dx.doi.org/10.1016/j.envsoft.2018.09.009>.
 License: file LICENSE
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
