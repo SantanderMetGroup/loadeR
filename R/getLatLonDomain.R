@@ -270,9 +270,17 @@ adjustRCMgrid <- function(gds, latLon, lonLim, latLim) {
                        which.max(auxLon[arrayInd(which.max(auxLat),
                                                  dim(auxLat))[1],])])
   }
-  if (length(lonLim) == 1 | length(latLim) == 1) {
-    ind.x <- which.min(abs(auxLon - lonLim))
-    ind.y <- which.min(abs(auxLat - latLim))
+  if (length(lonLim) == 1 & length(latLim) == 1) {
+    if (is.matrix(auxLat)){
+      ind.y <- arrayInd(which.min(abs(auxLat - latLim)), dim(auxLat))[1]
+    }else{
+      ind.y <- which.min(abs(auxLat - latLim))
+    }
+    if (is.matrix(auxLon)){
+      ind.x <- arrayInd(which.min(abs(auxLon - lonLim)), dim(auxLon))[2]
+    }else{
+      ind.x <- which.min(abs(auxLon - lonLim))
+    }
     pointXYindex <- c(ind.y,ind.x)
     if (!is.null(nc$findDimension("rlon"))){
       latLon$xyCoords$x <- nc$findCoordinateAxis('rlon')$getCoordValues()[ind.x]
@@ -286,6 +294,48 @@ adjustRCMgrid <- function(gds, latLon, lonLim, latLim) {
     }
     latLon$xyCoords$lon <- auxLon[ind.y,ind.x]
     latLon$xyCoords$lat <- auxLat[ind.y,ind.x]
+  } else if (length(lonLim) == 1) {
+    auxDis <- sqrt((auxLon - lonLim[1]) ^ 2 + (auxLat - latLim[1]) ^ 2)
+    llrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
+    lrrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
+    auxDis <- sqrt((auxLon - lonLim[1]) ^ 2 + (auxLat - latLim[2]) ^ 2)
+    ulrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
+    urrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
+    llrowCol <- c(min(c(llrowCol[1],lrrowCol[1])), min(c(llrowCol[2],ulrowCol[2])))
+    urrowCol <- c(max(c(ulrowCol[1],urrowCol[1])),max(c(lrrowCol[2],urrowCol[2])))
+    if (!is.null(nc$findDimension("rlon"))){
+      latLon$xyCoords$x <- nc$findCoordinateAxis('rlon')$getCoordValues()[llrowCol[2]:urrowCol[2]]
+    }else{
+      latLon$xyCoords$x <- nc$findCoordinateAxis('x')$getCoordValues()[llrowCol[2]:urrowCol[2]]
+    }
+    if (!is.null(nc$findDimension("rlat"))){
+      latLon$xyCoords$y <- nc$findCoordinateAxis('rlat')$getCoordValues()[llrowCol[1]:urrowCol[1]]
+    }else{
+      latLon$xyCoords$y <- nc$findCoordinateAxis('y')$getCoordValues()[llrowCol[1]:urrowCol[1]]
+    }
+    latLon$xyCoords$lon <- auxLon[llrowCol[1]:urrowCol[1],llrowCol[2]:urrowCol[2]]
+    latLon$xyCoords$lat <- auxLat[llrowCol[1]:urrowCol[1],llrowCol[2]:urrowCol[2]]
+  } else if (length(latLim) == 1) {
+    auxDis <- sqrt((auxLon - lonLim[1]) ^ 2 + (auxLat - latLim[1]) ^ 2)
+    ulrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
+    llrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
+    auxDis <- sqrt((auxLon - lonLim[2]) ^ 2 + (auxLat - latLim[1]) ^ 2)
+    urrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
+    lrrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
+    llrowCol <- c(min(c(llrowCol[1],lrrowCol[1])), min(c(llrowCol[2],ulrowCol[2])))
+    urrowCol <- c(max(c(ulrowCol[1],urrowCol[1])),max(c(lrrowCol[2],urrowCol[2])))
+    if (!is.null(nc$findDimension("rlon"))){
+      latLon$xyCoords$x <- nc$findCoordinateAxis('rlon')$getCoordValues()[llrowCol[2]:urrowCol[2]]
+    }else{
+      latLon$xyCoords$x <- nc$findCoordinateAxis('x')$getCoordValues()[llrowCol[2]:urrowCol[2]]
+    }
+    if (!is.null(nc$findDimension("rlat"))){
+      latLon$xyCoords$y <- nc$findCoordinateAxis('rlat')$getCoordValues()[llrowCol[1]:urrowCol[1]]
+    }else{
+      latLon$xyCoords$y <- nc$findCoordinateAxis('y')$getCoordValues()[llrowCol[1]:urrowCol[1]]
+    }
+    latLon$xyCoords$lon <- auxLon[llrowCol[1]:urrowCol[1],llrowCol[2]:urrowCol[2]]
+    latLon$xyCoords$lat <- auxLat[llrowCol[1]:urrowCol[1],llrowCol[2]:urrowCol[2]]
   } else {
     auxDis <- sqrt((auxLon - lonLim[1]) ^ 2 + (auxLat - latLim[1]) ^ 2)
     llrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
@@ -335,4 +385,3 @@ adjustRCMgrid <- function(gds, latLon, lonLim, latLim) {
   })
   return(latLon)
 }
-
