@@ -50,6 +50,12 @@ findPointXYindex <- function(lonLim, latLim, gcs, spatialTolerance = NULL)  {
       } 
     }
     pointXYindex[1] <- gcs$findXYindexFromCoord(lon.aux, lat.aux, .jnull())[1]
+    if (pointXYindex[1] < 0){
+      proj <- gcs$getProjection()
+      if (!proj$isLatLon() | proj$getName() == "LambertConformal") {
+        pointXYindex[1] <- gcs$findXYindexFromLatLon(lat.aux, lon.aux, .jnull())[1]
+      }
+    }
     if (pointXYindex[1] < 0) {
       stop("Selected X point coordinate is out of range")
     }
@@ -69,6 +75,12 @@ findPointXYindex <- function(lonLim, latLim, gcs, spatialTolerance = NULL)  {
       } 
     }
     pointXYindex[2] <- gcs$findXYindexFromCoord(lon.aux[1], latLim, .jnull())[2]
+    if (pointXYindex[2] < 0){
+      proj <- gcs$getProjection()
+      if (!proj$isLatLon() | proj$getName() == "LambertConformal") {
+        pointXYindex[2] <- gcs$findXYindexFromLatLon(latLim, lon.aux, .jnull())[2]
+      }
+    }
     if ((pointXYindex[2] < 0) & (bboxDataset$getLatMin() < bboxDataset$getLatMax())) {
       stop("Selected Y point coordinate is out of range")
     }
