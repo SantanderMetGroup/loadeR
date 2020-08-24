@@ -315,6 +315,9 @@ adjustRCMgrid <- function(gds, latLon, lonLim, latLim) {
     }
     latLon$xyCoords$lon <- auxLon[llrowCol[1]:urrowCol[1],llrowCol[2]:urrowCol[2]]
     latLon$xyCoords$lat <- auxLat[llrowCol[1]:urrowCol[1],llrowCol[2]:urrowCol[2]]
+    if (latLon$pointXYindex[1] >= 0){
+      latLon$pointXYindex[1] = as.integer(-1)
+    }
   } else if (length(latLim) == 1) {
     auxDis <- sqrt((auxLon - lonLim[1]) ^ 2 + (auxLat - latLim[1]) ^ 2)
     ulrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
@@ -336,6 +339,9 @@ adjustRCMgrid <- function(gds, latLon, lonLim, latLim) {
     }
     latLon$xyCoords$lon <- auxLon[llrowCol[1]:urrowCol[1],llrowCol[2]:urrowCol[2]]
     latLon$xyCoords$lat <- auxLat[llrowCol[1]:urrowCol[1],llrowCol[2]:urrowCol[2]]
+    if (latLon$pointXYindex[2] >= 0){
+      latLon$pointXYindex[2] = as.integer(-1)
+    }
   } else {
     auxDis <- sqrt((auxLon - lonLim[1]) ^ 2 + (auxLat - latLim[1]) ^ 2)
     llrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
@@ -359,6 +365,12 @@ adjustRCMgrid <- function(gds, latLon, lonLim, latLim) {
     }
     latLon$xyCoords$lon <- auxLon[llrowCol[1]:urrowCol[1],llrowCol[2]:urrowCol[2]]
     latLon$xyCoords$lat <- auxLat[llrowCol[1]:urrowCol[1],llrowCol[2]:urrowCol[2]]
+    if (latLon$pointXYindex[1] >= 0){
+      latLon$pointXYindex[1] = as.integer(-1)
+    }
+    if (latLon$pointXYindex[2] >= 0){
+      latLon$pointXYindex[2] = as.integer(-1)
+    }
   }
   lonRanges  <- list()
   latRanges  <- list()
