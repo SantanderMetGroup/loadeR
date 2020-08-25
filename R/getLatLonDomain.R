@@ -282,6 +282,14 @@ adjustRCMgrid <- function(gds, latLon, lonLim, latLim) {
       ind.x <- which.min(abs(auxLon - lonLim))
     }
     pointXYindex <- c(ind.y,ind.x)
+    
+    llrowCol <- c(ind.y,ind.x)
+    lrrowCol <- c(ind.y,ind.x)
+    ulrowCol <- c(ind.y,ind.x)
+    urrowCol <- c(ind.y,ind.x)
+    llrowCol <- c(min(c(llrowCol[1],lrrowCol[1])), min(c(llrowCol[2],ulrowCol[2])))
+    urrowCol <- c(max(c(ulrowCol[1],urrowCol[1])),max(c(lrrowCol[2],urrowCol[2])))
+    
     if (!is.null(nc$findDimension("rlon"))){
       latLon$xyCoords$x <- nc$findCoordinateAxis('rlon')$getCoordValues()[ind.x]
     }else{
