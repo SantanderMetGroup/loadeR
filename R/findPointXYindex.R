@@ -78,7 +78,7 @@ findPointXYindex <- function(lonLim, latLim, gcs, spatialTolerance = NULL)  {
     if (pointXYindex[2] < 0){
       proj <- gcs$getProjection()
       if (!proj$isLatLon() | proj$getName() == "LambertConformal") {
-        pointXYindex[2] <- gcs$findXYindexFromLatLon(latLim, lon.aux, .jnull())[2]
+        pointXYindex[2] <- gcs$findXYindexFromLatLon(latLim, lon.aux[1], .jnull())[2]
       }
     }
     if ((pointXYindex[2] < 0) & (bboxDataset$getLatMin() < bboxDataset$getLatMax())) {
