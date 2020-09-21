@@ -100,7 +100,7 @@ loadStationData <- function(dataset,
       if (grepl("\\.zip$", dataset)) {
             unzcond <- unz
             zipFileContents <- unzip(dataset, list = TRUE)$Name
-      } else if (grepl("\\.ncml$|\\.nc$|\\.nc4$|", dataset)) {
+      } else if (grepl("\\.ncml$|\\.nc$|\\.nc4$", dataset)) {
             gds <- openDataset(dataset)
             nc <- gds$getNetcdfDataset()
             if (grep("timeSeries",nc$getGlobalAttributes()$toString())){
@@ -120,7 +120,7 @@ loadStationData <- function(dataset,
             latLim <- NULL
             warning("lonLim/latLim arguments ignored as Station Codes have been specified.", call. = FALSE)
       }
-      if (grepl("\\.ncml$|\\.nc$|\\.nc4$|", dataset)) {
+      if (grepl("\\.ncml$|\\.nc$|\\.nc4$", dataset)) {
             stids <- nc$findVariable("station_id")
             stids <- stids$read()
             stids <- tryCatch({stids$make1DStringArray()}, error = function(err) {stids})
@@ -145,7 +145,7 @@ loadStationData <- function(dataset,
             stInd <- 1:length(stids)
       }
       ## Longitude and latitude
-      if (grepl("\\.ncml$|\\.nc$|\\.nc4$|", dataset)) {
+      if (grepl("\\.ncml$|\\.nc$|\\.nc4$", dataset)) {
             lons <- nc$findVariable("lon")
             if (is.null(lons)) lons <- nc$findVariable("Lon")
             if (is.null(lons)) lons <- nc$findVariable("x")
@@ -184,7 +184,7 @@ loadStationData <- function(dataset,
             attr(coords, "resX") <- 0
             attr(coords, "resY") <- 0
             ## Time dimension
-            if (grepl("\\.ncml$|\\.nc$|\\.nc4$|", dataset)) {
+            if (grepl("\\.ncml$|\\.nc$|\\.nc4$", dataset)) {
                   timeId <- nc$findVariable("time")
                   timeDates <- timeId$getCoordValues()
                   refDate <- timeId$getUnitsString()
@@ -203,7 +203,7 @@ loadStationData <- function(dataset,
                   timeString <- NULL
             }
             timePars <- getTimeDomainStations(timeDates, season, years)
-            if(grepl("\\.ncml$|\\.nc$|\\.nc4$|", dataset)) {
+            if(grepl("\\.ncml$|\\.nc$|\\.nc4$", dataset)) {
                   # varId <- varId$read()
                   # Data <- varId$toString()
                   # Data <- t(matrix(as.double(strsplit(Data,' ')[[1]]), nrow = varId$getShape()[2], ncol = varId$getShape()[1]))
