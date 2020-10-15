@@ -202,11 +202,25 @@ loadCircularGridData <- function(dataset,
   tab <- c("member", "time", "level", "lat", "lon")
   x <- attr(out$Data, "dimensions")
   if (length(x) > 1) {
+    if (length(grep(x, pattern = "x")) > 0) {
+      x[grep(x, pattern = "x")] <- "lon"
+    } else if (length(grep(x, pattern = "longitude")) > 0) {
+      x[grep(x, pattern = "longitude")] <- "lon"
+    } else if (length(grep(x, pattern = "rlon")) > 0) {
+      x[grep(x, pattern = "rlon")] <- "lon"
+    }
+    if (length(grep(x, pattern = "y")) > 0) {
+      x[grep(x, pattern = "y")] <- "lat"
+    } else if (length(grep(x, pattern = "latitude")) > 0) {
+      x[grep(x, pattern = "latitude")] <- "lat"
+    } else if (length(grep(x, pattern = "rlat")) > 0) {
+      x[grep(x, pattern = "rlat")] <- "lat"
+    }
     b <- na.exclude(match(tab, x))
     dimNames <- x[b]
     out$Data <- aperm(out$Data, perm = b)    
     attr(out$Data, "dimensions")  <- dimNames
-  }
+  }                     
   # Member attributes -----------------------------
   if (!is.null(members)) {
     out$Members <- paste0("Member_", members)
