@@ -56,7 +56,7 @@ findPointXYindex <- function(lonLim, latLim, gcs, spatialTolerance = NULL)  {
         pointXYindex[1] <- gcs$findXYindexFromLatLon(lat.aux, lon.aux, .jnull())[1]
       }
     }
-    if (pointXYindex[1] < 0) {
+    if ((pointXYindex[1] < 0) & (bboxDataset$getLonMin() < bboxDataset$getLonMax())) {
       stop("Selected X point coordinate is out of range")
     }
     lonLim <- NULL   
