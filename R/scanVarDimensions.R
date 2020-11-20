@@ -76,7 +76,7 @@ scanVarDimensions <- function(grid) {
       start <- rep(0L, length(gridShape))
       count <- rep(1L, length(gridShape))
       start[zDimIndex] <- as.integer(k - 1)
-      res <- tryCatch({grid$getVariable()$read(start, count)$getStorage()},
+      res <- tryCatch({is.numeric(grid$getVariable()$read(start, count)$getStorage())},
                       error = function(er) {err <- FALSE; return(err)})
       aux[k] <- res
     }
