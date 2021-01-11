@@ -211,7 +211,7 @@ loadGridData <- function(dataset,
     stop("Variable requested not found\nCheck 'dataInventory' output and/or dictionary 'identifier'.", call. = FALSE)
   }
   # Spatial collocation -------------
-  latLon <- getLatLonDomain(grid, lonLim, latLim, spatialTolerance = spatialTolerance)
+  latLon <- getLatLonDomain(grid = grid, lonLim = lonLim, latLim = latLim, spatialTolerance = spatialTolerance)
   proj <- grid$getCoordinateSystem()$getProjection()
   projParams <- NULL
   #if (!proj$isLatLon()) latLon <- adjustRCMgrid(gds, latLon, lonLim, latLim)
