@@ -52,7 +52,7 @@ getLatLonDomain <- function(grid, lonLim, latLim, spatialTolerance = NULL) {
   resX <- tryCatch((bboxDataset$getLonMax() - bboxDataset$getLonMin())/(grid$getXDimension()$getLength()-1), error = function(e) NA, finally = NA)
   if (length(latLim) > 1) {
     deltaLat <- latLim[2] - latLim[1]
-    if (abs(resY - deltaLon) > 1e-5 | is.na(resY)) {
+    if (abs(resY - deltaLat) > 1e-5 | is.na(resY)) {
       latLim <- mean(latLim)
       warning("Requested latLim range is smaller than the grid resolution. The nearest cell to ", latLim, " will be returned.")
     }
