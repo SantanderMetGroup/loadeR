@@ -16,4 +16,4 @@ ignore
 .Rbuildignore
 .Rprofile
 .directory
-
+.DS_Store

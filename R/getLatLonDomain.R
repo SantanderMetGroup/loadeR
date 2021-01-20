@@ -52,14 +52,14 @@ getLatLonDomain <- function(grid, lonLim, latLim, spatialTolerance = NULL) {
   resX <- tryCatch((bboxDataset$getLonMax() - bboxDataset$getLonMin())/(grid$getXDimension()$getLength()-1), error = function(e) NA, finally = NA)
   if (length(latLim) > 1) {
     deltaLat <- latLim[2] - latLim[1]
-    if (abs(resY - deltaLat) > 1e-5 | is.na(resY)) {
+    if (abs(resY - deltaLat) <= 1e-5 | is.na(resY)) {
       latLim <- mean(latLim)
       warning("Requested latLim range is smaller than the grid resolution. The nearest cell to ", latLim, " will be returned.")
     }
   }
   if (length(lonLim) > 1) {
     deltaLon <- lonLim[2] - lonLim[1]
-    if (abs(resX - deltaLon) > 1e-5 | is.na(resX)) {
+    if (abs(resX - deltaLon) <= 1e-5 | is.na(resX)) {
       lonLim <- mean(lonLim)
       warning("Requested lonLim range is smaller than the grid resolution. The nearest cell to ", lonLim, " will be returned.")
     }
