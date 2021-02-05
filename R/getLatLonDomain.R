@@ -113,8 +113,14 @@ getLatLonDomain <- function(grid, lonLim, latLim, spatialTolerance = NULL) {
           llRanges[[1]] <- gcs$getRangesFromLatLonRect(.jnew("ucar/unidata/geoloc/LatLonRect", spec2))
         }
       }else{
-        spec1 <- .jnew("java/lang/String", paste(latLim[1], -180, deltaLat, lonLim[2] - 180, sep = ", "))
-        spec2 <- .jnew("java/lang/String", paste(latLim[1], lonLim[1], deltaLat, (lonLim[2] - 180) - lonLim[1], sep = ", "))
+        # spec1 <- .jnew("java/lang/String", paste(latLim[1], -180, deltaLat, -180 + (lonLim[2] - 180), sep = ", "))
+        # spec2 <- .jnew("java/lang/String", paste(latLim[1], lonLim[1], deltaLat, (lonLim[2] - 180) - lonLim[1], sep = ", "))
+        # llbbox[[1]] <- .jnew("ucar/unidata/geoloc/LatLonRect", spec1)
+        # llbbox[[2]] <- .jnew("ucar/unidata/geoloc/LatLonRect", spec2)
+        # llRanges[[1]] <- gcs$getRangesFromLatLonRect(.jnew("ucar/unidata/geoloc/LatLonRect", spec1))
+        # llRanges[[2]] <- gcs$getRangesFromLatLonRect(.jnew("ucar/unidata/geoloc/LatLonRect", spec2))
+        spec1 <- .jnew("java/lang/String", paste(latLim[1], lonLim[1], deltaLat, 180 - lonLim[1], sep = ", "))
+        spec2 <- .jnew("java/lang/String", paste(latLim[1], -180 + max(c(resX, .Machine$double.eps), na.rm = TRUE), deltaLat, (lonLim[2] - 360) + 180, sep = ", "))
         llbbox[[1]] <- .jnew("ucar/unidata/geoloc/LatLonRect", spec1)
         llbbox[[2]] <- .jnew("ucar/unidata/geoloc/LatLonRect", spec2)
         llRanges[[1]] <- gcs$getRangesFromLatLonRect(.jnew("ucar/unidata/geoloc/LatLonRect", spec1))
