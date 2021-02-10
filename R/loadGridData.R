@@ -222,6 +222,24 @@ loadGridData <- function(dataset,
   # Read data -------------------
   out <- loadGridDataset(var, grid, dic, level, season, years, members,
                          time, latLon, aggr.d, aggr.m, threshold, condition)
+  # Sorting the longitudes ----------------
+  if (!is.null(latLon$ix)){
+    dimNames <- attr(out$Data, "dimensions")
+    lon.dim.index <- grep("^lon$", dimNames)   
+    if ((length(lon.dim.index) == 0) & (length(grep("^x$", dimNames)) > 0)) {
+      lon.dim.index <- grep("^x$", dimNames) 
+    } else if ((length(lon.dim.index) == 0) & (length(grep("^longitude$", dimNames)) > 0)) {
+      lon.dim.index <- grep("^longitude$", dimNames) 
+    }
+    indicesLon <- rep(list(bquote()), length(dim(out$Data)))
+    indicesLon[[lon.dim.index]] <- latLon$ix
+    call <- as.call(c(list(as.name("["), quote(out$Data)), indicesLon))
+    out$Data <- eval(call)
+    attr(out$Data, "dimensions") <- dimNames
+    latLon$ix <- NULL
+  }else{
+    latLon$ix <- NULL
+  }
   # Metadata: projection and spatial resolution -------------
   proj <- proj$toString()
   attr(out$xyCoords, which = "projection") <- proj
