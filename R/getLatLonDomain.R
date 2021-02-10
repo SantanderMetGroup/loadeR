@@ -199,7 +199,13 @@ getLatLonDomain <- function(grid, lonLim, latLim, spatialTolerance = NULL) {
     lonSlice <- do.call("c", lonAux)
   }
   lonSlice[which(lonSlice > 180)] <- lonSlice[which(lonSlice > 180)] - 360
-  lonSlice <- sort(lonSlice)
+  lonSlice <- sort(lonSlice, index.return = TRUE)
+  if (!any(lonSlice$ix == sort(lonSlice$ix))){
+    ixlonSlice <- lonSlice$ix
+  }else{
+    ixlonSlice <- NULL
+  }
+  lonSlice <- lonSlice$x
   aux <- grid$makeSubset(.jnull(), .jnull(), llbbox[[1]], 1L, 1L, 1L)
   revLat <- FALSE
   if (pointXYindex[2] >= 0) {
