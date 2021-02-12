@@ -310,10 +310,16 @@ adjustRCMgrid <- function(gds, latLon, lonLim, latLim) {
     if (!is.null(nc$findDimension("rlat"))){
       latLon$xyCoords$y <- nc$findCoordinateAxis('rlat')$getCoordValues()[ind.y]
     }else{
-      latLon$xyCoords$x <- nc$findCoordinateAxis('y')$getCoordValues()[ind.x]
+      latLon$xyCoords$y <- nc$findCoordinateAxis('y')$getCoordValues()[ind.x]
     }
     latLon$xyCoords$lon <- auxLon[ind.y,ind.x]
     latLon$xyCoords$lat <- auxLat[ind.y,ind.x]
+    if (latLon$pointXYindex[1] >= 0){
+      latLon$pointXYindex[1] = as.integer(-1)
+    }
+    if (latLon$pointXYindex[2] >= 0){
+      latLon$pointXYindex[2] = as.integer(-1)
+    }
   } else if (length(lonLim) == 1) {
     auxDis <- sqrt((auxLon - lonLim[1]) ^ 2 + (auxLat - latLim[1]) ^ 2)
     llrowCol <- arrayInd(which.min(auxDis), dim(auxDis))
