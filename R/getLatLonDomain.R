@@ -250,7 +250,7 @@ getLatLonDomain <- function(grid, lonLim, latLim, spatialTolerance = NULL) {
       revLat <- TRUE
     }
   }
-  return(list("llRanges" = llRanges, "llbbox" = llbbox, "pointXYindex" = pointXYindex, "xyCoords" = list("x" = lonSlice, "y" = latSlice, "resX" = resX, "resY" = resY), "revLat" = revLat))
+  return(list("llRanges" = llRanges, "llbbox" = llbbox, "pointXYindex" = pointXYindex, "xyCoords" = list("x" = lonSlice, "y" = latSlice, "resX" = resX, "resY" = resY), "revLat" = revLat, "ix" = ixlonSlice))
 }
 # End
 
