@@ -57,6 +57,9 @@ getLatLonDomain <- function(grid, lonLim, latLim, spatialTolerance = NULL) {
       latLim <- c(mean(latLim)-1e-5-max(c(resY,deltaLat), na.rm = TRUE)*0.5,mean(latLim)+1e-5+max(c(resY,deltaLat), na.rm = TRUE)*0.5)
       warning("Requested latLim range is smaller than the grid resolution. The nearest cell to ", mean(latLim), " will be returned.")
       deltaLat <- latLim[2] - latLim[1]
+    } else if (deltaLat == 0 | is.na(resY)) {
+      latLim <- c(latLim[1]-1e-5,latLim[1]+1e-5)
+      deltaLat <- latLim[2] - latLim[1]
     }
   } else if ((length(latLim) == 1) & (is.na(resY))) {
     latLim <- c(latLim[1]-1e-5,latLim[1]+1e-5)
@@ -68,6 +71,9 @@ getLatLonDomain <- function(grid, lonLim, latLim, spatialTolerance = NULL) {
       lonLim <- c(mean(lonLim)-1e-5-max(c(resX,deltaLon), na.rm = TRUE)*0.5,mean(lonLim)+1e-5+max(c(resX,deltaLon), na.rm = TRUE)*0.5)
       deltaLon <- lonLim[2] - lonLim[1]
       warning("Requested lonLim range is smaller than the grid resolution. The nearest cell to ", mean(lonLim), " will be returned.")
+    } else if (deltaLon == 0 | is.na(resX)) {
+      lonLim <- c(lonLim[1]-1e-5,lonLim[1]+1e-5)
+      deltaLon <- lonLim[2] - lonLim[1]
     }
   } else if ((length(lonLim) == 1) & (is.na(resX))) {
     lonLim <- c(lonLim[1]-1e-5,lonLim[1]+1e-5)
