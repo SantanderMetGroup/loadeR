@@ -94,8 +94,8 @@ makeSubset <- function(grid, timePars, levelPars, latLon, memberPars) {
         if (is.jnull(latLon$llRanges[[j]])){
           aux.pointXYindex <- as.integer(c(0))
         } else {
-          ## aux.pointXYindex <- as.integer(which(c(latLon$llRanges[[j]]$get(1L)$min():latLon$llRanges[[j]]$get(1L)$max()) == latLon$pointXYindex[1]) -1)
-          aux.pointXYindex <- as.integer(which(c(latLon$llRanges[[j]]$get(0L)$min():latLon$llRanges[[j]]$get(0L)$max()) == latLon$pointXYindex[1]) -1)
+          aux.pointXYindex <- as.integer(which(c(latLon$llRanges[[j]]$get(1L)$min():latLon$llRanges[[j]]$get(1L)$max()) == latLon$pointXYindex[1]) -1)
+          ## aux.pointXYindex <- as.integer(which(c(latLon$llRanges[[j]]$get(0L)$min():latLon$llRanges[[j]]$get(0L)$max()) == latLon$pointXYindex[1]) -1)
         }
         aux.list2[[j]] <- array(subSet$readDataSlice(-1L, -1L, -1L, -1L,
                                                      latLon$pointXYindex[2],
