@@ -308,3 +308,102 @@ loadStationData <- function(dataset,
   return(out)
 }
 # End      
+
+#' @title POSIXlt conversion from character 
+#' @description Converts the date codes of the Value format to \code{"POSIXlt"}
+#' @param timeString Date vector as stored in VALUE files, previously coerced to character
+#' @param tz Time zone. See \code{\link{loadStationData}}
+#' @return A POSIXlt vector of the same length of the input
+#' @details Currently the VALUE format is intended for daily data of the form YYYMMDD. However,
+#'  the function also considers the possibility of subdaily data if hourly data are introduced in
+#'  the form YYYYMMDDHH, eading to a string of 10 characters.
+#' @note The function is currently exported to be internally used by the VALUE package to load predictions.
+#' @keywords internal
+#' @export
+#' @author juaco
+string2date <- function(timeString, tz = tz) {
+      timeString = gsub("^\\s+|\\s+$", "", timeString)
+      if (nchar(timeString[1]) == 8) {
+            timeDates <- strptime(timeString, "%Y%m%d", tz = tz)  
+      }
+      if (nchar(timeString[1]) == 10) {
+            timeDates <- strptime(timeString, "%Y%m%d%H", tz = tz)
+      }
+      return(timeDates)
+}
+# End
+#' @title Compute time bounds
+#' @description Compute start/end verification time bounds from a vector of dates.
+#' @param timeDates A POSIXlt vector of dates
+#' @param tz Time zone
+#' @keywords internal
+#' @export
+#' @note The function is currently exported to be internally used by the VALUE package to load predictions.
+#' @return A list with components start and end, of POSIXct dates
+timeBoundsValue <- function(timeDates, tz) {
+      varTimeStep <- difftime(timeDates[2], timeDates[1])
+      dateSliceStart <- as.POSIXct(timeDates)
+      dateSliceEnd <- as.POSIXct(as.POSIXlt(timeDates + varTimeStep))
+      usetz <- ifelse(identical(tz, ""), FALSE, TRUE)
+      dateSliceStart <- format.POSIXct(dateSliceStart, "%Y-%m-%d %H:%M:%S", usetz = usetz, tz = tz)
+      dateSliceEnd <- format.POSIXct(dateSliceEnd, "%Y-%m-%d %H:%M:%S", usetz = usetz, tz = tz)
+      return(list("start" = dateSliceStart, "end" = dateSliceEnd))
+}
+# End
+#' Time  index positions for station dataset selections
+#' 
+#' Get time index positions for loading ascii station data
+#' 
+#' @param timeDates a POSIXlt vector of time dates
+#' @param season A vector of months defining the season selected
+#' @param years A vector of (continuous) year selection
+#' @return A list with a vector of time index positions and the corresponding POSIXlt dates
+#' @author J. Bedia 
+#' @keywords internal
+#' @export
+#' @note The function is currently exported to be internally used by the VALUE package to load predictions.
+#' @importFrom utils tail
+getTimeDomainStations <- function(timeDates, season, years) {
+      if (is.null(season)) {
+            season <- 1:12
+      }
+      allYears <- unique(timeDates$year + 1900)
+      startYear <- head(allYears, 1L)
+      endYear <- tail(allYears, 1L)
+      if (is.null(years)) {
+            years <- allYears
+      } 
+      if (years[1] < startYear & tail(years, 1L) > endYear) {
+            warning("Year selection out of dataset range. Only available years will be returned", call. = FALSE)
+            years <- allYears
+      }
+      if (years[1] < startYear) {
+            warning("First year in dataset: ", startYear,". Only available years will be returned", call. = FALSE)
+            years <- startYear:years[length(years)]
+      }
+      if (tail(years, 1L) > endYear) {
+            warning("Last year in dataset: ", endYear,". Only available years will be returned", call. = FALSE)
+            years <- years[1]:endYear
+      }
+      # Year-crossing seasons - year to take the initialization
+      if (!identical(season, sort(season))) {
+            if (years[1] == startYear) { 
+                  warning(paste("First forecast day in dataset: ", timeDates[1], ".\nRequested seasonal data for ", startYear," not available", sep = ""), call. = FALSE)
+                  years <- years[-length(years)]
+            } else {
+                  years <- append(years[1] - 1, years)
+            }
+            timeInd <- which((timeDates$year + 1900) %in% years & (timeDates$mon + 1) %in% season)
+            crossSeason <- which(c(1, diff(season)) < 0)
+            rm.ind <- which((timeDates$mon + 1) %in% season[1:(crossSeason - 1)] & (timeDates$year + 1900) %in% years[length(years)])
+            if (length(years) > 1) {
+                  rm.ind <- c(rm.ind, which((timeDates$mon + 1) %in% season[crossSeason:length(season)] & (timeDates$year + 1900) %in% years[1]))
+            }
+            timeInd <- setdiff(timeInd, rm.ind)
+      }else{
+            timeInd <- which((timeDates$year + 1900) %in% years & (timeDates$mon + 1) %in% season)
+      }  
+      timeDates <- timeDates[timeInd]
+      return(list("timeInd" = timeInd, "timeDates" = timeDates))
+}
+# end
