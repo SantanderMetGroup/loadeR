@@ -50,6 +50,12 @@ getLatLonDomain <- function(grid, lonLim, latLim, spatialTolerance = NULL) {
   bboxDataset <- gcs$getLatLonBoundingBox()
   resY <- tryCatch((bboxDataset$getLatMax() - bboxDataset$getLatMin())/(grid$getYDimension()$getLength()-1), error = function(e) NA, finally = NA)
   resX <- tryCatch((bboxDataset$getLonMax() - bboxDataset$getLonMin())/(grid$getXDimension()$getLength()-1), error = function(e) NA, finally = NA)
+  if ((!is.null(latLim)) & (length(unique(latLim)) == 1)){
+    latLim <- latLim[1]
+  }
+  if ((!is.null(lonLim)) & (length(unique(lonLim)) == 1)){
+    lonLim <- lonLim[1]
+  }                   
   if (length(latLim) > 1) {
     deltaLat <- latLim[2] - latLim[1]
     if (abs(resY - deltaLat) <= 1e-5 | is.na(resY)) {
