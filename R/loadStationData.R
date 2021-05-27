@@ -103,10 +103,10 @@ loadStationData <- function(dataset,
   } else if (grepl("\\.ncml$|\\.nc$|\\.nc4$", dataset)) {
     gds <- openDataset(dataset)
     nc <- gds$getNetcdfDataset()
-    if (grep("timeSeries",nc$getGlobalAttributes()$toString())){
+    if (grep("timeSeries", nc$getGlobalAttributes()$toString())) {
       varId <- nc$findVariable(var)
       units <- varId$getUnitsString()
-    }else{
+    } else {
       stop("The dataset does not content timeSeries.\nCheck the global attribute 'featureType'.", call. = FALSE)
     }
   } else {
@@ -152,19 +152,19 @@ loadStationData <- function(dataset,
     lons <- lons$read()
     if (lons$getSize() < 2){
       lons <- lons$copyTo1DJavaArray()
-    }else{
+    } else {
       lons <- lons$copyToNDJavaArray()
     }
     lats <- nc$findVariable("lat")
     if (is.null(lats)) lats <- nc$findVariable("Lat")
     if (is.null(lats)) lats <- nc$findVariable("y")
     lats <- lats$read()
-    if (lats$getSize() < 2){
+    if (lats$getSize() < 2) {
       lats <- lats$copyTo1DJavaArray()
-    }else{
+    } else {
       lats <- lats$copyToNDJavaArray()
     }
-  }else{
+  } else {
     lons <- aux[ , grep("^longitude$", names(aux), ignore.case = TRUE)]
     lats <- aux[ , grep("^latitude$", names(aux), ignore.case = TRUE)]
   }
@@ -198,7 +198,7 @@ loadStationData <- function(dataset,
       refDate <- timeId$getUnitsString()
       auxDate <- strsplit(refDate,' ')
       timeDates <- strptime(as.Date(paste(auxDate[[1]][3],auxDate[[1]][4])) + timeDates, "%Y-%m-%d", tz = tz) 
-    }else{
+    } else {
       fileInd <- grep(paste(var, "\\.txt", sep = ""), zipFileContents)
       if (any(grepl("MACOSX", zipFileContents[fileInd]))) {
         fileInd <- fileInd[-grep("MACOSX", zipFileContents[fileInd])]
@@ -224,7 +224,7 @@ loadStationData <- function(dataset,
         varId <- varId$read(paste0(range(stInd)[1]-1,":",range(stInd)[2]-1,":1,",range(timePars$timeInd)[1]-1,":",range(timePars$timeInd)[2]-1,":1"));
         Data <- varId$toString()
         Data <- t(matrix(as.double(strsplit(Data,' ')[[1]]), nrow = varId$getShape()[1], ncol = varId$getShape()[2]))
-      }else{
+      } else {
         varId <- varId$read(paste0(range(timePars$timeInd)[1]-1,":",range(timePars$timeInd)[2]-1,":1,",range(stInd)[1]-1,":",range(stInd)[2]-1,":1"));
         Data <- varId$toString()
         Data <- t(matrix(as.double(strsplit(Data,' ')[[1]]), nrow = varId$getShape()[2], ncol = varId$getShape()[1]))
@@ -233,7 +233,7 @@ loadStationData <- function(dataset,
       # Data <- t(matrix(as.double(strsplit(Data,' ')[[1]]), nrow = varId$getShape()[2], ncol = varId$getShape()[1]))
       Data <- unname(Data[timePars$timeInd-(range(timePars$timeInd)[1]-1), stInd-(range(stInd)[1]-1)])
       gds$close()
-    }else{
+    } else {
       ## missing data code
       varInd <- grep("variables", zipFileContents, ignore.case = TRUE)
       if (any(grepl("MACOSX", zipFileContents[varInd]))) {
@@ -273,7 +273,6 @@ loadStationData <- function(dataset,
       message("[", Sys.time(), "] Loading data ...", sep = "")
       var.stids <- lapply(strsplit(readLines(unzcond(dataset, zipFileContents[fileInd]), 1), split = ","), FUN = trim)
       var.stids <- tail(unlist(var.stids), -1)
-      closeAllConnections() 
       stInd.var <- match(stids, var.stids)
       Data <- unname(as.matrix(read.csv(unzcond(dataset, zipFileContents[fileInd]), na.strings = na.string)[timePars$timeInd, stInd.var + 1]))
     }
@@ -305,6 +304,7 @@ loadStationData <- function(dataset,
     }
     message(paste("[", Sys.time(), "] Done.", sep = ""))
   }
+  on.exit(closeAllConnections())
   return(out)
 }
 # End      
