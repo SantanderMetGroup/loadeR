@@ -86,4 +86,6 @@ For earlier version changes, see the GitHub Releases [Tab](https://github.com/Sa
  * loginUDG, C4R.vocabulary and C4R.vocabulary.update utilities moved to climate4R.UDG dependency
  * Other minor bug fixes and documentation updates
 
+## v1.7.1 (05 Jul 2021) 
+ * Minor bug fixes and and enhancements
  
