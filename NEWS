@@ -88,4 +88,8 @@ For earlier version changes, see the GitHub Releases [Tab](https://github.com/Sa
 
 ## v1.7.1 (05 Jul 2021) 
  * Minor bug fixes and and enhancements
+
+## v1.7.2 (in devel)
+ * Minor fix in loadSeasonalForecast output attributes (resX and resY)
+
  

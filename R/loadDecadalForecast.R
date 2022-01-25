@@ -171,9 +171,23 @@ loadDecadalForecast <- function(dataset,
   
   gds$close()
   message("[", Sys.time(), "]", " Done")
+  # So far lonlat proj is assumed
   attr(out$xyCoords, "projection") <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0"
-  attr(out, "resX") <- (tail(out$xyCoords$x, 1) - out$xyCoords$x[1]) / (length(out$xyCoords$x) - 1)
-  attr(out, "resY") <- (tail(out$xyCoords$y, 1) - out$xyCoords$y[1]) / (length(out$xyCoords$y) - 1)
+  # attr(out, "resX") <- (tail(out$xyCoords$x, 1) - out$xyCoords$x[1]) / (length(out$xyCoords$x) - 1)
+  # attr(out, "resY") <- (tail(out$xyCoords$y, 1) - out$xyCoords$y[1]) / (length(out$xyCoords$y) - 1)
+  if (length(out$xyCoords$x) > 1){
+    attr(out$xyCoords, "resX") <- (tail(out$xyCoords$x, 1) - out$xyCoords$x[1]) / (length(out$xyCoords$x) - 1)
+  } else {
+    attr(out$xyCoords, "resX") <- latLon$xyCoords$resX
+  }
+  if (length(out$xyCoords$y) > 1){
+    attr(out$xyCoords, "resY") <- (tail(out$xyCoords$y, 1) - out$xyCoords$y[1]) / (length(out$xyCoords$y) - 1)
+  } else {
+    attr(out$xyCoords, "resY") <- latLon$xyCoords$resY
+  }
+  out$xyCoords["resX"] <- NULL
+  out$xyCoords["resY"] <- NULL
+  
   if("lon" %in% names(out$xyCoords)){
     attr(out, "resLON") <- NA 
     attr(out, "resLAT") <- NA
