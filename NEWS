@@ -91,5 +91,6 @@ For earlier version changes, see the GitHub Releases [Tab](https://github.com/Sa
 
 ## v1.7.2 (in devel)
  * Minor fix in loadSeasonalForecast output attributes (resX and resY)
+ * Bug fix in dataInventory: exact variable name retrieval by grep
 
  

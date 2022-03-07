@@ -128,7 +128,7 @@ dataInventory.ASCII <- function(dataset, rs) {
             if (any(grepl("MACOSX", dirind))) dirind <- dirind[-grep("MACOSX", dirind)]
             read.csv(unz(dataset, dirind), colClasses = "character")[ ,1]
       } else {
-            read.csv(grep(paste0(vars[ ,1][1], "\\.*"), dirContents, value = TRUE), colClasses = "character")[ ,1]
+            read.csv(grep(paste0(vars[ ,1][1], "\\."), dirContents, value = TRUE), colClasses = "character")[ ,1]
       }
       timeDates <- if (nchar(timeString[1]) == 8) {
             strptime(timeString, "%Y%m%d")  
