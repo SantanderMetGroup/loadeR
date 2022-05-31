@@ -1,6 +1,6 @@
-login <- function(host, username, password) {
+login <- function(username, password) {
     message("[",Sys.time(), "] Setting credentials...")
-    J("ucar.httpservices.HTTPFactory")$setCredentials(host, username, password)
-    message("[",Sys.time(), "] Credentials set for user ", username, "@", host, ".")
+    J("ucar.httpservices.MyHTTPFactory")$setCredentials(username, password)
+    message("[",Sys.time(), "] Credentials set for user ", username, ".")
     message("[",Sys.time(), "] Please, note that invalid credentials will generate unauthorized errors when accessing the data.")
 }
