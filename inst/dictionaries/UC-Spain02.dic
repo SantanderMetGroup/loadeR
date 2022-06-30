@@ -1,5 +1,0 @@
-identifier,short_name,time_step,lower_time_bound,upper_time_bound,cell_method,offset,scale,deaccum,derived,interface
-pr,pr,24h,0,24,sum,0,1,0,0,
-tas,tas,24h,0,24,mean,0,1,0,0,
-tasmax,tasmax,24h,0,24,max,0,1,0,0,
-tasmin,tasmin,24h,0,24,min,0,1,0,0,
