@@ -1,2 +1,0 @@
-suppressPackageStartupMessages(require("rJava"))
-
