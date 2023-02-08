@@ -92,220 +92,220 @@ loadStationData <- function(dataset,
                             units = NULL,
                             level = NULL,
                             spatialTolerance = NULL) {
-  if (!is.null(spatialTolerance)) {
-    warning("Argument spatialTolerance not implemeted yet. Ignored")
-  }
-  aux <- NULL
-  empty.area <- FALSE
-  if (grepl("\\.zip$", dataset)) {
-    unzcond <- unz
-    zipFileContents <- unzip(dataset, list = TRUE)$Name
-  } else if (grepl("\\.ncml$|\\.nc$|\\.nc4$", dataset)) {
-    gds <- openDataset(dataset)
-    nc <- gds$getNetcdfDataset()
-    if (grep("timeSeries", nc$getGlobalAttributes()$toString())) {
-      varId <- nc$findVariable(var)
-      units <- varId$getUnitsString()
-    } else {
-      stop("The dataset does not content timeSeries.\nCheck the global attribute 'featureType'.", call. = FALSE)
-    }
-  } else {
-    unzcond <- function(description, filename) {
-      paste0(description, "/", filename)
-    }
-    zipFileContents <- list.files(dataset)
-  }
-  if ((!is.null(lonLim) | !is.null(latLim)) & !is.null(stationID)) { 
-    lonLim <- NULL 
-    latLim <- NULL
-    warning("lonLim/latLim arguments ignored as Station Codes have been specified.", call. = FALSE)
-  }
-  if (grepl("\\.ncml$|\\.nc$|\\.nc4$", dataset)) {
-    stids <- nc$findVariable("station_id")
-    stids <- stids$read()
-    stids <- tryCatch({stids$make1DStringArray()}, error = function(err) {stids})
-    stids <- stids$copyToNDJavaArray()
-  } else {
-    # Reading stations from zip file
-    stations.file <- grep("stations\\.", zipFileContents, ignore.case = TRUE, value = TRUE)
-    if (any(grepl("MACOSX", stations.file))) {
-      stations.file <- stations.file[-grep("MACOSX", stations.file)]
-    }      
-    aux <- read.csv(unzcond(description = dataset, filename = stations.file), stringsAsFactors = FALSE, strip.white = TRUE)
-    # Station codes
-    trim <- function(x) gsub("^\\s+|\\s+$", "", x)
-    stids <- trim(read.csv(unzcond(dataset, stations.file), colClasses = "character")[ ,grep("station_id", names(aux), ignore.case = TRUE)])
-  }
-  if (!is.null(stationID)) {
-    stInd <- match(stationID, stids)
-    if (any(is.na(stInd))) {
-      stop("'stationID' values not found.\nCheck data inventory", call. = FALSE)
-    }
-  } else {
-    stInd <- 1:length(stids)
-  }
-  ## Longitude and latitude
-  if (grepl("\\.ncml$|\\.nc$|\\.nc4$", dataset)) {
-    lons <- nc$findVariable("lon")
-    if (is.null(lons)) lons <- nc$findVariable("Lon")
-    if (is.null(lons)) lons <- nc$findVariable("x")
-    lons <- lons$read()
-    if (lons$getSize() < 2){
-      lons <- lons$copyTo1DJavaArray()
-    } else {
-      lons <- lons$copyToNDJavaArray()
-    }
-    lats <- nc$findVariable("lat")
-    if (is.null(lats)) lats <- nc$findVariable("Lat")
-    if (is.null(lats)) lats <- nc$findVariable("y")
-    lats <- lats$read()
-    if (lats$getSize() < 2) {
-      lats <- lats$copyTo1DJavaArray()
-    } else {
-      lats <- lats$copyToNDJavaArray()
-    }
-  } else {
-    lons <- aux[ , grep("^longitude$", names(aux), ignore.case = TRUE)]
-    lats <- aux[ , grep("^latitude$", names(aux), ignore.case = TRUE)]
-  }
-  if (!is.null(lonLim) | !is.null(latLim)) {
-    if (is.null(lonLim)) lonLim <- range(lons)
-    if (is.null(latLim)) latLim <- range(lats)
-    latLon <- getLatLonDomainStations(lonLim, latLim, lons, lats)
-    if (length(latLon$stInd) == 0) {
-      empty.area <- TRUE
-      warning("No stations were found in the selected spatial domain", call. = FALSE)
-    } else {
-      stInd <- latLon$stInd
-      coords <- setNames(data.frame(latLon$stCoords), nm = c("x", "y"))
-      latLon <- NULL
-    }
-  } else {
-    coords <- setNames(data.frame(matrix(cbind(lons, lats)[stInd, ], ncol = 2)), nm = c("x", "y"))
-  }
-  if (empty.area) {
-    out <- NULL
-  } else {
-    stids <- stids[stInd]
-    ## Spatial dimension
-    attr(coords, "projection") <- projection
-    attr(coords, "resX") <- 0
-    attr(coords, "resY") <- 0
-    ## Time dimension
-    if (grepl("\\.ncml$|\\.nc$|\\.nc4$", dataset)) {
-      timeId <- nc$findVariable("time")
-      timeDates <- timeId$getCoordValues()
-      refDate <- timeId$getUnitsString()
-      auxDate <- strsplit(refDate,' ')
-      timeDates <- strptime(as.Date(paste(auxDate[[1]][3],auxDate[[1]][4])) + timeDates, "%Y-%m-%d", tz = tz) 
-    } else {
-      fileInd <- grep(paste(var, "\\.txt", sep = ""), zipFileContents)
-      if (any(grepl("MACOSX", zipFileContents[fileInd]))) {
-        fileInd <- fileInd[-grep("MACOSX", zipFileContents[fileInd])]
-      } 
-      if (length(fileInd) == 0) {
-        stop("[", Sys.time(),"] Variable requested not found", call. = FALSE)
+      if (!is.null(spatialTolerance)) {
+            warning("Argument spatialTolerance not implemeted yet. Ignored")
       }
-      timeString <- read.csv(unzcond(dataset, zipFileContents[fileInd]), colClasses = "character")[ ,1]
-      timeDates <- string2date(timeString, tz = tz)
-      timeString <- NULL
-    }
-    timePars <- getTimeDomainStations(timeDates, season, years)
-    if(grepl("\\.ncml$|\\.nc$|\\.nc4$", dataset)) {
-      # varId <- varId$read()
-      # Data <- varId$toString()
-      # Data <- t(matrix(as.double(strsplit(Data,' ')[[1]]), nrow = varId$getShape()[2], ncol = varId$getShape()[1]))
-      # Data <- unname(Data[timePars$timeInd, stInd])
-      # gds$close()
-      aux.dimensions <- strsplit(varId$getDimensions()$toString(), ",")
-      timeIndex <- which(grepl("time",aux.dimensions[[1]]))
-      locIndex <- which(grepl("station_id",aux.dimensions[[1]]))
-      if (timeIndex > locIndex){
-        varId <- varId$read(paste0(range(stInd)[1]-1,":",range(stInd)[2]-1,":1,",range(timePars$timeInd)[1]-1,":",range(timePars$timeInd)[2]-1,":1"));
-        Data <- varId$toString()
-        Data <- t(matrix(as.double(strsplit(Data,' ')[[1]]), nrow = varId$getShape()[1], ncol = varId$getShape()[2]))
+      aux <- NULL
+      empty.area <- FALSE
+      if (grepl("\\.zip$", dataset)) {
+            unzcond <- unz
+            zipFileContents <- unzip(dataset, list = TRUE)$Name
+      } else if (grepl("\\.ncml$|\\.nc$|\\.nc4$", dataset)) {
+            gds <- openDataset(dataset)
+            nc <- gds$getNetcdfDataset()
+            if (grep("timeSeries", nc$getGlobalAttributes()$toString())) {
+                  varId <- nc$findVariable(var)
+                  units <- varId$getUnitsString()
+            } else {
+                  stop("The dataset does not content timeSeries.\nCheck the global attribute 'featureType'.", call. = FALSE)
+            }
       } else {
-        varId <- varId$read(paste0(range(timePars$timeInd)[1]-1,":",range(timePars$timeInd)[2]-1,":1,",range(stInd)[1]-1,":",range(stInd)[2]-1,":1"));
-        Data <- varId$toString()
-        Data <- t(matrix(as.double(strsplit(Data,' ')[[1]]), nrow = varId$getShape()[2], ncol = varId$getShape()[1]))
+            unzcond <- function(description, filename) {
+                  paste0(description, "/", filename)
+            }
+            zipFileContents <- list.files(dataset)
       }
-      # Data <- varId$toString()
-      # Data <- t(matrix(as.double(strsplit(Data,' ')[[1]]), nrow = varId$getShape()[2], ncol = varId$getShape()[1]))
-      Data <- unname(Data[timePars$timeInd-(range(timePars$timeInd)[1]-1), stInd-(range(stInd)[1]-1)])
-      gds$close()
-    } else {
-      ## missing data code
-      varInd <- grep("variables", zipFileContents, ignore.case = TRUE)
-      if (any(grepl("MACOSX", zipFileContents[varInd]))) {
-        varInd <- varInd[-grep("MACOSX", zipFileContents[varInd])]
-      } 
-      vars <- read.csv(unzcond(dataset, zipFileContents[varInd]))
-      miss.col <- grep("missing_code", names(vars), ignore.case = TRUE)
-      unit.col <- grep("^unit", names(vars), ignore.case = TRUE)
-      # Missing data value
-      if (length(miss.col) > 0) {
-        na.string <- vars[grep(var, vars[ , grep("variable", names(vars), ignore.case = TRUE)]), miss.col]
-        miss.col <- NULL
+      if ((!is.null(lonLim) | !is.null(latLim)) & !is.null(stationID)) { 
+            lonLim <- NULL 
+            latLim <- NULL
+            warning("lonLim/latLim arguments ignored as Station Codes have been specified.", call. = FALSE)
+      }
+      if (grepl("\\.ncml$|\\.nc$|\\.nc4$", dataset)) {
+            stids <- nc$findVariable("station_id")
+            stids <- stids$read()
+            stids <- tryCatch({stids$make1DStringArray()}, error = function(err) {stids})
+            stids <- stids$copyToNDJavaArray()
       } else {
-        na.string <- NA
+            # Reading stations from zip file
+            stations.file <- grep("stations\\.", zipFileContents, ignore.case = TRUE, value = TRUE)
+            if (any(grepl("MACOSX", stations.file))) {
+                  stations.file <- stations.file[-grep("MACOSX", stations.file)]
+            }      
+            aux <- read.csv(unzcond(description = dataset, filename = stations.file), stringsAsFactors = FALSE, strip.white = TRUE)
+            # Station codes
+            trim <- function(x) gsub("^\\s+|\\s+$", "", x)
+            stids <- trim(read.csv(unzcond(dataset, stations.file), colClasses = "character")[ ,grep("station_id", names(aux), ignore.case = TRUE)])
       }
-      # Level (fake slot)
-      if (is.null(level)) {
-        aux.level <- findVerticalLevel(var)
-        level <- aux.level$level
-      }
-      # Units
-      if (length(unit.col) > 0) {
-        units.meta <- gsub(" ","", as.character(vars[grep(var, vars[ , grep("variable", names(vars), ignore.case = TRUE)]), unit.col]))
-        if (!is.null(units)) {
-          if (!identical(units, units.meta)) {
-            warning("the dataset units metadata definition, (\'", units.meta,
-                    "\') and the \'units\' value provided, (\'", units,
-                    "\') differ.\nThe latter will be used.")
-          }
-        } else {
-          units <- units.meta
-        }
+      if (!is.null(stationID)) {
+            stInd <- match(stationID, stids)
+            if (any(is.na(stInd))) {
+                  stop("'stationID' values not found.\nCheck data inventory", call. = FALSE)
+            }
       } else {
-        na.string <- NA
+            stInd <- 1:length(stids)
       }
-      # Data retrieval
-      message("[", Sys.time(), "] Loading data ...", sep = "")
-      var.stids <- lapply(strsplit(readLines(unzcond(dataset, zipFileContents[fileInd]), 1), split = ","), FUN = trim)
-      var.stids <- tail(unlist(var.stids), -1)
-      stInd.var <- match(stids, var.stids)
-      Data <- unname(as.matrix(read.csv(unzcond(dataset, zipFileContents[fileInd]), na.strings = na.string)[timePars$timeInd, stInd.var + 1]))
-    }
-    # Metadata
-    message("[", Sys.time(), "] Retrieving metadata ...", sep = "")
-    # Assumes that at least station ids must exist, and therefore meta.list is never empty
-    ind.meta <- c(1:length(names(aux)))[-pmatch(c("longitude", "latitude", "station_id"), names(aux))]
-    meta.list <- list()
-    meta.list[[1]] <- stids
-    for (i in 1:length(ind.meta)) {
-      meta.list[[i + 1]] <- aux[stInd, ind.meta[i]]
-    }
-    names(meta.list) <- c("station_id", names(aux)[ind.meta])
-    # Units
-    aux <- NULL  
-    out <- list("Variable" = list("varName" = var, "level" = level), "Data" = Data, "xyCoords" = coords, "Dates" = timeBoundsValue(timePars$timeDates, tz), "Metadata" = meta.list)
-    if (is.null(units)) message("NOTE: The \'units\' argument is undefined: It is highly recommended to indicate this attribute\nThis can be made afterwards with transformeR's function \'setGridUnits\'")
-    datadimnames <- c("time", "loc")
-    if (class(out$Data) == "numeric") datadimnames <- "time"
-    attr(out$Data, "dimensions") <- datadimnames
-    attr(out$Variable, "units") <- units
-    attr(out, "dataset") <- dataset
-    attr(out, "R_package_desc") <- paste0("loadeR-v", packageVersion("loadeR"))
-    attr(out, "R_package_URL") <- "https://github.com/SantanderMetGroup/loadeR"
-    attr(out, "R_package_ref") <- "https://doi.org/10.1016/j.envsoft.2018.09.009"
-    if (grepl("http://meteo\\.unican\\.es", dataset)) {
-      attr(out, "source") <- "User Data Gateway"
-      attr(out, "URL") <- "<http://meteo.unican.es/trac/wiki/udg>"
-    }
-    message(paste("[", Sys.time(), "] Done.", sep = ""))
-  }
-  on.exit(closeAllConnections())
-  return(out)
+      ## Longitude and latitude
+      if (grepl("\\.ncml$|\\.nc$|\\.nc4$", dataset)) {
+            lons <- nc$findVariable("lon")
+            if (is.null(lons)) lons <- nc$findVariable("Lon")
+            if (is.null(lons)) lons <- nc$findVariable("x")
+            lons <- lons$read()
+            if (lons$getSize() < 2){
+                  lons <- lons$copyTo1DJavaArray()
+            } else {
+                  lons <- lons$copyToNDJavaArray()
+            }
+            lats <- nc$findVariable("lat")
+            if (is.null(lats)) lats <- nc$findVariable("Lat")
+            if (is.null(lats)) lats <- nc$findVariable("y")
+            lats <- lats$read()
+            if (lats$getSize() < 2) {
+                  lats <- lats$copyTo1DJavaArray()
+            } else {
+                  lats <- lats$copyToNDJavaArray()
+            }
+      } else {
+            lons <- aux[ , grep("^longitude$", names(aux), ignore.case = TRUE)]
+            lats <- aux[ , grep("^latitude$", names(aux), ignore.case = TRUE)]
+      }
+      if (!is.null(lonLim) | !is.null(latLim)) {
+            if (is.null(lonLim)) lonLim <- range(lons)
+            if (is.null(latLim)) latLim <- range(lats)
+            latLon <- getLatLonDomainStations(lonLim, latLim, lons, lats)
+            if (length(latLon$stInd) == 0) {
+                  empty.area <- TRUE
+                  warning("No stations were found in the selected spatial domain", call. = FALSE)
+            } else {
+                  stInd <- latLon$stInd
+                  coords <- setNames(data.frame(latLon$stCoords), nm = c("x", "y"))
+                  latLon <- NULL
+            }
+      } else {
+            coords <- setNames(data.frame(matrix(cbind(lons, lats)[stInd, ], ncol = 2)), nm = c("x", "y"))
+      }
+      if (empty.area) {
+            out <- NULL
+      } else {
+            stids <- stids[stInd]
+            ## Spatial dimension
+            attr(coords, "projection") <- projection
+            attr(coords, "resX") <- 0
+            attr(coords, "resY") <- 0
+            ## Time dimension
+            if (grepl("\\.ncml$|\\.nc$|\\.nc4$", dataset)) {
+                  timeId <- nc$findVariable("time")
+                  timeDates <- timeId$getCoordValues()
+                  refDate <- timeId$getUnitsString()
+                  auxDate <- strsplit(refDate,' ')
+                  timeDates <- strptime(as.Date(paste(auxDate[[1]][3],auxDate[[1]][4])) + timeDates, "%Y-%m-%d", tz = tz) 
+            } else {
+                  fileInd <- grep(paste(var, "\\.txt", sep = ""), zipFileContents)
+                  if (any(grepl("MACOSX", zipFileContents[fileInd]))) {
+                        fileInd <- fileInd[-grep("MACOSX", zipFileContents[fileInd])]
+                  } 
+                  if (length(fileInd) == 0) {
+                        stop("[", Sys.time(),"] Variable requested not found", call. = FALSE)
+                  }
+                  timeString <- read.csv(unzcond(dataset, zipFileContents[fileInd]), colClasses = "character")[ ,1]
+                  timeDates <- string2date(timeString, tz = tz)
+                  timeString <- NULL
+            }
+            timePars <- getTimeDomainStations(timeDates, season, years)
+            if(grepl("\\.ncml$|\\.nc$|\\.nc4$", dataset)) {
+                  # varId <- varId$read()
+                  # Data <- varId$toString()
+                  # Data <- t(matrix(as.double(strsplit(Data,' ')[[1]]), nrow = varId$getShape()[2], ncol = varId$getShape()[1]))
+                  # Data <- unname(Data[timePars$timeInd, stInd])
+                  # gds$close()
+                  aux.dimensions <- strsplit(varId$getDimensions()$toString(), ",")
+                  timeIndex <- which(grepl("time",aux.dimensions[[1]]))
+                  locIndex <- which(grepl("station_id",aux.dimensions[[1]]))
+                  if (timeIndex > locIndex){
+                        varId <- varId$read(paste0(range(stInd)[1]-1,":",range(stInd)[2]-1,":1,",range(timePars$timeInd)[1]-1,":",range(timePars$timeInd)[2]-1,":1"));
+                        Data <- varId$toString()
+                        Data <- t(matrix(as.double(strsplit(Data,' ')[[1]]), nrow = varId$getShape()[1], ncol = varId$getShape()[2]))
+                  } else {
+                        varId <- varId$read(paste0(range(timePars$timeInd)[1]-1,":",range(timePars$timeInd)[2]-1,":1,",range(stInd)[1]-1,":",range(stInd)[2]-1,":1"));
+                        Data <- varId$toString()
+                        Data <- t(matrix(as.double(strsplit(Data,' ')[[1]]), nrow = varId$getShape()[2], ncol = varId$getShape()[1]))
+                  }
+                  # Data <- varId$toString()
+                  # Data <- t(matrix(as.double(strsplit(Data,' ')[[1]]), nrow = varId$getShape()[2], ncol = varId$getShape()[1]))
+                  Data <- unname(Data[timePars$timeInd-(range(timePars$timeInd)[1]-1), stInd-(range(stInd)[1]-1)])
+                  gds$close()
+            } else {
+                  ## missing data code
+                  varInd <- grep("variables", zipFileContents, ignore.case = TRUE)
+                  if (any(grepl("MACOSX", zipFileContents[varInd]))) {
+                        varInd <- varInd[-grep("MACOSX", zipFileContents[varInd])]
+                  } 
+                  vars <- read.csv(unzcond(dataset, zipFileContents[varInd]))
+                  miss.col <- grep("missing_code", names(vars), ignore.case = TRUE)
+                  unit.col <- grep("^unit", names(vars), ignore.case = TRUE)
+                  # Missing data value
+                  if (length(miss.col) > 0) {
+                        na.string <- vars[grep(var, vars[ , grep("variable", names(vars), ignore.case = TRUE)]), miss.col]
+                        miss.col <- NULL
+                  } else {
+                        na.string <- NA
+                  }
+                  # Level (fake slot)
+                  if (is.null(level)) {
+                        aux.level <- findVerticalLevel(var)
+                        level <- aux.level$level
+                  }
+                  # Units
+                  if (length(unit.col) > 0) {
+                        units.meta <- gsub(" ","", as.character(vars[grep(var, vars[ , grep("variable", names(vars), ignore.case = TRUE)]), unit.col]))
+                        if (!is.null(units)) {
+                              if (!identical(units, units.meta)) {
+                                    warning("the dataset units metadata definition, (\'", units.meta,
+                                            "\') and the \'units\' value provided, (\'", units,
+                                            "\') differ.\nThe latter will be used.")
+                              }
+                        } else {
+                              units <- units.meta
+                        }
+                  } else {
+                        na.string <- NA
+                  }
+                  # Data retrieval
+                  message("[", Sys.time(), "] Loading data ...", sep = "")
+                  var.stids <- lapply(strsplit(readLines(unzcond(dataset, zipFileContents[fileInd]), 1), split = ","), FUN = trim)
+                  var.stids <- tail(unlist(var.stids), -1)
+                  stInd.var <- match(stids, var.stids)
+                  Data <- unname(as.matrix(read.csv(unzcond(dataset, zipFileContents[fileInd]), na.strings = na.string)[timePars$timeInd, stInd.var + 1]))
+            }
+            # Metadata
+            message("[", Sys.time(), "] Retrieving metadata ...", sep = "")
+            # Assumes that at least station ids must exist, and therefore meta.list is never empty
+            ind.meta <- c(1:length(names(aux)))[-pmatch(c("longitude", "latitude", "station_id"), names(aux))]
+            meta.list <- list()
+            meta.list[[1]] <- stids
+            for (i in 1:length(ind.meta)) {
+                  meta.list[[i + 1]] <- aux[stInd, ind.meta[i]]
+            }
+            names(meta.list) <- c("station_id", names(aux)[ind.meta])
+            # Units
+            aux <- NULL  
+            out <- list("Variable" = list("varName" = var, "level" = level), "Data" = Data, "xyCoords" = coords, "Dates" = timeBoundsValue(timePars$timeDates, tz), "Metadata" = meta.list)
+            if (is.null(units)) message("NOTE: The \'units\' argument is undefined: It is highly recommended to indicate this attribute\nThis can be made afterwards with transformeR's function \'setGridUnits\'")
+            datadimnames <- c("time", "loc")
+            if ("numeric" %in% class(out$Data)) datadimnames <- "time"
+            attr(out$Data, "dimensions") <- datadimnames
+            attr(out$Variable, "units") <- units
+            attr(out, "dataset") <- dataset
+            attr(out, "R_package_desc") <- paste0("loadeR-v", packageVersion("loadeR"))
+            attr(out, "R_package_URL") <- "https://github.com/SantanderMetGroup/loadeR"
+            attr(out, "R_package_ref") <- "https://doi.org/10.1016/j.envsoft.2018.09.009"
+            if (grepl("http://meteo\\.unican\\.es", dataset)) {
+                  attr(out, "source") <- "User Data Gateway"
+                  attr(out, "URL") <- "<http://meteo.unican.es/trac/wiki/udg>"
+            }
+            message(paste("[", Sys.time(), "] Done.", sep = ""))
+      }
+      on.exit(closeAllConnections())
+      return(out)
 }
 # End      
 
