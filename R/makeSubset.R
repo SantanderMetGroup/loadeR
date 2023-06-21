@@ -39,7 +39,7 @@ makeSubset <- function(grid, timePars, levelPars, latLon, memberPars) {
       # subSet <- grid$makeSubset(levelPars$zRange, memberPars, timePars$tRanges[[i]],
       #                           levelPars$zRange, latLon$llRanges[[j]]$get(0L),
       #                           latLon$llRanges[[j]]$get(1L))
-      if (is.jnull(latLon$llRanges[[j]])){
+      if (rJava::is.jnull(latLon$llRanges[[j]])){
         subSet <- grid$makeSubset(memberPars, levelPars$zRange, timePars$tRanges[[i]],
                                   levelPars$zRange, latLon$llRanges[[j]], latLon$llRanges[[j]])
       } else {
@@ -91,7 +91,7 @@ makeSubset <- function(grid, timePars, levelPars, latLon, memberPars) {
         dimNamesRef <- dimNamesRef[setdiff(c(1:length(dimNamesRef)),rm.dim)]
       } 
       if (latLon$pointXYindex[1] >= 0) {
-        if (is.jnull(latLon$llRanges[[j]])){
+        if (rJava::is.jnull(latLon$llRanges[[j]])){
           aux.pointXYindex <- as.integer(c(0))
         } else {
           aux.pointXYindex <- as.integer(which(c(latLon$llRanges[[j]]$get(1L)$min():latLon$llRanges[[j]]$get(1L)$max()) == latLon$pointXYindex[1]) -1)
