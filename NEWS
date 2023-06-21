@@ -89,8 +89,7 @@ For earlier version changes, see the GitHub Releases [Tab](https://github.com/Sa
 ## v1.7.1 (05 Jul 2021) 
  * Minor bug fixes and and enhancements
 
-## v1.7.2 (in devel)
+## v1.8.0 (21 Jun 2023) 
  * Minor fix in loadSeasonalForecast output attributes (resX and resY)
  * Bug fix in dataInventory: exact variable name retrieval by grep
-
- 
+ * Adapt to new class denomination for matrix objects in R version 4.X
