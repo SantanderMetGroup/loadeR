@@ -5,7 +5,7 @@
 #' 
 #' @importFrom abind abind
 #' 
-#' @param A grid of the java class \sQuote{ucar.nc2.dt.grid.GeoGrid}
+#' @param grid A grid of the java class \sQuote{ucar.nc2.dt.grid.GeoGrid}
 #' @param timePars A list of time parameters as returnde by \code{getTimeDomain}.
 #' @param levelPars Vertical level parameters, as returned by \code{getVerticalLevelPars}.
 #' The element \code{zRange} is a \sQuote{ucar.ma2.Range} or a null reference.

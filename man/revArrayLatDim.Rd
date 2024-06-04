@@ -8,8 +8,6 @@ revArrayLatDim(mdArray)
 }
 \arguments{
 \item{mdArray}{A n-dimensional array of data as returned by \code{makeSubset}}
-
-\item{grid}{A java-class \sQuote{GeoGrid}}
 }
 \value{
 A n-dimensional array with the ordering of the lat dimension reversed

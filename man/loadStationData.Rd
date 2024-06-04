@@ -13,8 +13,8 @@ loadStationData(
   season = NULL,
   years = NULL,
   tz = "",
- 
-    projection = "+proj=longlat +init=epsg:4326 +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0",
+  projection =
+    "+proj=longlat +init=epsg:4326 +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0",
   units = NULL,
   level = NULL,
   spatialTolerance = NULL

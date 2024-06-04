@@ -4,7 +4,6 @@
 #'  reverse y order. Sub-routine of \code{makeSubset}.
 #' 
 #' @param mdArray A n-dimensional array of data as returned by \code{makeSubset}
-#' @param grid A java-class \sQuote{GeoGrid}
 #' @return A n-dimensional array with the ordering of the lat dimension reversed
 #' @references \url{http://adv-r.had.co.nz/Computing-on-the-language.html}
 #' @author J. Bedia 
