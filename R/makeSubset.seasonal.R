@@ -16,6 +16,7 @@
 #' In the current version the Z dimension is ignored (and dropped),
 #'  as it is not planned to include multi-level variables.
 #' @keywords internal
+#' @note The Ensemble Axis is assumed to be named \dQuote{member}.
 #' 
 #' @references \url{http://www.unidata.ucar.edu/software/thredds/v4.3/netcdf-java/v4.3/javadocAll/ucar/nc2/dt/grid/GeoGrid.html}
 #' @author J Bedia, A.Cofino
@@ -106,7 +107,7 @@ makeSubset.seasonal <- function(grid, latLon, runTimePars, memberRangeList, fore
             }
             aux.list1 <- NULL
       }
-      mdArray <- do.call("abind", c(aux.list, along = grep(gcs$getEnsembleAxis()$getDimensionsString(), dimNamesRef, fixed = TRUE)))
+      mdArray <- do.call("abind", c(aux.list, along = grep(gcs$getEnsembleAxis()$getName(), dimNamesRef, fixed = TRUE)))
       aux.list <- NULL
       if (any(dim(mdArray) == 1)) {
             dimNames <- dimNamesRef[-which(dim(mdArray) == 1)]
@@ -114,7 +115,10 @@ makeSubset.seasonal <- function(grid, latLon, runTimePars, memberRangeList, fore
       } else {
             dimNames <- dimNamesRef
       }
-      dimNames <- gsub("^time.*", "time", dimNames)
+      dimNames <- gsub("^time.*", "time", dimNames, ignore.case = TRUE)
+      ## Fix lon-lat dimension names
+      dimNames <- gsub("^lon.*", "lon", dimNames, ignore.case = TRUE)
+      dimNames <- gsub("^lat.*", "lat", dimNames, ignore.case = TRUE)
       mdArray <- unname(mdArray)
       attr(mdArray, "dimensions") <- dimNames
       # Date adjustment
