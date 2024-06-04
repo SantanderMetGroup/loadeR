@@ -25,13 +25,11 @@
 #'  corresponds to the December initialization. Default to 1 (i.e., 1 lead month forecast)..
 #' @template templateParamsDicTimeAggr
 #' @template templateReturnLoadSeasonalForecast
-#' 
 #' @template templateDicDetails
 #' @template templateTimeAggr
 #' @template templateGeolocation
 #' @template templateDeaccumulation
 #' @template templateTimeSeasonal
-#' 
 #' @importFrom stats na.exclude
 #' @importFrom utils tail
 #' @importFrom climate4R.UDG C4R.vocabulary

@@ -96,3 +96,7 @@ For earlier version changes, see the GitHub Releases [Tab](https://github.com/Sa
 
 ## v1.8.1 (22 Jun 2023) 
  * Update of the DESCRIPTION file 
+
+## v1.8.2 (04 Jun 2024) 
+ * Minor changes in loadSeasonalForecast to handle non-standard dimension names
+ 

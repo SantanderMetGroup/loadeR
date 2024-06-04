@@ -7,6 +7,8 @@
 makeSubset(grid, timePars, levelPars, latLon, memberPars)
 }
 \arguments{
+\item{grid}{A grid of the java class \sQuote{ucar.nc2.dt.grid.GeoGrid}}
+
 \item{timePars}{A list of time parameters as returnde by \code{getTimeDomain}.}
 
 \item{levelPars}{Vertical level parameters, as returned by \code{getVerticalLevelPars}.
@@ -14,8 +16,6 @@ The element \code{zRange} is a \sQuote{ucar.ma2.Range} or a null reference.}
 
 \item{latLon}{A list of geospatial parameters, as returned by
 \code{getLatLonDomain}.}
-
-\item{A}{grid of the java class \sQuote{ucar.nc2.dt.grid.GeoGrid}}
 }
 \value{
 A n-dimensional array with the selected subset data.

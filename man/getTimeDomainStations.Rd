@@ -30,7 +30,5 @@ The function is currently exported to be internally used by the VALUE package to
 }
 \author{
 J. Bedia
-
-J. Bedia
 }
 \keyword{internal}
