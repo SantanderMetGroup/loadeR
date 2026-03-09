@@ -62,6 +62,20 @@ if (Sys.which("ncgen") != "") {
 
   writeLines(
     '<?xml version="1.0" encoding="UTF-8"?>
+        <netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2"
+                location="test_multidim.nc">
+          <variable name="member" type="string" shape="member">
+            <attribute name="standard_name" value="realization"/>
+            <attribute name="_CoordinateAxisType" value="Ensemble"/>
+            <attribute name="ref" value="http://www.uncertml.org/samples/realisation"/>
+            <values> 1 2 3 4 5 </values>
+          </variable>
+        </netcdf>',
+    file.path(temp_test_dir, "test_multidim.ncml")
+  )
+
+  writeLines(
+    '<?xml version="1.0" encoding="UTF-8"?>
     <netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
       <aggregation type="union">
  
