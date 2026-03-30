@@ -10,6 +10,18 @@
 #' @author J. Bedia, A Cofino, M. Vega
 
 openDataset <- function(dataset) {
+  ver5.9.1.1 <- TRUE
+
+  openGriddataset <- function(dataset) {
+    if (isTRUE(ver5.9.1.1)) {
+      ncd <- J("ucar.nc2.dataset.NetcdfDatasets")$openDataset(dataset)
+      gds <- .jnew("ucar.nc2.dt.grid.GridDataset", ncd)
+    } else {
+      gds <- J("ucar.nc2.dt.grid.GridDataset")$open(dataset)
+    }
+    gds
+  }
+
   url.check <- paste0(dataset, ".html")
   txt <- url.exists(url.check, .header = TRUE)
   if (!is.logical(txt)) {
@@ -21,7 +33,7 @@ openDataset <- function(dataset) {
     if (grepl("code = 503", htmlheader)) {
       stop("Service temporarily unavailable (HTTP error 503)\nThe server is temporarily unable to service your request, please try again later.", call. = FALSE)
     }
-    gds <- tryCatch(expr = J("ucar.nc2.dt.grid.GridDataset")$open(dataset), error = function(e) {
+    gds <- tryCatch(expr = openGriddataset(dataset), error = function(e) {
       # These return status do not appear in recent versions of the java api. Only the last one is currently acting
       if (grepl("return status=503", e)) {
         stop("Service temporarily unavailable\nThe server is temporarily unable to service your request, please try again later.", call. = FALSE)
@@ -40,8 +52,7 @@ openDataset <- function(dataset) {
     }
     message("[", Sys.time(), "] ", "The dataset was successfuly opened")
   } else {
-    gds <- J("ucar.nc2.dt.grid.GridDataset")$open(dataset)
+    gds <- openGriddataset(dataset)
   }
   return(gds)
-}
-
+} 
