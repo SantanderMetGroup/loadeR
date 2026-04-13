@@ -10,10 +10,12 @@
 #' @author J. Bedia, A Cofino, M. Vega
 
 openDataset <- function(dataset) {
-  ver5.9.1.1 <- TRUE
+  netcdf_version <- getOption("loadeR.java_detected_version", NA_character_)
+  netcdf_major <- tryCatch(as.numeric(strsplit(netcdf_version, "\\.")[[1]][1]), error = function(e) NA_real_)
+  ver5 <- !is.na(netcdf_major) && netcdf_major >= 5
 
   openGriddataset <- function(dataset) {
-    if (isTRUE(ver5.9.1.1)) {
+    if (isTRUE(ver5)) {
       ncd <- J("ucar.nc2.dataset.NetcdfDatasets")$openDataset(dataset)
       gds <- .jnew("ucar.nc2.dt.grid.GridDataset", ncd)
     } else {
