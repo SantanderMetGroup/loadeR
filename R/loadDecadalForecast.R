@@ -99,7 +99,7 @@ loadDecadalForecast <- function(dataset,
   }
   message("[", Sys.time(), "] ", "Opening connection with the UDG...")
   gds <- tryCatch(expr = {
-    J("ucar.nc2.dt.grid.GridDataset")$open(dataset)
+    openDataset(dataset)
   }, error = function(e) {
     if (grepl("return status=503", e)) {
       stop("UDG SERVICE TEMPORARILY UNAVAILABLE\nThe UDG server is temporarily unable to service your request due to maintenance downtime or capacity problems, please try again later.\n

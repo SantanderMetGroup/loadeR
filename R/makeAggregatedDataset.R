@@ -81,7 +81,7 @@ makeAggregatedDataset <- function(source.dir, ncml.file, file.ext = "nc", aggr.d
       cat(c("\n","\t","<aggregation type=\"union\">"), sep = "", file = z)
       varNames <- rep(NA, length(lf))
       for (i in 1:length(lf)) {
-            gds <- J("ucar.nc2.dt.grid.GridDataset")$open(.jnew("java/lang/String", lf[i]))
+            gds <- openDataset(.jnew("java/lang/String", lf[i]))
             varNames[i] <- unlist(strsplit(gsub("\\[|]|\\s", "", gds$getGrids()$toString()), ","))[1] # case when you have something like "varName, lon, lat" (e.g. some ENSEMBLES files)
       }
       vars <- unique(varNames)
@@ -97,7 +97,7 @@ makeAggregatedDataset <- function(source.dir, ncml.file, file.ext = "nc", aggr.d
             if (verbose) {
                   message("[",Sys.time(),"] Scanning file ", i, " out of ", length(vars))
             }
-            gds <- J("ucar.nc2.dt.grid.GridDataset")$open(lf[ind[i]])
+            gds <- openDataset(lf[ind[i]])
             grid <- gds$findGridByShortName(vars[i])
             dims <- unlist(strsplit(gsub("\\[|]|;|\\s","", grid$getDimensions()$toString()), split = ","))
             hasAggrDim[i] <- any(grepl(aggr.dim, dims))
@@ -124,7 +124,7 @@ makeAggregatedDataset <- function(source.dir, ncml.file, file.ext = "nc", aggr.d
       #
       if (length(lf) == length(vars)) {
             for (i in 1:length(lf)) {
-                  gds <- J("ucar.nc2.dt.grid.GridDataset")$open(lf[i])
+                  gds <- openDataset(lf[i])
                   grid <- gds$findGridByShortName(vars[i])
                   dims <- unlist(strsplit(gsub("\\[|]|;|\\s","", grid$getDimensions()$toString()), split = ","))
                   aggrDimIndex <- as.integer(grep(aggr.dim, dims) - 1)
@@ -151,7 +151,7 @@ makeAggregatedDataset <- function(source.dir, ncml.file, file.ext = "nc", aggr.d
                   cat(c("\n","\t","\t","<aggregation dimName=\"", aggr.dim, "\" ", "type=\"joinExisting\" ",strTimeUnitsChange,">"), sep = "", file = z)
                   cat(c("\n","\t","\t","<variableAgg name=\"", vars[ind[i]], "\"/>"), sep = "", file = z)
                   for (j in 1:length(varfile)) {
-                        gds <- J("ucar.nc2.dt.grid.GridDataset")$open(varfile[j])
+                        gds <- openDataset(varfile[j])
                         grid <- gds$findGridByShortName(vars[ind[i]])
                         dims <- unlist(strsplit(gsub("\\[|]|;|\\s","", grid$getDimensions()$toString()), split = ","))
                         aggrDimIndex <- as.integer(grep(aggr.dim, dims) - 1)

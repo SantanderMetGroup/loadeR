@@ -12,7 +12,7 @@
 
 
 dataInventory.NetCDF <- function(dataset) {
-   gds <- J("ucar.nc2.dt.grid.GridDataset")$open(dataset)
+   gds <- openDataset(dataset)
    nc.dataset <- gds$getNetcdfDataset()
    varNames <- unlist(strsplit(gsub("\\[|]|\\s", "", gds$getGrids()$toString()), ","))
    rm.ind <- grep("^lon|^lat", varNames)  
