@@ -81,7 +81,7 @@ makeAggregatedDataset <- function(source.dir, ncml.file, file.ext = "nc", aggr.d
       cat(c("\n","\t","<aggregation type=\"union\">"), sep = "", file = z)
       varNames <- rep(NA, length(lf))
       for (i in 1:length(lf)) {
-            gds <- openDataset(.jnew("java/lang/String", lf[i]))
+            gds <- gds <- openDataset(lf[i])
             varNames[i] <- unlist(strsplit(gsub("\\[|]|\\s", "", gds$getGrids()$toString()), ","))[1] # case when you have something like "varName, lon, lat" (e.g. some ENSEMBLES files)
       }
       vars <- unique(varNames)
