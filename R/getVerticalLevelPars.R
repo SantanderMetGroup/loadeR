@@ -22,6 +22,7 @@ getVerticalLevelPars <- function(grid, level) {
   gcs <- grid$getCoordinateSystem()
   if (gcs$hasVerticalAxis()) {
     levels <- scanVarDimensions(grid)$level$Values
+    if (length(levels) == 0) levels <- gcs$getVerticalAxis()$getCoordValues()
     if (is.null(level)) {
       if (length(levels) == 1) {
         level <- levels
@@ -40,7 +41,7 @@ getVerticalLevelPars <- function(grid, level) {
         stop("Vertical level not found\nPossible values: ", paste(levels, collapse = ", "), call. = FALSE)
       }
     }
-    zRange <- .jnew("ucar/ma2/Range", levelInd, levelInd)
+    zRange <- if (grid$getZDimensionIndex() < 0) .jnull() else .jnew("ucar/ma2/Range", levelInd, levelInd)
   } else { 
     zRange <- .jnull()
   }
